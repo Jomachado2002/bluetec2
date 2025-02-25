@@ -1,4 +1,4 @@
-const backendDomain = "http://localhost:8080"; // Cambiado "backendDomin" a "backendDomain"
+const backendDomain = process.env.REACT_APP_BACKEND_URL ; // Cambiado "backendDomin" a "backendDomain"
 
 const SummaryApi = {
     SignUP: { 
