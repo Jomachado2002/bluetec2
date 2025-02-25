@@ -1,0 +1,372 @@
+import React, { useEffect, useState } from 'react'
+import UploadProduct from '../components/UploadProduct'
+import SummaryApi from '../common'
+import AdminProductCard from '../components/AdminProductCard'
+import { FaSearch, FaFilter, FaFileExcel } from 'react-icons/fa'
+import productCategory from '../helpers/productCategory'
+import * as XLSX from 'xlsx'
+
+const AllProducts = () => {
+  const [openUploadProduct, setOpenUploadProduct] = useState(false)
+  const [allProduct, setAllProduct] = useState([])
+  const [filteredProducts, setFilteredProducts] = useState([])
+  
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedSubcategory, setSelectedSubcategory] = useState('')
+  const [sortOption, setSortOption] = useState('newest')
+
+  const [showCategoryMenu, setShowCategoryMenu] = useState(false)
+  const [showSubcategoryMenu, setShowSubcategoryMenu] = useState(false)
+  const [showSortMenu, setShowSortMenu] = useState(false)
+
+  const fetchAllProduct = async() => {
+    try {
+      const response = await fetch(SummaryApi.allProduct.url)
+      const dataResponse = await response.json()
+      const products = dataResponse?.data || []
+      setAllProduct(products)
+      applyFiltersAndSort(products)
+    } catch (error) {
+      console.error("Error fetching products:", error)
+    }
+  }
+
+  useEffect(() => {
+    fetchAllProduct()
+  }, [])
+
+  const sortProducts = (products, option) => {
+    const sorted = [...products]
+    
+    if (option === 'newest') {
+      return sorted.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    }
+    
+    if (option === 'oldest') {
+      return sorted.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0))
+    }
+    
+    if (option === 'priceHighToLow') {
+      return sorted.sort((a, b) => {
+        const priceA = Number(a.sellingPrice) || 0
+        const priceB = Number(b.sellingPrice) || 0
+        return priceB - priceA
+      })
+    }
+    
+    if (option === 'priceLowToHigh') {
+      return sorted.sort((a, b) => {
+        const priceA = Number(a.sellingPrice) || 0
+        const priceB = Number(b.sellingPrice) || 0
+        return priceA - priceB
+      })
+    }
+    
+    return sorted
+  }
+
+  const applyFiltersAndSort = (products) => {
+    let result = [...products]
+
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase()
+      result = result.filter(product => 
+        (product.productName?.toLowerCase() || '').includes(searchLower) ||
+        (product.brandName?.toLowerCase() || '').includes(searchLower) ||
+        (product.category?.toLowerCase() || '').includes(searchLower) ||
+        (product.subcategory?.toLowerCase() || '').includes(searchLower)
+      )
+    }
+
+    if (selectedCategory) {
+      result = result.filter(product => product.category === selectedCategory)
+    }
+
+    if (selectedSubcategory) {
+      result = result.filter(product => product.subcategory === selectedSubcategory)
+    }
+
+    result = sortProducts(result, sortOption)
+    setFilteredProducts(result)
+  }
+
+  useEffect(() => {
+    applyFiltersAndSort(allProduct)
+  }, [searchTerm, selectedCategory, selectedSubcategory, sortOption])
+
+  const getSubcategories = () => {
+    const categoryObj = productCategory.find(cat => cat.value === selectedCategory)
+    return categoryObj ? categoryObj.subcategories : []
+  }
+
+  const exportToExcel = () => {
+    const excelData = filteredProducts.map(product => ({
+      'Nombre del Producto': product.productName || '',
+      'Marca': product.brandName || '',
+      'Categoría': product.category || '',
+      'Subcategoría': product.subcategory || '',
+      'Precio de Venta': product.sellingPrice || '',
+      'Precio': product.price || '',
+      'Stock': product.stock || 0,
+      'Fecha de Creación': product.createdAt ? new Date(product.createdAt).toLocaleDateString() : '',
+      'Estado': product.status || '',
+      'SKU': product.sku || ''
+    }))
+
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(excelData)
+
+    const columnWidths = [
+      { wch: 40 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 15 },
+      { wch: 10 },
+      { wch: 15 }
+    ]
+    ws['!cols'] = columnWidths
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Productos')
+    XLSX.writeFile(wb, `Productos_${new Date().toLocaleDateString()}.xlsx`)
+  }
+
+  const getFilterDescription = () => {
+    let description = `Mostrando ${filteredProducts.length} producto${filteredProducts.length !== 1 ? 's' : ''}`
+    
+    if (selectedCategory) {
+      description += ` en la categoría "${productCategory.find(c => c.value === selectedCategory)?.label || selectedCategory}"`
+    }
+    
+    if (selectedSubcategory) {
+      const subcategoryLabel = getSubcategories().find(s => s.value === selectedSubcategory)?.label
+      description += ` y subcategoría "${subcategoryLabel || selectedSubcategory}"`
+    }
+    
+    if (searchTerm) {
+      description += ` que coinciden con "${searchTerm}"`
+    }
+
+    return description
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.filter-menu')) {
+        setShowCategoryMenu(false)
+        setShowSubcategoryMenu(false)
+        setShowSortMenu(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  return (
+    <div>
+      <div className='bg-green-50 py-2 px-4 flex justify-between items-center'>
+        <h2 className='font-bold text-lg'>Todos los productos</h2>
+        <div className='flex gap-2'>
+          <button
+            className='flex items-center gap-2 border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all py-1 px-4 rounded-full'
+            onClick={exportToExcel}
+          >
+            <FaFileExcel />
+            Exportar a Excel
+          </button>
+          <button
+            className='border border-gray-400 hover:bg-green-200 transition-all py-1 px-4 rounded-full'
+            onClick={() => setOpenUploadProduct(true)}
+          >
+            Cargar Productos
+          </button>
+        </div>
+      </div>
+
+      <div className='flex flex-col'>
+        <div className='flex flex-wrap items-center gap-4 p-4 bg-white shadow-sm'>
+          <div className='relative flex-grow'>
+            <input
+              type='text'
+              placeholder='Buscar productos...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className='w-full p-2 pl-8 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500'
+            />
+            <FaSearch className='absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400' />
+          </div>
+
+          <div className='relative filter-menu'>
+            <button 
+              onClick={() => {
+                setShowCategoryMenu(!showCategoryMenu)
+                setShowSortMenu(false)
+                setShowSubcategoryMenu(false)
+              }}
+              className='flex items-center bg-green-100 p-2 rounded-lg hover:bg-green-200 transition-colors'
+            >
+              Categoría: {selectedCategory ? productCategory.find(c => c.value === selectedCategory)?.label : 'Todas'}
+            </button>
+
+            {showCategoryMenu && (
+              <div className='absolute z-10 mt-2 w-48 bg-white border rounded-lg shadow-lg'>
+                <button 
+                  onClick={() => {
+                    setSelectedCategory('')
+                    setSelectedSubcategory('')
+                    setShowCategoryMenu(false)
+                  }}
+                  className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                >
+                  Todas las Categorías
+                </button>
+                {productCategory.map(category => (
+                  <button 
+                    key={category.value}
+                    onClick={() => {
+                      setSelectedCategory(category.value)
+                      setSelectedSubcategory('')
+                      setShowCategoryMenu(false)
+                    }}
+                    className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {selectedCategory && (
+            <div className='relative filter-menu'>
+              <button 
+                onClick={() => {
+                  setShowSubcategoryMenu(!showSubcategoryMenu)
+                  setShowCategoryMenu(false)
+                  setShowSortMenu(false)
+                }}
+                className='flex items-center bg-green-100 p-2 rounded-lg hover:bg-green-200 transition-colors'
+              >
+                Subcategoría: {selectedSubcategory ? getSubcategories().find(s => s.value === selectedSubcategory)?.label : 'Todas'}
+              </button>
+
+              {showSubcategoryMenu && (
+                <div className='absolute z-10 mt-2 w-48 bg-white border rounded-lg shadow-lg'>
+                  <button 
+                    onClick={() => {
+                      setSelectedSubcategory('')
+                      setShowSubcategoryMenu(false)
+                    }}
+                    className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                  >
+                    Todas las Subcategorías
+                  </button>
+                  {getSubcategories().map(subcategory => (
+                    <button 
+                      key={subcategory.value}
+                      onClick={() => {
+                        setSelectedSubcategory(subcategory.value)
+                        setShowSubcategoryMenu(false)
+                      }}
+                      className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                    >
+                      {subcategory.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className='relative filter-menu'>
+            <button 
+              onClick={() => {
+                setShowSortMenu(!showSortMenu)
+                setShowCategoryMenu(false)
+                setShowSubcategoryMenu(false)
+              }}
+              className='flex items-center bg-green-100 p-2 rounded-lg hover:bg-green-200 transition-colors'
+            >
+              <FaFilter className='mr-2' /> Ordenar
+            </button>
+
+            {showSortMenu && (
+              <div className='absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-10'>
+                <button 
+                  onClick={() => {
+                    setSortOption('newest')
+                    setShowSortMenu(false)
+                  }}
+                  className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                >
+                  Más recientes
+                </button>
+                <button 
+                  onClick={() => {
+                    setSortOption('oldest')
+                    setShowSortMenu(false)
+                  }}
+                  className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                >
+                  Más antiguos
+                </button>
+                <button 
+                  onClick={() => {
+                    setSortOption('priceHighToLow')
+                    setShowSortMenu(false)
+                  }}
+                  className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                >
+                  Precio: Mayor a menor
+                </button>
+                <button 
+                  onClick={() => {
+                    setSortOption('priceLowToHigh')
+                    setShowSortMenu(false)
+                  }}
+                  className='w-full text-left px-4 py-2 hover:bg-gray-100'
+                >
+                  Precio: Menor a mayor
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className='px-4 py-2 bg-gray-100 text-gray-700'>
+          {getFilterDescription()}
+        </div>
+      </div>
+
+      <div className='flex items-center flex-wrap gap-5 p-4 h-[calc(100vh-250px)] overflow-y-auto'>
+        {filteredProducts.map((product, index) => (
+          <AdminProductCard 
+            data={product} 
+            key={product._id || index+"allProduct"} 
+            fetchdata={fetchAllProduct}
+          />
+        ))}
+        
+        {filteredProducts.length === 0 && (
+          <div className='w-full text-center text-gray-500 py-10'>
+            No se encontraron productos
+          </div>
+        )}
+      </div>
+
+      {openUploadProduct && (
+        <UploadProduct 
+          onClose={() => setOpenUploadProduct(false)} 
+          fetchData={fetchAllProduct}
+        />
+      )}
+    </div>
+  )
+}
+
+export default AllProducts
