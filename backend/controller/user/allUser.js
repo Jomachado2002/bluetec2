@@ -7,7 +7,7 @@ async function allUsers(req, res) {
         const allUser = await userModel.find();
 
         res.json({
-            message: "All User",
+            message: "Todos los usuarios",
             data: allUser,
             success: true, // Corregido: 'success' estaba mal escrito
             error: false

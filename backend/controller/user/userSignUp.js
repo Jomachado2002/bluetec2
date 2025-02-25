@@ -24,22 +24,13 @@ async function userSignUpController(req, res) {
 
         // Verificar si el usuario ya existe
         const user = await userModel.findOne({ email });
-
-        console.log("usuario", user);
-
         if (user) {
             throw new Error("El usuario ya existe.");
         }
 
-        // Validar que se proporcionen los campos requeridos
-        if (!email) {
-            throw new Error("Por favor, proporciona un correo electrónico.");
-        }
-        if (!password) {
-            throw new Error("Por favor, proporciona una contraseña.");
-        }
-        if (!name) {
-            throw new Error("Por favor, proporciona un nombre.");
+        // Validar campos requeridos
+        if (!email || !password || !name) {
+            throw new Error("Por favor, proporciona todos los campos requeridos.");
         }
 
         // Validar la fortaleza de la contraseña
@@ -51,22 +42,16 @@ async function userSignUpController(req, res) {
         const salt = bcrypt.genSaltSync(10);
         const hashPassword = bcrypt.hashSync(password, salt);
 
-        if (!hashPassword) {
-            throw new Error("Algo salió mal al encriptar la contraseña.");
-        }
-
-        // Crear el objeto del nuevo usuario
+        // Crear el nuevo usuario
         const payload = {
             ...req.body,
             role: "GENERAL",
             password: hashPassword
         };
 
-        // Guardar el nuevo usuario en la base de datos
         const userData = new userModel(payload);
         const saveUser = await userData.save();
 
-        // Enviar respuesta de éxito
         res.status(201).json({
             data: saveUser,
             success: true,
@@ -75,9 +60,8 @@ async function userSignUpController(req, res) {
         });
 
     } catch (err) {
-        // Manejo de errores
-        res.json({
-            message: err.message || err,
+        res.status(400).json({
+            message: err.message || "Error al registrar el usuario.",
             error: true,
             success: false,
         });

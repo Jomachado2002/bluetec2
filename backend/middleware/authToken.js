@@ -1,41 +1,40 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 
-async function authToken(req,res,next){
-    try{
-        const token = req.cookies?.token
-
-        console.log("token",token)
-        if(!token){
-            return res.status(200).json({
-                message : "Please Login...!",
-                error : true,
-                success : false
-            })
+async function authToken(req, res, next) {
+    try {
+        // Asegurarse de que hay una sesión de invitado
+        if (!req.session.guestId) {
+            req.session.guestId = `guest-${uuidv4()}`;
         }
 
-        jwt.verify(token, process.env.TOKEN_SECRET_KEY, function(err, decoded) {
-            console.log(err)
-            console.log("decoded",decoded)
-            
-            if(err){
-                console.log("error auth", err)
-            }
+        const token = req.cookies?.token;
 
-            req.userId = decoded?._id
-
-            next()
-        });
-
-
-    }catch(err){
-        res.status(400).json({
-            message : err.message || err,
-            data : [],
-            error : true,
-            success : false
-        })
+        if (token) {
+            jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
+                if (err) {
+                    // Token inválido, usar ID de invitado
+                    req.userId = req.session.guestId;
+                    req.isAuthenticated = false;
+                } else {
+                    // Usuario autenticado
+                    req.userId = decoded._id;
+                    req.isAuthenticated = true;
+                }
+                next();
+            });
+        } else {
+            // Usuario no autenticado
+            req.userId = req.session.guestId;
+            req.isAuthenticated = false;
+            next();
+        }
+    } catch (err) {
+        console.error('Error en authToken:', err);
+        req.userId = req.session.guestId;
+        req.isAuthenticated = false;
+        next();
     }
 }
 
-
-module.exports = authToken
+module.exports = authToken;
