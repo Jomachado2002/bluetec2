@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWiseProduct';
 import displayPYGCurrency from '../helpers/displayCurrency';
-import { FaAngleLeft, FaAngleRight, FaShoppingCart } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight, FaShoppingCart, FaExpand } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
@@ -12,6 +12,7 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
     const [loading, setLoading] = useState(true);
     const [showLeftButton, setShowLeftButton] = useState(false);
     const [showRightButton, setShowRightButton] = useState(true);
+    const [hoveredProductId, setHoveredProductId] = useState(null);
     const loadingList = new Array(6).fill(null);
 
     const scrollElement = useRef();
@@ -153,8 +154,10 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                                 <Link 
                                     to={`/product/${product?._id}`} 
                                     key={product?._id} 
-                                    className='snap-center flex-none w-[220px] sm:w-[250px] md:w-[280px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 group/card product-card relative'
+                                    className='snap-center flex-none w-[220px] sm:w-[250px] md:w-[280px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 group/card product-card relative'
                                     onClick={scrollTop}
+                                    onMouseEnter={() => setHoveredProductId(product?._id)}
+                                    onMouseLeave={() => setHoveredProductId(null)}
                                 >
                                     {/* Etiqueta de descuento */}
                                     {discount && (
@@ -164,17 +167,28 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                                     )}
                                     
                                     {/* Imagen del producto */}
-                                    <div className='block bg-white h-48 rounded-t-xl flex items-center justify-center overflow-hidden'>
+                                    <div className='block bg-gray-50 h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
                                         <img
                                             src={product.productImage[0]}
                                             alt={product.productName}
                                             className='object-contain h-full w-full transform group-hover/card:scale-110 transition-transform duration-500'
                                         />
+                                        <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
+                                            <div className='bg-white/70 p-2 rounded-full'>
+                                                <FaExpand className='text-gray-700' />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {/* Detalles del producto */}
                                     <div className='p-5 space-y-3'>
-                                        <h2 className='font-bold text-base text-gray-800 line-clamp-2 hover:text-blue-600 transition-colors'>
+                                        <h2 
+                                            className={`font-semibold text-base text-gray-700 ${
+                                                hoveredProductId === product?._id 
+                                                    ? 'line-clamp-none' 
+                                                    : 'line-clamp-2'
+                                            } hover:line-clamp-none transition-all duration-300`}
+                                        >
                                             {product?.productName}
                                         </h2>
                                         

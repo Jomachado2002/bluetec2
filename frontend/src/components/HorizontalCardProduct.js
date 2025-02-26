@@ -24,7 +24,7 @@ const HorizontalCardProduct = ({
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
-  const [hoveredProductId, setHoveredProductId] = useState(null);
+  // Eliminamos el estado de hoveredProductId ya que no lo necesitaremos
   const loadingList = new Array(13).fill(null);
   const scrollElement = useRef();
   const { fetchUserAddToCart } = useContext(Context);
@@ -85,6 +85,65 @@ const HorizontalCardProduct = ({
     return null;
   };
 
+  // Función para formatear el nombre del producto
+  const formatProductName = (productName) => {
+    if (!productName) return { mainName: '', specs: [] };
+    
+    // Si el nombre tiene separadores tipo "/"
+    if (productName.includes(' / ')) {
+      const parts = productName.split(' / ');
+      return {
+        mainName: parts[0],
+        specs: parts.slice(1)
+      };
+    }
+    
+    // Si no tiene separadores, intentamos extraer información importante
+    
+    // Extraer nombre principal: normalmente es "Tipo + Marca + Modelo"
+    let mainName = '';
+    const devicePattern = /(Notebook|Laptop|Portátil|PC|Tablet|Teléfono|Smartphone|Monitor)\s+([A-Za-z]+)\s+([A-Za-z0-9-]+(\s+[A-Za-z0-9-]+)?)/i;
+    const deviceMatch = productName.match(devicePattern);
+    
+    if (deviceMatch) {
+      mainName = `${deviceMatch[1]} ${deviceMatch[2]} ${deviceMatch[3]}`;
+    } else {
+      // Si no se encuentra un patrón claro, usar las primeras 3-4 palabras
+      mainName = productName.split(' ').slice(0, 4).join(' ');
+    }
+    
+    // Extraer especificaciones clave
+    const specs = [];
+    
+    // RAM
+    const ramMatch = productName.match(/(\d+\s*GB\s*de\s*RAM|\d+\s*GB\s*RAM)/i);
+    if (ramMatch) specs.push(ramMatch[0]);
+    
+    // Almacenamiento
+    const storageMatch = productName.match(/(\d+\s*GB\s*(SSD|HDD|eMMC)|(\d+\s*TB))/i);
+    if (storageMatch) specs.push(storageMatch[0]);
+    
+    // Procesador - capturamos solo la parte esencial
+    const processorMatch = productName.match(/(Intel|AMD|Ryzen|Core i\d|Celeron|Pentium)(\s+[A-Za-z0-9-]+)?/i);
+    if (processorMatch) specs.push(processorMatch[0].trim());
+    
+    // Pantalla
+    const screenMatch = productName.match(/(Full HD|HD|FHD|4K|UHD)(\s+\d+(\.\d+)?")?|((\d+(\.\d+)?|,\d+)\s?")/i);
+    if (screenMatch) {
+      const screenSize = screenMatch[0].trim();
+      specs.push(`Pantalla ${screenSize}`);
+    }
+    
+    // Color o acabado
+    const colorMatch = productName.match(/\s(Negro|Blanco|Gris|Plata|Azul|Rojo|Rose Gold)(\s+\([^)]+\))?(?=\s|$)/i);
+    if (colorMatch) specs.push(colorMatch[0].trim());
+    
+    return {
+      mainName: mainName.trim(),
+      specs: specs.filter(spec => spec && spec.length > 0)
+    };
+  };
+
   // If no data, don't render anything
   if (!loading && data.length === 0) {
     return null;
@@ -143,15 +202,14 @@ const HorizontalCardProduct = ({
             </div>
           )) : data.map((product, index) => {
             const discount = calculateDiscount(product?.price, product?.sellingPrice);
+            const formattedName = formatProductName(product?.productName);
             
             return (
               <Link
                 to={`${pathname}product/${product?._id}`}
                 onClick={scrollTop}
                 key={index}
-                className="flex-none w-[260px] sm:w-[300px] lg:w-[340px] h-[260px] sm:h-[300px] lg:h-[320px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 product-card cursor-pointer snap-center block overflow-hidden relative"
-                onMouseEnter={() => setHoveredProductId(product?._id)}
-                onMouseLeave={() => setHoveredProductId(null)}
+                className="flex-none w-[260px] sm:w-[300px] lg:w-[340px] h-[260px] sm:h-[300px] lg:h-[320px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 product-card cursor-pointer snap-center block overflow-hidden relative group/card"
               >
                 {discount && (
                   <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-green-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold transform hover:scale-110 transition-transform z-10">
@@ -178,40 +236,64 @@ const HorizontalCardProduct = ({
                   <div className="p-3 sm:p-4 lg:p-5 w-3/5 flex flex-col justify-between">
                     <div>
                       <div className="mb-2">
-                        <h2 className={`font-semibold text-xs sm:text-sm text-gray-800 hover:text-green-600 transition-colors ${
-                          hoveredProductId === product?._id 
-                              ? 'line-clamp-none' 
-                              : 'line-clamp-2'
-                          } hover:line-clamp-none transition-all duration-300`}
+                        <div className="flex items-center gap-1 mb-1">
+                          <span className="text-xs text-gray-500 font-medium bg-gray-100 px-1.5 py-0.5 rounded-full inline-block">
+                            {product?.brandName}
+                          </span>
+                          
+                          {/* Solo mostramos modelo si existe en la BD */}
+                          {product?.modelName && (
+                            <span className="text-[9px] text-gray-500 bg-gray-100 px-1 py-0.5 rounded-full">
+                              {product?.modelName}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Título principal más compacto */}
+                        <h2 
+                          className="font-semibold text-xs sm:text-sm text-gray-800 hover:text-green-600 transition-colors line-clamp-2"
+                          title={product?.productName}
                         >
-                          {product?.productName}
+                          {formattedName.mainName}
                         </h2>
-                        <span className="text-xs text-gray-500 font-medium bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full inline-block mt-1">
-                          {product?.brandName}
-                        </span>
+                        
+                        {/* Especificaciones clave en formato de chips/pills */}
+                        <div className="mt-2">
+                          {formattedName.specs.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {formattedName.specs.map((spec, idx) => (
+                                <span key={idx} className="inline-block text-[9px] bg-gray-50 px-1.5 py-0.5 rounded-full border border-gray-100 text-gray-600">
+                                  {spec}
+                                </span>
+                              )).slice(0, 3)} {/* Limitamos a máximo 3 especificaciones */}
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
 
-                      {/* Especificaciones */}
-                      <div className="space-y-1 sm:space-y-2">
-                        <div className="flex items-center text-xs text-gray-600">
-                          <FaMicrochip className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" /> 
-                          <span className="text-[10px] sm:text-xs truncate">
-                            {product?.processor || 'Procesador no especificado'}
-                          </span>
+                      {/* Solo mostramos las especificaciones adicionales si no hay suficientes specs en el nombre */}
+                      {formattedName.specs.length < 2 && (
+                        <div className="space-y-1 sm:space-y-2">
+                          <div className="flex items-center text-xs text-gray-600">
+                            <FaMicrochip className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" /> 
+                            <span className="text-[10px] sm:text-xs truncate">
+                              {product?.processor || 'Procesador no especificado'}
+                            </span>
+                          </div>
+                          <div className="flex items-center text-xs text-gray-600">
+                            <FaMemory className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" />
+                            <span className="text-[10px] sm:text-xs truncate">
+                              {product?.ram || 'RAM no especificada'}
+                            </span>
+                          </div>
+                          <div className="flex items-center text-xs text-gray-600">
+                            <FaHdd className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" />
+                            <span className="text-[10px] sm:text-xs truncate">
+                              {product?.storage || 'Almacenamiento no especificado'}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center text-xs text-gray-600">
-                          <FaMemory className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" />
-                          <span className="text-[10px] sm:text-xs truncate">
-                            {product?.ram || 'RAM no especificada'}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-xs text-gray-600">
-                          <FaHdd className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" />
-                          <span className="text-[10px] sm:text-xs truncate">
-                            {product?.storage || 'Almacenamiento no especificado'}
-                          </span>
-                        </div>
-                      </div>
+                      )}
                     </div>
 
                     <div>

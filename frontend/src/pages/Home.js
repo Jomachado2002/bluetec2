@@ -71,7 +71,7 @@ const Home = () => {
           initial="hidden"
           animate="visible"
           variants={fadeIn}
-          className="relative bg-gradient-to-r from-green-600 to-green-800 shadow-xl overflow-hidden"
+          className="relative bg-white shadow-xl overflow-hidden"
         >
           <div className="absolute inset-0 bg-pattern opacity-10"></div>
           <div className="container mx-auto py-4 sm:py-6 px-4">
@@ -194,7 +194,7 @@ const Home = () => {
                   <div className="h-1 w-24 bg-green-500 mt-2 mb-4 rounded-full"></div>
                 </div>
                 <div className="p-4">
-                  <HorizontalCardProduct
+                  <VerticalCardProduct
                     category="informatica"
                     subcategory="computadoras_ensambladas"
                     heading=""
@@ -216,7 +216,7 @@ const Home = () => {
                   <div className="h-1 w-20 bg-yellow-400 mt-2 mb-4 rounded-full"></div>
                 </div>
                 <div className="p-4">
-                  <HorizontalCardProduct
+                  <VerticalCardProduct
                     category="perifericos"
                     subcategory="monitores"
                     heading=""
@@ -238,7 +238,7 @@ const Home = () => {
                   <div className="h-1 w-20 bg-purple-300 mt-2 mb-4 rounded-full"></div>
                 </div>
                 <div className="p-4">
-                  <HorizontalCardProduct
+                  <VerticalCardProduct
                     category="informatica"
                     subcategory="memorias_ram"
                     heading=""
@@ -260,7 +260,7 @@ const Home = () => {
                   <div className="h-1 w-20 bg-yellow-300 mt-2 mb-4 rounded-full"></div>
                 </div>
                 <div className="p-4">
-                  <HorizontalCardProduct
+                  <VerticalCardProduct
                     category="informatica"
                     subcategory="discos_duros"
                     heading=""
