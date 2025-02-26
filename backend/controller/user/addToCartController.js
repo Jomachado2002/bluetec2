@@ -11,13 +11,34 @@ const addToCartController = async (req, res) => {
             });
         }
 
-        // Asegurar que tenemos identificadores estables
+        // Identificadores estables para usuarios
         const currentUser = req.userId || 'guest';
         const sessionId = req.sessionId || req.sessionID || `session-${Date.now()}`;
         const isGuest = !req.isAuthenticated;
 
-        // IMPORTANTE: Simplificar la lógica para Vercel
-        // Siempre crear nuevo elemento - para entornos serverless
+        // Buscar si el producto ya existe para este usuario/sesión
+        const existingCartItem = await addToCartModel.findOne({
+            productId,
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
+        });
+
+        if (existingCartItem) {
+            // Incrementar cantidad si ya existe
+            existingCartItem.quantity += 1;
+            await existingCartItem.save();
+
+            return res.json({
+                data: existingCartItem,
+                message: "Producto actualizado en el carrito",
+                success: true,
+                error: false,
+            });
+        }
+
+        // Crear nuevo elemento de carrito
         const payload = {
             productId,
             quantity: 1,

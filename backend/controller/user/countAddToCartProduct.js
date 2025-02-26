@@ -5,12 +5,11 @@ const countAddToCartProduct = async (req, res) => {
         const currentUser = req.userId || 'guest';
         const sessionId = req.sessionId || req.sessionID || 'session';
 
-        // Consulta más permisiva para entornos serverless
+        // Consulta específica para el usuario actual
         const query = {
             $or: [
                 { userId: currentUser },
-                { sessionId: sessionId },
-                { isGuest: true }
+                { sessionId: sessionId }
             ]
         };
 
