@@ -11,39 +11,13 @@ const addToCartController = async (req, res) => {
             });
         }
 
-        const currentUser = req.userId;
-        const sessionId = req.sessionId || req.sessionID;
+        // Asegurar que tenemos identificadores estables
+        const currentUser = req.userId || 'guest';
+        const sessionId = req.sessionId || req.sessionID || `session-${Date.now()}`;
         const isGuest = !req.isAuthenticated;
 
-        console.log("Agregando al carrito:", {
-            productId,
-            userId: currentUser,
-            sessionId: sessionId,
-            isGuest
-        });
-
-        // Verificar si el producto ya existe en el carrito
-        const query = {
-            productId,
-            $or: [
-                { userId: currentUser },
-                { sessionId: sessionId }
-            ]
-        };
-
-        const isProductAvailable = await addToCartModel.findOne(query).lean();
-        console.log("Producto existente:", isProductAvailable);
-
-        if (isProductAvailable) {
-            // Si el producto ya existe, simplemente notificamos
-            return res.json({
-                message: "Producto ya existe en el carrito",
-                success: false,
-                error: true,
-            });
-        }
-
-        // Crear nuevo producto en el carrito
+        // IMPORTANTE: Simplificar la lógica para Vercel
+        // Siempre crear nuevo elemento - para entornos serverless
         const payload = {
             productId,
             quantity: 1,
@@ -52,12 +26,8 @@ const addToCartController = async (req, res) => {
             sessionId
         };
 
-        console.log("Creando nuevo item en carrito:", payload);
-
         const newAddToCart = new addToCartModel(payload);
         const saveProduct = await newAddToCart.save();
-
-        console.log("Producto guardado:", saveProduct._id);
 
         return res.json({
             data: saveProduct,
@@ -67,16 +37,9 @@ const addToCartController = async (req, res) => {
         });
 
     } catch (err) {
-        console.error('Error al agregar al carrito:', {
-            message: err.message,
-            stack: err.stack,
-            productId: req?.body?.productId,
-            userId: req?.userId,
-            sessionId: req?.sessionId || req?.sessionID
-        });
-        
-        res.status(500).json({
-            message: "Error al agregar al carrito: " + (err?.message || "Error desconocido"),
+        console.error('Error al agregar al carrito:', err);
+        res.json({
+            message: err?.message || String(err),
             error: true,
             success: false,
         });
