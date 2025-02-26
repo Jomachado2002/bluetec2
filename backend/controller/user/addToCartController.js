@@ -5,19 +5,23 @@ const addToCartController = async (req, res) => {
         const { productId } = req?.body;
         if (!productId) {
             return res.json({
-                message: "ID de producto requerido",
+                message: "Product ID is required",
                 success: false,
                 error: true,
             });
         }
 
-        const currentUser = req.userId || 'guest';
+        // Use the guest user ID from the request
+        const currentUser = req.userId; // This should now be the guest ID from authToken middleware
         const sessionId = req.sessionId || req.sessionID || `session-${Date.now()}`;
-        const isGuest = !req.isAuthenticated;
 
+        // Check if the product is already in the cart for this user
         const existingCartItem = await addToCartModel.findOne({
             productId,
-            userId: currentUser
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
         });
 
         if (existingCartItem) {
@@ -25,12 +29,13 @@ const addToCartController = async (req, res) => {
             await existingCartItem.save();
             return res.json({
                 data: existingCartItem,
-                message: "Producto actualizado en el carrito",
+                message: "Product quantity updated in cart",
                 success: true,
                 error: false,
             });
         }
 
+        // Create new cart item
         const payload = {
             productId,
             quantity: 1,
@@ -40,24 +45,23 @@ const addToCartController = async (req, res) => {
         };
 
         const newAddToCart = new addToCartModel(payload);
-        const saveProduct = await newAddToCart.save();
+        const savedProduct = await newAddToCart.save();
 
         return res.json({
-            data: saveProduct,
-            message: "Producto agregado al carrito",
+            data: savedProduct,
+            message: "Product added to cart",
             success: true,
             error: false,
         });
 
     } catch (err) {
-        console.error('Error al agregar al carrito:', err);
-        res.json({
+        console.error('Error adding to cart:', err);
+        res.status(500).json({
             message: err?.message || String(err),
             error: true,
             success: false,
         });
     }
 };
-
 
 module.exports = addToCartController;

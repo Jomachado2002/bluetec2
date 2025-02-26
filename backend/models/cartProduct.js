@@ -28,8 +28,14 @@ const addToCartSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Índice único para prevenir duplicados
-addToCartSchema.index({ userId: 1, productId: 1 }, { unique: true });
+// Compound unique index to prevent duplicate entries
+addToCartSchema.index({ 
+    productId: 1, 
+    $or: [
+        { userId: 1 }, 
+        { sessionId: 1 }
+    ]
+}, { unique: true });
 
 const addToCartModel = mongoose.model("addToCart", addToCartSchema);
 

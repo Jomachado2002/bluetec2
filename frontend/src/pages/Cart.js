@@ -7,85 +7,132 @@ import { MdDelete, MdShoppingCart } from "react-icons/md";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import logo from '../helpers/logo.jpg';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const context = useContext(Context);
 
-    // Mantener todas las funciones existentes sin cambios...
+    // Función mejorada para obtener datos del carrito
     const fetchData = async () => {
-        const response = await fetch(SummaryApi.addToCartProductView.url, {
-            method: SummaryApi.addToCartProductView.method,
-            credentials: 'include',
-            headers: {
-                "content-type": 'application/json'
-            },
-        });
-        const responseData = await response.json();
-        if (responseData.success) {
-            setData(responseData.data);
+        try {
+            const response = await fetch(SummaryApi.addToCartProductView.url, {
+                method: SummaryApi.addToCartProductView.method,
+                credentials: 'include', // Importante para manejar cookies de sesión
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+            });
+            const responseData = await response.json();
+            
+            if (responseData.success) {
+                setData(responseData.data);
+            } else {
+                console.error('Error al cargar el carrito:', responseData.message);
+                toast.error('No se pudieron cargar los productos del carrito');
+                setData([]);
+            }
+        } catch (error) {
+            console.error('Error al obtener productos del carrito:', error);
+            toast.error('Error de conexión al cargar el carrito');
+            setData([]);
         }
     };
 
+    // Cargar datos del carrito al montar el componente
     useEffect(() => {
         setLoading(true);
-        fetchData().then(() => setLoading(false));
+        fetchData().finally(() => setLoading(false));
     }, []);
 
-    // Funciones existentes sin cambios...
+    // Aumentar cantidad de producto
     const increaseQty = async (id, qty) => {
-        const response = await fetch(SummaryApi.updateCartProduct.url, {
-            method: SummaryApi.updateCartProduct.method,
-            credentials: 'include',
-            headers: {
-                "content-type": 'application/json'
-            },
-            body: JSON.stringify({ _id: id, quantity: qty + 1 })
-        });
-        const responseData = await response.json();
-        if (responseData.success) {
-            fetchData();
-        }
-    };
-
-    const decreaseQty = async (id, qty) => {
-        if (qty >= 2) {
+        try {
             const response = await fetch(SummaryApi.updateCartProduct.url, {
                 method: SummaryApi.updateCartProduct.method,
                 credentials: 'include',
                 headers: {
-                    "content-type": 'application/json'
+                    "Content-Type": 'application/json'
                 },
-                body: JSON.stringify({ _id: id, quantity: qty - 1 })
+                body: JSON.stringify({ _id: id, quantity: qty + 1 })
             });
             const responseData = await response.json();
+            
             if (responseData.success) {
                 fetchData();
+                toast.success('Cantidad actualizada');
+            } else {
+                toast.error('No se pudo actualizar la cantidad');
+            }
+        } catch (error) {
+            console.error('Error al aumentar cantidad:', error);
+            toast.error('Error al actualizar cantidad');
+        }
+    };
+
+    // Disminuir cantidad de producto
+    const decreaseQty = async (id, qty) => {
+        if (qty >= 2) {
+            try {
+                const response = await fetch(SummaryApi.updateCartProduct.url, {
+                    method: SummaryApi.updateCartProduct.method,
+                    credentials: 'include',
+                    headers: {
+                        "Content-Type": 'application/json'
+                    },
+                    body: JSON.stringify({ _id: id, quantity: qty - 1 })
+                });
+                const responseData = await response.json();
+                
+                if (responseData.success) {
+                    fetchData();
+                    toast.success('Cantidad actualizada');
+                } else {
+                    toast.error('No se pudo actualizar la cantidad');
+                }
+            } catch (error) {
+                console.error('Error al disminuir cantidad:', error);
+                toast.error('Error al actualizar cantidad');
             }
         }
     };
 
+    // Eliminar producto del carrito
     const deleteCartProduct = async (id) => {
-        const response = await fetch(SummaryApi.deleteCartProduct.url, {
-            method: SummaryApi.deleteCartProduct.method,
-            credentials: 'include',
-            headers: {
-                "content-type": 'application/json'
-            },
-            body: JSON.stringify({ _id: id })
-        });
-        const responseData = await response.json();
-        if (responseData.success) {
-            fetchData();
-            context.fetchUserAddToCart();
+        try {
+            const response = await fetch(SummaryApi.deleteCartProduct.url, {
+                method: SummaryApi.deleteCartProduct.method,
+                credentials: 'include',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({ _id: id })
+            });
+            const responseData = await response.json();
+            
+            if (responseData.success) {
+                fetchData();
+                context.fetchUserAddToCart();
+                toast.success('Producto eliminado del carrito');
+            } else {
+                toast.error('No se pudo eliminar el producto');
+            }
+        } catch (error) {
+            console.error('Error al eliminar producto:', error);
+            toast.error('Error al eliminar producto');
         }
     };
 
-    const totalQty = data.reduce((previousValue, currentValue) => previousValue + currentValue.quantity, 0);
-    const totalPrice = data.reduce((prev, curr) => prev + (curr.quantity * curr?.productId?.sellingPrice), 0);
+    // Calcular cantidad total de productos
+    const totalQty = data.reduce((previousValue, currentValue) => 
+        previousValue + currentValue.quantity, 0);
+    
+    // Calcular precio total
+    const totalPrice = data.reduce((prev, curr) => 
+        prev + (curr.quantity * curr?.productId?.sellingPrice), 0);
 
-    // Mantener la función generatePDF sin cambios...
+    // Generar PDF de presupuesto
     const generatePDF = () => {
         const clientName = prompt("Por favor, ingrese el nombre del cliente:");
         if (!clientName) {
@@ -97,26 +144,27 @@ const Cart = () => {
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
     
-        const imgWidth = 25;  // Ancho del logo ajustado
-        const imgHeight = 12; // Altura del logo ajustada
+        const imgWidth = 25;
+        const imgHeight = 12;
         doc.addImage(logo, 'JPEG', 10, 10, imgWidth, imgHeight);
     
-        // Título y encabezado
-        doc.setFontSize(18); // Tamaño de fuente para el título
+        doc.setFontSize(18);
         doc.text("Presupuesto de Compra", pageWidth / 2, 20, { align: "center" });
     
-        // Fecha actual en formato sudamericano (DD/MM/YYYY)
-        const currentDate = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const currentDate = new Date().toLocaleDateString('es-ES', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric' 
+        });
     
-        // Información del cliente y fecha
-        doc.setFontSize(12); // Tamaño de fuente para la información del cliente
+        doc.setFontSize(12);
         doc.text(`Cliente: ${clientName}`, 10, 35);
         doc.text(`Fecha: ${currentDate}`, 10, 45);
     
-        // Columnas de la tabla
         const tableColumn = ["N", "Producto", "Cantidad", "Precio Unitario", "Subtotal"];
         const tableRows = [];
         let totalPrice = 0;
+        
         data.forEach((product, index) => {
             const subtotal = product.quantity * product.productId.sellingPrice;
             totalPrice += subtotal;
@@ -129,7 +177,6 @@ const Cart = () => {
             ]);
         });
     
-        // Crear la tabla principal
         doc.autoTable({
             head: [tableColumn],
             body: tableRows,
@@ -137,7 +184,7 @@ const Cart = () => {
             theme: 'grid',
             tableWidth: pageWidth - 20,
             styles: {
-                fontSize: 8, // Tamaño de fuente mínima para la tabla
+                fontSize: 8,
                 cellPadding: 3,
                 overflow: 'linebreak',
                 textColor: [0, 0, 0],
@@ -157,11 +204,10 @@ const Cart = () => {
                     data.cursor.y = 50;
                 }
     
-                // Pie de página
                 const pageCount = doc.internal.getNumberOfPages();
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    doc.setFontSize(8); // Tamaño de fuente mínima para el pie de página
+                    doc.setFontSize(8);
                     doc.setTextColor(150, 150, 150);
                     doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
                     doc.line(10, pageHeight - 20, pageWidth - 10, pageHeight - 20);
@@ -169,8 +215,7 @@ const Cart = () => {
             }
         });
     
-        // Total en guaraníes y dólares
-        const totalInUSD = totalPrice / 7850; // Cotización del dólar
+        const totalInUSD = totalPrice / 7850;
         const totalTableColumns = ["Moneda", "Total"];
         const totalTableRows = [
             ["Guaraníes (GS)", displayINRCurrency(totalPrice)],
@@ -182,16 +227,21 @@ const Cart = () => {
             body: totalTableRows,
             startY: doc.lastAutoTable.finalY + 10,
             theme: 'grid',
-            styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak', textColor: [0, 0, 0], halign: 'center' },
+            styles: { 
+                fontSize: 8, 
+                cellPadding: 3, 
+                overflow: 'linebreak', 
+                textColor: [0, 0, 0], 
+                halign: 'center' 
+            },
             columnStyles: {
                 0: { cellWidth: 50, halign: 'left' },
                 1: { cellWidth: 50, halign: 'right' }
             }
         });
     
-        // Notas finales
         const finalY = doc.lastAutoTable.finalY + 20;
-        doc.setFontSize(8); // Tamaño de fuente mínima para notas finales
+        doc.setFontSize(8);
         doc.text("Forma de Pago: Contado", 10, finalY);
         doc.text("Validez de la oferta: 5 días", 10, finalY + 10);
         doc.text("Entrega: 48 horas", 10, finalY + 20);
@@ -200,7 +250,6 @@ const Cart = () => {
     
         doc.save("presupuesto_compra.pdf");
     };
-    
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
@@ -295,7 +344,7 @@ const Cart = () => {
                                                             <span>Eliminar</span>
                                                         </button>
                                                     </div>
-
+                
                                                     <div className="mt-2 text-right">
                                                         <p className="text-lg font-semibold text-gray-900">
                                                             {displayINRCurrency(product?.productId?.sellingPrice * product?.quantity)}
@@ -308,7 +357,7 @@ const Cart = () => {
                                 </div>
                             )}
                         </div>
-
+                
                         {/* Resumen */}
                         <div className="w-full lg:w-96">
                             <div className="bg-white rounded-xl shadow-sm p-6 sticky top-4">
@@ -316,7 +365,7 @@ const Cart = () => {
                                     <span className="w-1 h-6 bg-green-600 rounded-full"></span>
                                     Resumen del Carrito
                                 </h2>
-
+                
                                 <div className="space-y-4">
                                     <div className="flex justify-between py-2 border-b">
                                         <span className="text-gray-600">Cantidad Total</span>
@@ -331,14 +380,14 @@ const Cart = () => {
                                         <span className="text-xl font-bold text-green-600">{displayINRCurrency(totalPrice)}</span>
                                     </div>
                                 </div>
-
+                
                                 <button
                                     onClick={generatePDF}
                                     className="mt-6 w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                                 >
                                     <span>Descargar Presupuesto</span>
                                 </button>
-
+                
                                 <Link
                                     to="/"
                                     className="mt-4 w-full block text-center py-3 text-gray-600 hover:text-gray-900 transition-colors"
@@ -349,9 +398,9 @@ const Cart = () => {
                         </div>
                     </div>
                 )}
-            </div>
-        </div>
-    );
-};
-
-export default Cart;
+                </div>
+                </div>
+                    );
+                };
+                
+                export default Cart;
