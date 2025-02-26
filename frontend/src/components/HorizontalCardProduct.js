@@ -56,10 +56,11 @@ const HorizontalCardProduct = ({ category, heading }) => {
     return () => scrollContainer.removeEventListener('scroll', checkScrollPosition);
   }, []);
 
-  const handleAddToCart = async (e, id) => {
+  // Modificado: Ahora pasamos el objeto producto completo
+  const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation(); // Evita que el clic se propague al Link padre
-    await addToCart(e, id);
+    addToCart(e, product);
     fetchUserAddToCart();
   };
 
@@ -199,7 +200,7 @@ const HorizontalCardProduct = ({ category, heading }) => {
                     </div>
 
                     <button 
-                      onClick={(e) => handleAddToCart(e, product?._id)}
+                      onClick={(e) => handleAddToCart(e, product)} // Pasamos todo el producto
                       className="w-full flex items-center justify-center gap-1 sm:gap-2 
                                bg-green-600 hover:bg-green-700 text-white 
                                px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg 

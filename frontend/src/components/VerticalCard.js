@@ -12,9 +12,10 @@ const VerticalCard = ({ loading, data = [] }) => {
     const cardContainerRef = useRef(null);
     const [hoveredProductId, setHoveredProductId] = useState(null);
 
-    const handleAddToCart = async (e, id) => {
+    // Modificado para pasar todo el objeto producto
+    const handleAddToCart = (e, product) => {
         e.stopPropagation(); // Evita que el clic se propague al Link
-        await addToCart(e, id);
+        addToCart(e, product);
         fetchUserAddToCart();
     };
 
@@ -122,9 +123,9 @@ const VerticalCard = ({ loading, data = [] }) => {
                                         </div>
                                     </div>
 
-                                    {/* Add to Cart Button */}
+                                    {/* Add to Cart Button - Modificado para pasar todo el producto */}
                                     <button
-                                        onClick={(e) => handleAddToCart(e, product?._id)}
+                                        onClick={(e) => handleAddToCart(e, product)}
                                         className='w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 
                                                  text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors'
                                     >
