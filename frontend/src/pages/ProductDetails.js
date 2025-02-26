@@ -219,19 +219,32 @@ const ProductDetails = () => {
     setZoomImage(false);
   };
 
-  const handleAddToCart = async (e, id) => {
-    await addToCart(e, id);
+  // Actualizado para usar el objeto completo del producto
+  const handleAddToCart = async (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await addToCart(e, product);
     fetchUserAddToCart();
   };
 
-  const handleBuyProduct = async (e, id) => {
-    await addToCart(e, id);
+  // Actualizado para usar el objeto completo del producto
+  const handleBuyProduct = async (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await addToCart(e, product);
     fetchUserAddToCart();
     navigate("/cart");
   };
 
+  // Actualizado para incluir más información y la URL del producto
   const handleWhatsAppClick = () => {
-    const message = `Hola, me interesa este producto: ${data.productName}. ¿Me puedes brindar más detalles?`;
+    const price = displayINRCurrency(data.sellingPrice);
+    const productUrl = window.location.href;
+    const message = `Hola, estoy interesado en este producto: *${data.productName}* (${data.brandName})
+Precio: ${price}
+${productUrl}
+¿Me puedes brindar más detalles sobre disponibilidad y envío?`;
+    
     const whatsappUrl = `https://wa.me/+595972971353?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -354,13 +367,13 @@ const ProductDetails = () => {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={(e) => handleBuyProduct(e, data?._id)}
+                    onClick={(e) => handleBuyProduct(e, data)}
                     className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 text-white py-2 px-4 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
                   >
                     Comprar
                   </button>
                   <button
-                    onClick={(e) => handleAddToCart(e, data?._id)}
+                    onClick={(e) => handleAddToCart(e, data)}
                     className="w-full sm:w-auto bg-white text-green-600 border-2 border-green-600 py-2 px-4 rounded-lg shadow hover:bg-green-600 hover:text-white transition-all duration-300"
                   >
                     Agregar al carrito

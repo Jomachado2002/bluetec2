@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWiseProduct';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import { FaAngleLeft, FaAngleRight, FaShoppingCart, FaExpand } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
@@ -12,16 +12,28 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
+  const [hoveredProductId, setHoveredProductId] = useState(null);
   const loadingList = new Array(13).fill(null);
 
   const scrollElement = useRef();
 
   const { fetchUserAddToCart } = useContext(Context);
 
+  // Función para calcular el descuento
+  const calculateDiscount = (price, sellingPrice) => {
+    if (price && price > 0) {
+      const discount = Math.round(((price - sellingPrice) / price) * 100);
+      return discount > 0 ? `${discount}% OFF` : null;
+    }
+    return null;
+  };
+
   // Función para manejar la acción de agregar al carrito
   const handleAddToCart = useCallback(
-    async (e, id) => {
-      await addToCart(e, id);
+    (e, product) => {
+      e.preventDefault();
+      e.stopPropagation(); // Evita que el clic se propague al Link
+      addToCart(e, product);
       fetchUserAddToCart();
     },
     [fetchUserAddToCart]
@@ -69,6 +81,15 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
     return () => scrollContainer.removeEventListener('scroll', checkScrollPosition);
   }, []);
 
+  // Manejo de teclas para accesibilidad
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowRight') {
+      scrollRight();
+    } else if (e.key === 'ArrowLeft') {
+      scrollLeft();
+    }
+  };
+
   return (
     <div className='container mx-auto px-4 my-6 relative'>
       <h2 className='text-2xl font-semibold py-4'>{heading}</h2>
@@ -86,63 +107,99 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
         <div
           className='flex gap-4 overflow-x-scroll scrollbar-none scroll-smooth'
           ref={scrollElement}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
         >
           {loading
             ? loadingList.map((_, index) => (
                 <div
                   key={index}
-                  className='w-full min-w-[240px] md:min-w-[280px] max-w-[240px] md:max-w-[280px] bg-white rounded-lg shadow-md animate-pulse'
+                  className='w-full min-w-[280px] md:min-w-[300px] max-w-[300px] bg-white rounded-xl shadow-lg animate-pulse'
                 >
-                  <div className='bg-gray-200 h-40 flex justify-center items-center rounded-t-lg'></div>
-                  <div className='p-4 space-y-2'>
-                    <div className='h-4 bg-gray-300 rounded-full'></div>
-                    <div className='h-4 bg-gray-300 rounded-full w-2/3'></div>
-                    <div className='flex gap-2'>
-                      <div className='h-4 bg-gray-300 rounded-full w-1/2'></div>
-                      <div className='h-4 bg-gray-300 rounded-full w-1/3'></div>
+                  <div className='bg-slate-200 h-48 rounded-t-xl'></div>
+                  <div className='p-5 space-y-3'>
+                    <div className='h-4 bg-slate-300 rounded-full'></div>
+                    <div className='h-4 bg-slate-300 rounded-full w-2/3'></div>
+                    <div className='flex gap-3'>
+                      <div className='h-4 bg-slate-300 rounded-full w-1/2'></div>
+                      <div className='h-4 bg-slate-300 rounded-full w-1/2'></div>
                     </div>
-                    <div className='h-8 bg-gray-300 rounded-full'></div>
+                    <div className='h-10 bg-slate-300 rounded-full'></div>
                   </div>
                 </div>
               ))
-            : data.map((product, index) => (
-                <Link
-                  to={'/product/' + product?._id}
-                  key={product?._id}
-                  className='w-full min-w-[240px] md:min-w-[280px] max-w-[240px] md:max-w-[280px] bg-white rounded-lg shadow-md hover:shadow-lg transition-all'
-                  onClick={scrollTop}
-                >
-                  <div className='bg-white h-40 flex justify-center items-center rounded-t-lg overflow-hidden'>
-                    <img
-                      src={product.productImage[0]}
-                      alt={product.productName}
-                      className='object-contain h-full w-full hover:scale-110 transition-transform'
-                    />
-                  </div>
-                  <div className='p-4 grid gap-3'>
-                    <h2 className='font-medium text-base text-ellipsis line-clamp-1 text-black'>
-                      {product?.productName}
-                    </h2>
-                    <p className='capitalize text-gray-500 text-sm'>{product?.subcategory}</p>
-                    <div className='flex gap-3 items-center justify-center'>
-                      <p className='text-red-600 font-semibold text-sm'>
-                        {displayPYGCurrency(product?.sellingPrice)}
-                      </p>
-                      <p className='text-gray-400 line-through text-xs'>
-                        {displayPYGCurrency(product?.price)}
-                      </p>
+            : data.map((product) => {
+                const discount = calculateDiscount(product?.price, product?.sellingPrice);
+                return (
+                  <Link
+                    to={'/product/' + product?._id}
+                    key={product?._id}
+                    className='block w-full min-w-[280px] md:min-w-[300px] max-w-[300px] bg-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative group/card'
+                    onClick={scrollTop}
+                    onMouseEnter={() => setHoveredProductId(product?._id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
+                  >
+                    {/* Discount Badge */}
+                    {discount && (
+                      <div className='absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold'>
+                        {discount}
+                      </div>
+                    )}
+
+                    {/* Product Image */}
+                    <div className='bg-gray-50 h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
+                      <img
+                        src={product.productImage[0]}
+                        alt={product.productName}
+                        className='object-contain h-full w-full transform group-hover/card:scale-110 transition-transform duration-500'
+                      />
+                      <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
+                        <div className='bg-white/70 p-2 rounded-full'>
+                          <FaExpand className='text-gray-700' />
+                        </div>
+                      </div>
                     </div>
-                    <div className='flex justify-center mt-2'>
-                      <button
-                        className='text-sm bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full'
-                        onClick={(e) => handleAddToCart(e, product?._id)}
+
+                    {/* Product Details */}
+                    <div className='p-5 space-y-3'>
+                      <h2
+                        className={`font-semibold text-base text-gray-700 ${
+                          hoveredProductId === product?._id
+                            ? 'line-clamp-none'
+                            : 'line-clamp-2'
+                        } hover:line-clamp-none transition-all duration-300`}
                       >
-                        Agregar al Carrito
+                        {product?.productName}
+                      </h2>
+
+                      <div className='flex items-center justify-between'>
+                        <span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'>
+                          {product?.subcategory}
+                        </span>
+                        <div className='flex items-center gap-2'>
+                          <p className='text-green-600 font-bold text-base'>
+                            {displayPYGCurrency(product?.sellingPrice)}
+                          </p>
+                          {product?.price > 0 && (
+                            <p className='text-gray-400 line-through text-xs'>
+                              {displayPYGCurrency(product?.price)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Add to Cart Button */}
+                      <button
+                        onClick={(e) => handleAddToCart(e, product)}
+                        className='w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 
+                             text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors'
+                      >
+                        <FaShoppingCart /> Agregar al Carrito
                       </button>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
         </div>
 
         {showRightButton && (
