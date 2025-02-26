@@ -17,9 +17,9 @@ for (const envVar of requiredEnvVars) {
     }
 }
 
-// Configuración de CORS mejorada
+// Configuración de CORS mejorada con múltiples orígenes permitidos
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [process.env.FRONTEND_URL, 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -29,19 +29,19 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser(process.env.SESSION_SECRET));
 
-// Configuración de sesión mejorada
+// Configuración de sesión mejorada para invitados
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true, // Cambiado a true para asegurar sesiones de invitados
     name: 'sessionId',
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días para mejor experiencia
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     },
-    store: new session.MemoryStore() // Para desarrollo, usa una base de datos en producción
+    store: new session.MemoryStore() // Mantenemos MemoryStore por simplicidad
 }));
 
 // Rutas

@@ -1,30 +1,40 @@
-const addToCartModel = require("../../models/cartProduct")
+const addToCartModel = require("../../models/cartProduct");
 
-const updateAddToCartProduct = async(req,res)=>{
+const updateAddToCartProduct = async(req, res) => {
     try{
-        const currentUserId = req.userId 
-        const addToCartProductId = req?.body?._id
+        const currentUser = req.userId;
+        const sessionId = req.sessionId || req.sessionID;
+        const addToCartProductId = req?.body?._id;
+        const qty = req.body.quantity;
 
-        const qty = req.body.quantity
+        // Actualizar el producto verificando el usuario o sessionId
+        const query = {
+            _id: addToCartProductId,
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
+        };
 
-        const updateProduct = await addToCartModel.updateOne({_id : addToCartProductId},{
-            ...(qty && {quantity : qty})
-        })
+        const updateProduct = await addToCartModel.updateOne(query, {
+            ...(qty && {quantity: qty})
+        });
 
         res.json({
-            message : "Producto Actualizado",
-            data : updateProduct,
-            error : false,
-            success : true
-        })
+            message: "Producto Actualizado",
+            data: updateProduct,
+            error: false,
+            success: true
+        });
 
-    }catch(err){
+    } catch(err) {
+        console.error('Error al actualizar producto en carrito:', err);
         res.json({
-            message : err?.message || err,
-            error : true,
-            success : false
-        })
+            message: err?.message || err,
+            error: true,
+            success: false
+        });
     }
-}
+};
 
-module.exports = updateAddToCartProduct
+module.exports = updateAddToCartProduct;

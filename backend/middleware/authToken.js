@@ -8,6 +8,9 @@ async function authToken(req, res, next) {
             req.session.guestId = `guest-${uuidv4()}`;
         }
 
+        // Almacenar el sessionID para usuarios invitados
+        const sessionID = req.sessionID;
+        
         const token = req.cookies?.token;
 
         if (token) {
@@ -15,6 +18,7 @@ async function authToken(req, res, next) {
                 if (err) {
                     // Token inválido, usar ID de invitado
                     req.userId = req.session.guestId;
+                    req.sessionId = sessionID;
                     req.isAuthenticated = false;
                 } else {
                     // Usuario autenticado
@@ -26,12 +30,14 @@ async function authToken(req, res, next) {
         } else {
             // Usuario no autenticado
             req.userId = req.session.guestId;
+            req.sessionId = sessionID;
             req.isAuthenticated = false;
             next();
         }
     } catch (err) {
         console.error('Error en authToken:', err);
-        req.userId = req.session.guestId;
+        req.userId = req.session.guestId || `guest-${uuidv4()}`;
+        req.sessionId = req.sessionID;
         req.isAuthenticated = false;
         next();
     }

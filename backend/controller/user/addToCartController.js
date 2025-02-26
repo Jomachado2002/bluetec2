@@ -4,13 +4,19 @@ const addToCartController = async (req, res) => {
     try {
         const { productId } = req?.body;
         const currentUser = req.userId;
-        const isGuest = !req.cookies?.token;
+        const sessionId = req.sessionId || req.sessionID;
+        const isGuest = !req.isAuthenticated;
 
         // Verificar si el producto ya existe en el carrito
-        const isProductAvailable = await addToCartModel.findOne({
+        const query = {
             productId,
-            userId: currentUser
-        });
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
+        };
+
+        const isProductAvailable = await addToCartModel.findOne(query);
 
         if (isProductAvailable) {
             return res.json({
@@ -25,7 +31,8 @@ const addToCartController = async (req, res) => {
             productId,
             quantity: 1,
             userId: currentUser,
-            isGuest
+            isGuest,
+            sessionId
         };
 
         const newAddToCart = new addToCartModel(payload);
@@ -39,6 +46,7 @@ const addToCartController = async (req, res) => {
         });
 
     } catch (err) {
+        console.error('Error al agregar al carrito:', err);
         res.json({
             message: err?.message || err,
             error: true,

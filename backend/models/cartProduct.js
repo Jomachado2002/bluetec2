@@ -27,8 +27,8 @@ const addToCartSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Índices para mejorar el rendimiento
-addToCartSchema.index({ userId: 1, productId: 1 }, { unique: true });
+// Eliminar el índice único y agregar índices básicos
+addToCartSchema.index({ userId: 1 });
 addToCartSchema.index({ sessionId: 1 });
 
 const addToCartModel = mongoose.model("addToCart", addToCartSchema);

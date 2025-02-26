@@ -2,12 +2,20 @@ const addToCartModel = require("../../models/cartProduct");
 
 const deleteAddToCartProduct = async (req, res) => {
     try {
-        // Si el usuario no está autenticado, usamos un identificador temporal
-        const currentUser = req.userId || req.sessionID || "guest";
+        const currentUser = req.userId;
+        const sessionId = req.sessionId || req.sessionID;
         const addToCartProductId = req.body._id;
 
-        // Eliminamos el producto del carrito del usuario actual
-        const deleteProduct = await addToCartModel.deleteOne({ _id: addToCartProductId, userId: currentUser });
+        // Eliminar el producto del carrito verificando el usuario o sessionId
+        const query = {
+            _id: addToCartProductId,
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
+        };
+
+        const deleteProduct = await addToCartModel.deleteOne(query);
 
         res.json({
             message: "Producto eliminado del carrito",
@@ -17,6 +25,7 @@ const deleteAddToCartProduct = async (req, res) => {
         });
 
     } catch (err) {
+        console.error('Error al eliminar producto del carrito:', err);
         res.json({
             message: err?.message || err,
             error: true,

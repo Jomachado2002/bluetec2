@@ -3,10 +3,17 @@ const addToCartModel = require("../../models/cartProduct");
 const addToCartViewProduct = async(req, res) => {
     try {
         const currentUser = req.userId;
+        const sessionId = req.sessionId || req.sessionID;
 
-        const allProduct = await addToCartModel.find({
-            userId: currentUser
-        }).populate("productId");
+        // Buscar productos en el carrito del usuario actual o por sessionId
+        const query = {
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
+        };
+
+        const allProduct = await addToCartModel.find(query).populate("productId");
 
         res.json({
             data: allProduct,
@@ -15,6 +22,7 @@ const addToCartViewProduct = async(req, res) => {
         });
 
     } catch (err) {
+        console.error('Error al ver productos en carrito:', err);
         res.json({
             message: err.message || err,
             error: true,

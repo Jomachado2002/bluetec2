@@ -2,13 +2,18 @@ const addToCartModel = require("../../models/cartProduct");
 
 const countAddToCartProduct = async (req, res) => {
     try {
-        // Si el usuario no está autenticado, usamos un identificador temporal
-        const currentUser = req.userId || req.sessionID || "guest";
+        const currentUser = req.userId;
+        const sessionId = req.sessionId || req.sessionID;
 
-        // Contamos los productos en el carrito del usuario actual
-        const count = await addToCartModel.countDocuments({
-            userId: currentUser
-        });
+        // Contar productos en el carrito del usuario actual o por sessionId
+        const query = {
+            $or: [
+                { userId: currentUser },
+                { sessionId: sessionId }
+            ]
+        };
+
+        const count = await addToCartModel.countDocuments(query);
 
         res.json({
             data: {
@@ -19,6 +24,7 @@ const countAddToCartProduct = async (req, res) => {
             success: true
         });
     } catch (error) {
+        console.error('Error al contar productos en carrito:', error);
         res.json({
             message: error.message || error,
             error: true,
