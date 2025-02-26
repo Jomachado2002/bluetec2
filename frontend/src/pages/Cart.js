@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import SummaryApi from '../common';
 import Context from '../context';
 import displayINRCurrency from '../helpers/displayCurrency';
 import { MdDelete, MdShoppingCart } from "react-icons/md";
@@ -8,62 +7,53 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import logo from '../helpers/logo.jpg';
 import { toast } from 'react-toastify';
+import { localCartHelper } from '../helpers/addToCart';
 
 const Cart = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const context = useContext(Context);
 
-    // Función mejorada para obtener datos del carrito
-    const fetchData = async () => {
+    // Función simplificada para cargar datos directamente desde localStorage
+    const fetchData = () => {
         try {
-            const response = await fetch(SummaryApi.addToCartProductView.url, {
-                method: SummaryApi.addToCartProductView.method,
-                credentials: 'include', // Importante para manejar cookies de sesión
-                headers: {
-                    "Content-Type": 'application/json'
-                },
-            });
-            const responseData = await response.json();
+            setLoading(true);
             
-            if (responseData.success) {
-                setData(responseData.data);
-            } else {
-                console.error('Error al cargar el carrito:', responseData.message);
-                toast.error('No se pudieron cargar los productos del carrito');
-                setData([]);
-            }
+            // Obtener items directamente del localStorage
+            const cartItems = localCartHelper.getCart();
+            console.log("Datos de carrito cargados:", cartItems);
+            
+            // Ya no es necesario hacer peticiones adicionales
+            setData(cartItems);
+            
         } catch (error) {
-            console.error('Error al obtener productos del carrito:', error);
-            toast.error('Error de conexión al cargar el carrito');
-            setData([]);
+            console.error('Error al cargar productos del carrito:', error);
+            toast.error('Error al cargar el carrito');
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Cargar datos del carrito al montar el componente
+    // Cargar datos al montar el componente
     useEffect(() => {
-        setLoading(true);
-        fetchData().finally(() => setLoading(false));
+        fetchData();
     }, []);
 
+    // Función para verificar que un producto tiene datos válidos
+    const isValidProduct = (product) => {
+        return product && product.productId && 
+               typeof product.productId === 'object' &&
+               product.productId.productImage &&
+               Array.isArray(product.productId.productImage) &&
+               product.productId.productImage.length > 0;
+    };
+
     // Aumentar cantidad de producto
-    const increaseQty = async (id, qty) => {
+    const increaseQty = (id, qty) => {
         try {
-            const response = await fetch(SummaryApi.updateCartProduct.url, {
-                method: SummaryApi.updateCartProduct.method,
-                credentials: 'include',
-                headers: {
-                    "Content-Type": 'application/json'
-                },
-                body: JSON.stringify({ _id: id, quantity: qty + 1 })
-            });
-            const responseData = await response.json();
-            
-            if (responseData.success) {
+            if (localCartHelper.updateQuantity(id, qty + 1)) {
                 fetchData();
                 toast.success('Cantidad actualizada');
-            } else {
-                toast.error('No se pudo actualizar la cantidad');
             }
         } catch (error) {
             console.error('Error al aumentar cantidad:', error);
@@ -72,55 +62,53 @@ const Cart = () => {
     };
 
     // Disminuir cantidad de producto
-    const decreaseQty = async (id, qty) => {
-        if (qty >= 2) {
-            try {
-                const response = await fetch(SummaryApi.updateCartProduct.url, {
-                    method: SummaryApi.updateCartProduct.method,
-                    credentials: 'include',
-                    headers: {
-                        "Content-Type": 'application/json'
-                    },
-                    body: JSON.stringify({ _id: id, quantity: qty - 1 })
-                });
-                const responseData = await response.json();
-                
-                if (responseData.success) {
-                    fetchData();
-                    toast.success('Cantidad actualizada');
-                } else {
-                    toast.error('No se pudo actualizar la cantidad');
-                }
-            } catch (error) {
-                console.error('Error al disminuir cantidad:', error);
-                toast.error('Error al actualizar cantidad');
+    const decreaseQty = (id, qty) => {
+        if (qty < 2) return;
+        
+        try {
+            if (localCartHelper.updateQuantity(id, qty - 1)) {
+                fetchData();
+                toast.success('Cantidad actualizada');
             }
+        } catch (error) {
+            console.error('Error al disminuir cantidad:', error);
+            toast.error('Error al actualizar cantidad');
         }
     };
 
     // Eliminar producto del carrito
-    const deleteCartProduct = async (id) => {
+    const deleteCartProduct = (id) => {
         try {
-            const response = await fetch(SummaryApi.deleteCartProduct.url, {
-                method: SummaryApi.deleteCartProduct.method,
-                credentials: 'include',
-                headers: {
-                    "Content-Type": 'application/json'
-                },
-                body: JSON.stringify({ _id: id })
-            });
-            const responseData = await response.json();
+            localCartHelper.removeItem(id);
+            fetchData();
             
-            if (responseData.success) {
-                fetchData();
+            // Actualizar contador global del carrito
+            if (context.fetchUserAddToCart) {
                 context.fetchUserAddToCart();
-                toast.success('Producto eliminado del carrito');
-            } else {
-                toast.error('No se pudo eliminar el producto');
             }
+            
+            toast.success('Producto eliminado del carrito');
         } catch (error) {
             console.error('Error al eliminar producto:', error);
             toast.error('Error al eliminar producto');
+        }
+    };
+
+    // Limpiar todo el carrito
+    const clearCart = () => {
+        try {
+            localCartHelper.clearCart();
+            fetchData();
+            
+            // Actualizar contador global del carrito
+            if (context.fetchUserAddToCart) {
+                context.fetchUserAddToCart();
+            }
+            
+            toast.success('Carrito limpiado correctamente');
+        } catch (error) {
+            console.error('Error al limpiar el carrito:', error);
+            toast.error('Error al limpiar el carrito');
         }
     };
 
@@ -128,11 +116,15 @@ const Cart = () => {
     const totalQty = data.reduce((previousValue, currentValue) => 
         previousValue + currentValue.quantity, 0);
     
-    // Calcular precio total
-    const totalPrice = data.reduce((prev, curr) => 
-        prev + (curr.quantity * curr?.productId?.sellingPrice), 0);
+    // Calcular precio total - adaptado para el nuevo formato con validación
+    const totalPrice = data.reduce((prev, curr) => {
+        if (curr?.productId?.sellingPrice) {
+            return prev + (curr.quantity * curr.productId.sellingPrice);
+        }
+        return prev;
+    }, 0);
 
-    // Generar PDF de presupuesto
+    // Generar PDF de presupuesto (sin cambios)
     const generatePDF = () => {
         const clientName = prompt("Por favor, ingrese el nombre del cliente:");
         if (!clientName) {
@@ -165,7 +157,10 @@ const Cart = () => {
         const tableRows = [];
         let totalPrice = 0;
         
-        data.forEach((product, index) => {
+        // Filtrar productos válidos para el PDF
+        const validProducts = data.filter(isValidProduct);
+        
+        validProducts.forEach((product, index) => {
             const subtotal = product.quantity * product.productId.sellingPrice;
             totalPrice += subtotal;
             tableRows.push([
@@ -251,9 +246,23 @@ const Cart = () => {
         doc.save("presupuesto_compra.pdf");
     };
 
+    const validProducts = data.filter(isValidProduct);
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Botones para debug */}
+                <div className="flex gap-2 mb-4">
+                    <button onClick={() => console.log("Carrito actual:", localCartHelper.getCart())} 
+                            className="px-3 py-1 bg-gray-200 rounded text-sm">
+                        Debug: Ver carrito en consola
+                    </button>
+                    <button onClick={clearCart} 
+                            className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">
+                        Limpiar carrito
+                    </button>
+                </div>
+                
                 {/* Encabezado del carrito */}
                 <div className="flex items-center justify-between mb-8">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
@@ -266,7 +275,7 @@ const Cart = () => {
                 </div>
 
                 {/* Carrito vacío */}
-                {data.length === 0 && !loading && (
+                {validProducts.length === 0 && !loading && (
                     <div className="bg-white rounded-xl shadow-sm p-8 text-center">
                         <MdShoppingCart className="mx-auto text-6xl text-gray-300 mb-4" />
                         <p className="text-xl text-gray-600 mb-4">No hay productos en tu carrito</p>
@@ -280,7 +289,7 @@ const Cart = () => {
                 )}
 
                 {/* Contenido del carrito */}
-                {data.length > 0 && (
+                {validProducts.length > 0 && (
                     <div className="flex flex-col lg:flex-row gap-8">
                         {/* Lista de productos */}
                         <div className="flex-grow">
@@ -300,54 +309,58 @@ const Cart = () => {
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    {data.map((product) => (
+                                    {validProducts.map((product) => (
                                         <div key={product._id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
                                             <div className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4">
                                                 {/* Imagen */}
                                                 <div className="w-full sm:w-36 h-36 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center p-2">
-                                                    <img src={product?.productId?.productImage[0]} alt={product?.productId?.productName} className="w-full h-full object-contain" />
+                                                    <img 
+                                                        src={product.productId.productImage[0]} 
+                                                        alt={product.productId.productName} 
+                                                        className="w-full h-full object-contain" 
+                                                    />
                                                 </div>
 
                                                 {/* Información */}
                                                 <div className="flex-1">
-                                                    <Link to={`/product/${product?.productId?._id}`} className="text-lg font-semibold text-gray-900 hover:text-green-600 transition-colors">
-                                                        {product?.productId?.productName}
+                                                    <Link to={`/product/${product.productId._id}`} className="text-lg font-semibold text-gray-900 hover:text-green-600 transition-colors">
+                                                        {product.productId.productName}
                                                     </Link>
-                                                    <p className="text-sm text-gray-500 mt-1">{product?.productId?.category}</p>
+                                                    <p className="text-sm text-gray-500 mt-1">{product.productId.category}</p>
                                                     
                                                     <div className="mt-4 flex flex-wrap gap-4 items-center">
                                                         <span className="text-lg font-medium text-green-600">
-                                                            {displayINRCurrency(product?.productId?.sellingPrice)}
+                                                            {displayINRCurrency(product.productId.sellingPrice)}
                                                         </span>
                                                         <div className="flex items-center border rounded-lg overflow-hidden">
                                                             <button 
-                                                                onClick={() => decreaseQty(product?._id, product?.quantity)} 
+                                                                onClick={() => decreaseQty(product._id, product.quantity)} 
                                                                 className="px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                                                             >
                                                                 -
                                                             </button>
                                                             <span className="px-4 py-1 text-gray-800 font-medium">
-                                                                {product?.quantity}
+                                                                {product.quantity}
                                                             </span>
                                                             <button 
-                                                                onClick={() => increaseQty(product?._id, product?.quantity)}
+                                                                onClick={() => increaseQty(product._id, product.quantity)}
                                                                 className="px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                                                             >
                                                                 +
                                                             </button>
                                                         </div>
                                                         <button 
-                                                            onClick={() => deleteCartProduct(product?._id)}
+                                                            onClick={() => deleteCartProduct(product._id)}
                                                             className="flex items-center gap-1 text-red-500 hover:text-red-600 transition-colors"
                                                         >
                                                             <MdDelete />
                                                             <span>Eliminar</span>
                                                         </button>
                                                     </div>
-                
+                    
                                                     <div className="mt-2 text-right">
                                                         <p className="text-lg font-semibold text-gray-900">
-                                                            {displayINRCurrency(product?.productId?.sellingPrice * product?.quantity)}
+                                                            {displayINRCurrency(product.productId.sellingPrice * product.quantity)}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -398,9 +411,9 @@ const Cart = () => {
                         </div>
                     </div>
                 )}
-                </div>
-                </div>
-                    );
-                };
-                
-                export default Cart;
+            </div>
+        </div>
+    );
+};
+
+export default Cart;

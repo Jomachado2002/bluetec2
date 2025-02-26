@@ -5,7 +5,7 @@ import { FaAngleLeft, FaAngleRight, FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
-import scrollTop from '../helpers/scrollTop'; // Importa la función scrollTop
+import scrollTop from '../helpers/scrollTop';
 
 const VerticalCardProduct = ({ category, heading }) => {
     const [data, setData] = useState([]);
@@ -16,17 +16,23 @@ const VerticalCardProduct = ({ category, heading }) => {
 
     const { fetchUserAddToCart } = useContext(Context);
 
-    const handleAddToCart = async (e, id) => {
+    // MODIFICADO: Ahora pasamos todo el producto, no solo el ID
+    const handleAddToCart = (e, product) => {
         e.preventDefault();
-        await addToCart(e, id);
+        addToCart(e, product);
         fetchUserAddToCart();
     };
 
     const fetchData = async () => {
         setLoading(true);
-        const categoryProduct = await fetchCategoryWiseProduct(category);
-        setLoading(false);
-        setData(categoryProduct?.data);
+        try {
+            const categoryProduct = await fetchCategoryWiseProduct(category);
+            setData(categoryProduct?.data || []);
+        } catch (error) {
+            console.error("Error al cargar productos:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -112,7 +118,7 @@ const VerticalCardProduct = ({ category, heading }) => {
                                     to={`/product/${product?._id}`} 
                                     key={product?._id} 
                                     className='snap-center w-full min-w-[240px] md:min-w-[280px] max-w-[240px] md:max-w-[280px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 group/card relative'
-                                    onClick={scrollTop} // Agrega scrollTop aquí
+                                    onClick={scrollTop}
                                 >
                                     {/* Discount Badge */}
                                     {discount && (
@@ -155,7 +161,7 @@ const VerticalCardProduct = ({ category, heading }) => {
                                         <button
                                             onClick={(e) => {
                                                 e.preventDefault(); // Evita la propagación del evento
-                                                handleAddToCart(e, product?._id);
+                                                handleAddToCart(e, product); // PASAMOS TODO EL PRODUCTO
                                             }}
                                             className='w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 
                                                      text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors'
