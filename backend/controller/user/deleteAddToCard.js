@@ -6,7 +6,12 @@ const deleteAddToCartProduct = async (req, res) => {
         const sessionId = req.sessionId || req.sessionID || 'session';
         const addToCartProductId = req.body._id;
 
-        // Eliminar el producto del carrito verificando el usuario o sessionId
+        console.log('Eliminando producto:', {
+            productId: addToCartProductId,
+            userId: currentUser,
+            sessionId: sessionId
+        });
+
         const deleteProduct = await addToCartModel.deleteOne({
             _id: addToCartProductId,
             $or: [
@@ -15,8 +20,13 @@ const deleteAddToCartProduct = async (req, res) => {
             ]
         });
 
-        // Verificar si se eliminó algún producto
         if (deleteProduct.deletedCount === 0) {
+            console.warn('No se eliminó ningún producto', {
+                productId: addToCartProductId,
+                userId: currentUser,
+                sessionId: sessionId
+            });
+
             return res.json({
                 message: "Producto no encontrado o no autorizado",
                 error: true,

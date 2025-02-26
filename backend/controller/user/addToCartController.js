@@ -26,7 +26,8 @@ const addToCartController = async (req, res) => {
         });
 
         if (existingCartItem) {
-            // Incrementar cantidad si ya existe
+            // Actualizar la fecha de creación para restablecer el TTL
+            existingCartItem.createdAt = new Date();
             existingCartItem.quantity += 1;
             await existingCartItem.save();
 
@@ -43,8 +44,9 @@ const addToCartController = async (req, res) => {
             productId,
             quantity: 1,
             userId: currentUser,
+            sessionId,
             isGuest,
-            sessionId
+            createdAt: new Date()
         };
 
         const newAddToCart = new addToCartModel(payload);

@@ -3,47 +3,48 @@ const { v4: uuidv4 } = require('uuid');
 
 async function authToken(req, res, next) {
     try {
-        // Generar un ID de invitado persistente si no existe
-        if (!req.session.guestId) {
-            req.session.guestId = `guest-${uuidv4()}`;
+        // Generar un ID de sesión persistente
+        if (!req.cookies.sessionId) {
+            const newSessionId = `guest-${uuidv4()}`;
+            res.cookie('sessionId', newSessionId, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+                sameSite: 'lax'
+            });
+            req.sessionId = newSessionId;
+        } else {
+            req.sessionId = req.cookies.sessionId;
         }
 
-        // Almacenar el sessionID para usuarios invitados
-        const sessionID = req.sessionID;
         const token = req.cookies?.token;
 
-        // Función interna para manejar usuarios no autenticados
         const handleUnauthenticatedUser = () => {
-            req.userId = req.session.guestId;
-            req.sessionId = sessionID;
+            req.userId = req.sessionId;
             req.isAuthenticated = false;
         };
 
         if (token) {
             jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
                 if (err) {
-                    // Token inválido, tratar como invitado
                     console.warn('Token inválido', err);
                     handleUnauthenticatedUser();
                 } else {
-                    // Usuario autenticado
                     req.userId = decoded._id;
-                    req.sessionId = sessionID;
                     req.isAuthenticated = true;
                 }
                 next();
             });
         } else {
-            // Sin token, manejar como invitado
             handleUnauthenticatedUser();
             next();
         }
     } catch (err) {
         console.error('Error en authToken:', err);
         
-        // Último recurso de seguridad
-        req.userId = `guest-${uuidv4()}`;
-        req.sessionId = req.sessionID || `session-${uuidv4()}`;
+        const fallbackSessionId = `guest-${uuidv4()}`;
+        req.userId = fallbackSessionId;
+        req.sessionId = fallbackSessionId;
         req.isAuthenticated = false;
         
         next();

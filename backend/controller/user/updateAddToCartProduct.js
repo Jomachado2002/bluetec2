@@ -1,13 +1,19 @@
 const addToCartModel = require("../../models/cartProduct");
 
 const updateAddToCartProduct = async(req, res) => {
-    try{
+    try {
         const currentUser = req.userId;
         const sessionId = req.sessionId || req.sessionID;
         const addToCartProductId = req?.body?._id;
         const qty = req.body.quantity;
 
-        // Actualizar el producto verificando el usuario o sessionId
+        console.log('Actualizando producto en carrito:', {
+            productId: addToCartProductId,
+            userId: currentUser,
+            sessionId: sessionId,
+            quantity: qty
+        });
+
         const query = {
             _id: addToCartProductId,
             $or: [
@@ -17,8 +23,17 @@ const updateAddToCartProduct = async(req, res) => {
         };
 
         const updateProduct = await addToCartModel.updateOne(query, {
-            ...(qty && {quantity: qty})
+            ...(qty && {quantity: qty}),
+            createdAt: new Date() // Reiniciar el TTL al actualizar
         });
+
+        if (updateProduct.modifiedCount === 0) {
+            console.warn('No se actualizó ningún producto', {
+                productId: addToCartProductId,
+                userId: currentUser,
+                sessionId: sessionId
+            });
+        }
 
         res.json({
             message: "Producto Actualizado",
