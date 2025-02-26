@@ -7,13 +7,13 @@ const addToCart = async(e, id) => {
 
     try {
         // Mostrar toast inmediatamente para mejor experiencia de usuario
-        toast.success("Agregando al carrito...");
+        toast.info("Agregando al carrito...");
 
         const response = await fetch(SummaryApi.addToCartProduct.url, {
             method: SummaryApi.addToCartProduct.method,
             credentials: 'include',
             headers: {
-                "content-type": 'application/json'
+                "Content-Type": 'application/json'
             },
             body: JSON.stringify({ productId: id })
         });
@@ -30,6 +30,8 @@ const addToCart = async(e, id) => {
                     window.fetchUserAddToCart();
                 }
             }, 500);
+
+            return responseData;
         }
 
         if (responseData.error) {

@@ -16,18 +16,14 @@ const addToCartController = async (req, res) => {
         const sessionId = req.sessionId || req.sessionID || `session-${Date.now()}`;
         const isGuest = !req.isAuthenticated;
 
-        // Buscar si el producto ya existe para este usuario/sesión
+        // Buscar si el producto ya existe para este usuario
         const existingCartItem = await addToCartModel.findOne({
             productId,
-            $or: [
-                { userId: currentUser },
-                { sessionId: sessionId }
-            ]
+            userId: currentUser
         });
 
         if (existingCartItem) {
-            // Actualizar la fecha de creación para restablecer el TTL
-            existingCartItem.createdAt = new Date();
+            // Incrementar cantidad si ya existe
             existingCartItem.quantity += 1;
             await existingCartItem.save();
 
@@ -45,8 +41,7 @@ const addToCartController = async (req, res) => {
             quantity: 1,
             userId: currentUser,
             sessionId,
-            isGuest,
-            createdAt: new Date()
+            isGuest: true
         };
 
         const newAddToCart = new addToCartModel(payload);

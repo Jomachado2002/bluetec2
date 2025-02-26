@@ -3,32 +3,25 @@ const { v4: uuidv4 } = require('uuid');
 
 async function authToken(req, res, next) {
     try {
-        // Generar un ID de sesión persistente
-        if (!req.cookies.sessionId) {
-            const newSessionId = `guest-${uuidv4()}`;
-            res.cookie('sessionId', newSessionId, {
+        // Generar un ID de usuario persistente
+        let userId = req.cookies?.guestUserId;
+        if (!userId) {
+            userId = `guest-${uuidv4()}`;
+            res.cookie('guestUserId', userId, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
                 sameSite: 'lax'
             });
-            req.sessionId = newSessionId;
-        } else {
-            req.sessionId = req.cookies.sessionId;
         }
 
         const token = req.cookies?.token;
 
-        const handleUnauthenticatedUser = () => {
-            req.userId = req.sessionId;
-            req.isAuthenticated = false;
-        };
-
         if (token) {
             jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
                 if (err) {
-                    console.warn('Token inválido', err);
-                    handleUnauthenticatedUser();
+                    req.userId = userId;
+                    req.isAuthenticated = false;
                 } else {
                     req.userId = decoded._id;
                     req.isAuthenticated = true;
@@ -36,17 +29,14 @@ async function authToken(req, res, next) {
                 next();
             });
         } else {
-            handleUnauthenticatedUser();
+            req.userId = userId;
+            req.isAuthenticated = false;
             next();
         }
     } catch (err) {
         console.error('Error en authToken:', err);
-        
-        const fallbackSessionId = `guest-${uuidv4()}`;
-        req.userId = fallbackSessionId;
-        req.sessionId = fallbackSessionId;
+        req.userId = `guest-${uuidv4()}`;
         req.isAuthenticated = false;
-        
         next();
     }
 }
