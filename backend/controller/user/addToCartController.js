@@ -11,22 +11,18 @@ const addToCartController = async (req, res) => {
             });
         }
 
-        // Identificadores estables para usuarios
         const currentUser = req.userId || 'guest';
         const sessionId = req.sessionId || req.sessionID || `session-${Date.now()}`;
         const isGuest = !req.isAuthenticated;
 
-        // Buscar si el producto ya existe para este usuario
         const existingCartItem = await addToCartModel.findOne({
             productId,
             userId: currentUser
         });
 
         if (existingCartItem) {
-            // Incrementar cantidad si ya existe
             existingCartItem.quantity += 1;
             await existingCartItem.save();
-
             return res.json({
                 data: existingCartItem,
                 message: "Producto actualizado en el carrito",
@@ -35,7 +31,6 @@ const addToCartController = async (req, res) => {
             });
         }
 
-        // Crear nuevo elemento de carrito
         const payload = {
             productId,
             quantity: 1,
@@ -63,5 +58,6 @@ const addToCartController = async (req, res) => {
         });
     }
 };
+
 
 module.exports = addToCartController;

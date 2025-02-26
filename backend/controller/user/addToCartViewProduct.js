@@ -3,8 +3,6 @@ const addToCartModel = require("../../models/cartProduct");
 const addToCartViewProduct = async(req, res) => {
     try {
         const currentUser = req.userId || 'guest';
-
-        // Consulta para encontrar productos del usuario actual
         const allProduct = await addToCartModel.find({ userId: currentUser })
             .populate("productId")
             .lean();
@@ -25,5 +23,6 @@ const addToCartViewProduct = async(req, res) => {
         });
     }
 };
+
 
 module.exports = addToCartViewProduct;

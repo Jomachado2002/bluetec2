@@ -33,15 +33,15 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true, // Cambiado a true para asegurar sesiones de invitados
+    saveUninitialized: true, // Aseguramos que las sesiones de invitados se guarden
     name: 'sessionId',
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días para mejor experiencia
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+        sameSite: 'none' // Ajustamos a 'none' para permitir cookies en solicitudes cross-site
     },
-    store: new session.MemoryStore() // Mantenemos MemoryStore por simplicidad
+    store: new session.MemoryStore() // Considera usar un store más robusto para producción
 }));
 
 // Rutas
