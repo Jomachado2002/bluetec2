@@ -15,11 +15,11 @@ const { updateProductController} = require('../controller/product/updateProduct'
 const getCategoryProduct = require('../controller/product/getCategoryProduct');
 const getCategoryWiseProduct = require('../controller/product/getCategoryWiseProduct');
 const getProductDetails = require('../controller/product/getProductDetails');
-const addToCartController = require('../controller/user/addToCartController');
-const countAddToCartProduct = require('../controller/user/countAddToCartProduct');
-const addToCartViewProduct = require('../controller/user/addToCartViewProduct');
-const updateAddToCartProduct = require('../controller/user/updateAddToCartProduct');
-const deleteAddToCartProduct = require('../controller/user/deleteAddToCard');
+//const addToCartController = require('../controller/user/addToCartController');
+//const countAddToCartProduct = require('../controller/user/countAddToCartProduct');
+//const addToCartViewProduct = require('../controller/user/addToCartViewProduct');
+//const updateAddToCartProduct = require('../controller/user/updateAddToCartProduct');
+//const deleteAddToCartProduct = require('../controller/user/deleteAddToCard');
 const searchProduct = require('../controller/product/searchProduct');
 const filterProductController = require('../controller/product/filterProduct');
 const requestPasswordReset = require('../controller/user/requestPasswordReset');
@@ -49,11 +49,11 @@ router.get("/search", searchProduct);
 router.post("/filter-product", filterProductController);
 
 // Carrito de compras
-router.post("/addtocart", authToken, addToCartController);
-router.get("/countAddToCartProduct", authToken, countAddToCartProduct);
-router.get("/view-card-product", authToken, addToCartViewProduct);
-router.post("/update-cart-product", authToken, updateAddToCartProduct);
-router.post("/delete-cart-product", authToken, deleteAddToCartProduct);
+//router.post("/addtocart", authToken, addToCartController);
+//router.get("/countAddToCartProduct", authToken, countAddToCartProduct);
+//router.get("/view-card-product", authToken, addToCartViewProduct);
+//router.post("/update-cart-product", authToken, updateAddToCartProduct);
+//router.post("/delete-cart-product", authToken, deleteAddToCartProduct);
 
 // Recuperación de contraseña
 router.post("/request-password-reset", requestPasswordReset);
