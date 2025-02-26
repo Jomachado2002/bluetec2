@@ -8,7 +8,8 @@ const productCategory = [
           { id: 102, label: "Computadoras Ensambladas", value: "computadoras_ensambladas" },
           { id: 103, label: "Placas Madre", value: "placas_madre" },
           { id: 104, label: "Memorias RAM", value: "memorias_ram" },
-          { id: 105, label: "Discos Duros", value: "discos_duros" }
+          { id: 105, label: "Discos Duros", value: "discos_duros" },
+          { id: 105, label: "Procesador", value: "procesador" },
       ]
   },
   {
@@ -19,7 +20,8 @@ const productCategory = [
           { id: 201, label: "Monitores", value: "monitores" },
           { id: 202, label: "Teclados", value: "teclados" },
           { id: 203, label: "Mouses", value: "mouses" },
-          { id: 204, label: "Adaptadores", value: "adaptadores" }
+          { id: 204, label: "Adaptadores", value: "adaptadores" },
+          { id: 503, label: "Airpods", value: "airpods" }
       ]
   },
   {
@@ -48,7 +50,7 @@ const productCategory = [
       subcategories: [
           { id: 501, label: "Fuentes de Alimentación", value: "fuentes_alimentacion" },
           { id: 502, label: "UPS", value: "ups" },
-          { id: 503, label: "Airpods", value: "airpods" }
+          
       ]
   },
   {

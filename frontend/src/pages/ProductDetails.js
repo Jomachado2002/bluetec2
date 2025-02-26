@@ -6,6 +6,161 @@ import CategroyWiseProductDisplay from '../components/CategoryWiseProductDisplay
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
 
+// Lista de todas las posibles especificaciones por categoría
+const specificationsByCategory = {
+  informatica: [
+    'processor', 'memory', 'storage', 'disk', 'graphicsCard', 'notebookScreen', 'notebookBattery',
+    'pcCase', 'pcPowerSupply', 'pcCooling',
+    'motherboardSocket', 'motherboardChipset', 'motherboardFormFactor', 'expansionSlots',
+    'ramType', 'ramSpeed', 'ramCapacity', 'ramLatency',
+    'hddCapacity', 'diskType', 'hddInterface', 'hddRPM', 'diskReadSpeed', 'diskWriteSpeed',
+    'processorModel', 'processorSocket', 'processorCores', 'processorThreads',
+    'processorBaseFreq', 'processorTurboFreq', 'processorCache', 'processorTDP',
+    'psuWattage', 'psuEfficiency', 'psuModular', 'psuFormFactor', 'psuProtections'
+  ],
+  perifericos: [
+    'monitorSize', 'monitorResolution', 'monitorRefreshRate', 'monitorPanel', 'monitorConnectivity',
+    'keyboardInterface', 'keyboardLayout', 'keyboardBacklight', 'keyboardSwitches', 'keyboardFeatures',
+    'mouseInterface', 'mouseSensor', 'mouseDPI', 'mouseButtons', 'mouseBacklight',
+    'adapterType', 'adapterInterface', 'adapterSpeed', 'adapterProtocol'
+  ],
+  cctv: [
+    'cameraResolution', 'cameraLensType', 'cameraIRDistance', 'cameraType', 'cameraConnectivity', 'cameraProtection',
+    'dvrChannels', 'dvrResolution', 'dvrStorageCapacity', 'dvrConnectivity', 'dvrSmartFeatures',
+    'nasCapacity', 'nasBays', 'nasRAID', 'nasConnectivity'
+  ],
+  impresoras: [
+    'printerType', 'printerResolution', 'printerSpeed', 'printerDuplex', 'printerConnectivity', 
+    'printerTrayCapacity', 'printerFunctions', 'printerDisplay'
+  ],
+  energia: [
+    'upsCapacity', 'upsOutputPower', 'upsBackupTime', 'upsOutlets', 'upsType', 'upsConnectivity'
+  ],
+  accesorios: [
+    'airpodsModel', 'airpodsBatteryLife', 'airpodsCharging', 'airpodsResistance', 'airpodsFeatures'
+  ],
+  software_licencias: [
+    'softwareLicenseType', 'softwareLicenseDuration', 'softwareLicenseQuantity', 'softwareVersion', 'softwareFeatures'
+  ],
+  telefonia: [
+    'phoneType', 'phoneScreenSize', 'phoneRAM', 'phoneStorage', 'phoneProcessor', 'phoneCameras', 
+    'phoneBattery', 'phoneOS', 'landlineType', 'landlineTechnology', 'landlineDisplay', 
+    'landlineFunctions', 'landlineHandsets'
+  ]
+};
+
+// Mapeo de nombres de campo a nombres legibles
+const fieldNameMapping = {
+  processor: "Procesador",
+  memory: "Memoria RAM",
+  storage: "Almacenamiento",
+  disk: "Disco",
+  graphicsCard: "Tarjeta Gráfica",
+  notebookScreen: "Pantalla",
+  notebookBattery: "Batería",
+  pcCase: "Gabinete",
+  pcPowerSupply: "Fuente de Poder",
+  pcCooling: "Sistema de Enfriamiento",
+  motherboardSocket: "Socket",
+  motherboardChipset: "Chipset",
+  motherboardFormFactor: "Factor de Forma",
+  expansionSlots: "Slots de Expansión",
+  ramType: "Tipo de RAM",
+  ramSpeed: "Velocidad",
+  ramCapacity: "Capacidad",
+  ramLatency: "Latencia",
+  hddCapacity: "Capacidad",
+  diskType: "Tipo de Disco",
+  hddInterface: "Interfaz",
+  hddRPM: "RPM",
+  diskReadSpeed: "Velocidad de Lectura",
+  diskWriteSpeed: "Velocidad de Escritura",
+  processorModel: "Modelo",
+  processorSocket: "Socket",
+  processorCores: "Núcleos",
+  processorThreads: "Hilos",
+  processorBaseFreq: "Frecuencia Base",
+  processorTurboFreq: "Frecuencia Turbo",
+  processorCache: "Caché",
+  processorTDP: "TDP",
+  psuWattage: "Vataje",
+  psuEfficiency: "Eficiencia",
+  psuModular: "Modularidad",
+  psuFormFactor: "Factor de Forma",
+  psuProtections: "Protecciones",
+  monitorSize: "Tamaño",
+  monitorResolution: "Resolución",
+  monitorRefreshRate: "Tasa de Refresco",
+  monitorPanel: "Tipo de Panel",
+  monitorConnectivity: "Conectividad",
+  keyboardInterface: "Interfaz",
+  keyboardLayout: "Layout",
+  keyboardBacklight: "Iluminación",
+  keyboardSwitches: "Switches",
+  keyboardFeatures: "Características",
+  mouseInterface: "Interfaz",
+  mouseSensor: "Sensor",
+  mouseDPI: "DPI",
+  mouseButtons: "Botones",
+  mouseBacklight: "Iluminación",
+  adapterType: "Tipo",
+  adapterInterface: "Interfaz",
+  adapterSpeed: "Velocidad",
+  adapterProtocol: "Protocolo",
+  cameraResolution: "Resolución",
+  cameraLensType: "Tipo de Lente",
+  cameraIRDistance: "Distancia IR",
+  cameraType: "Tipo de Cámara",
+  cameraConnectivity: "Conectividad",
+  cameraProtection: "Protección",
+  dvrChannels: "Canales",
+  dvrResolution: "Resolución",
+  dvrStorageCapacity: "Almacenamiento",
+  dvrConnectivity: "Conectividad",
+  dvrSmartFeatures: "Funciones Inteligentes",
+  nasCapacity: "Capacidad",
+  nasBays: "Bahías",
+  nasRAID: "Soporte RAID",
+  nasConnectivity: "Conectividad",
+  printerType: "Tipo",
+  printerResolution: "Resolución",
+  printerSpeed: "Velocidad",
+  printerDuplex: "Impresión Dúplex",
+  printerConnectivity: "Conectividad",
+  printerTrayCapacity: "Capacidad de Bandeja",
+  printerFunctions: "Funciones",
+  printerDisplay: "Display",
+  upsCapacity: "Capacidad",
+  upsOutputPower: "Potencia de Salida",
+  upsBackupTime: "Tiempo de Respaldo",
+  upsOutlets: "Tomas",
+  upsType: "Tipo",
+  upsConnectivity: "Conectividad",
+  airpodsModel: "Modelo",
+  airpodsBatteryLife: "Duración de Batería",
+  airpodsCharging: "Tipo de Carga",
+  airpodsResistance: "Resistencia",
+  airpodsFeatures: "Características",
+  softwareLicenseType: "Tipo de Licencia",
+  softwareLicenseDuration: "Duración",
+  softwareLicenseQuantity: "Cantidad de Usuarios",
+  softwareVersion: "Versión",
+  softwareFeatures: "Características",
+  phoneType: "Tipo",
+  phoneScreenSize: "Tamaño de Pantalla",
+  phoneRAM: "RAM",
+  phoneStorage: "Almacenamiento",
+  phoneProcessor: "Procesador",
+  phoneCameras: "Cámaras",
+  phoneBattery: "Batería",
+  phoneOS: "Sistema Operativo",
+  landlineType: "Tipo",
+  landlineTechnology: "Tecnología",
+  landlineDisplay: "Pantalla",
+  landlineFunctions: "Funciones",
+  landlineHandsets: "Auriculares"
+};
+
 const ProductDetails = () => {
   const [data, setData] = useState({
     productName: "",
@@ -85,6 +240,20 @@ const ProductDetails = () => {
   const discountPercentage = data.price && data.sellingPrice && data.price > 0
     ? Math.round(((data.price - data.sellingPrice) / data.price) * 100)
     : 0;
+
+  // Función para obtener los campos de especificaciones relevantes para el producto actual
+  const getRelevantSpecifications = () => {
+    if (!data.category) return [];
+    
+    const categorySpecs = specificationsByCategory[data.category] || [];
+    
+    // Obtener todas las especificaciones que tienen valores
+    const filledSpecs = categorySpecs
+      .filter(key => data[key] && data[key].trim !== '')
+      .map(key => ({ key, value: data[key], label: fieldNameMapping[key] || key }));
+    
+    return filledSpecs;
+  };
 
   return (
     <div className="container mx-auto p-4 font-roboto">
@@ -208,22 +377,12 @@ const ProductDetails = () => {
                   <div className="mt-6 bg-gray-50 p-4 rounded-lg">
                     <h3 className="text-xl font-semibold text-gray-700 mb-3">Especificaciones</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {Object.entries(data)
-                        .filter(([key, value]) => [
-                          'processor', 'memory', 'storage', 'disk', 'graphicsCard', 'notebookScreen',
-                          'monitorSize', 'monitorRefreshRate', 'cameraResolution',
-                          'dvrChannels', 'nasCapacity', 'printerType', 'printerFunctions',
-                          'psuWattage', 'upsCapacity', 'airpodsModel', 
-                          'softwareLicenseType', 'phoneType', 'phoneStorage'
-                        ].includes(key) && value)
-                        .map(([key, value]) => (
-                          <div key={key} className="flex flex-col sm:flex-row justify-between p-2 bg-white rounded-lg shadow-sm">
-                            <span className="font-medium text-gray-600 capitalize">
-                              {key.replace(/([A-Z])/g, ' $1').toLowerCase()}:
-                            </span>
-                            <span className="text-gray-800">{value}</span>
-                          </div>
-                        ))}
+                      {getRelevantSpecifications().map(({ key, value, label }) => (
+                        <div key={key} className="flex flex-col sm:flex-row justify-between p-2 bg-white rounded-lg shadow-sm">
+                          <span className="font-medium text-gray-600">{label}:</span>
+                          <span className="text-gray-800">{value}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

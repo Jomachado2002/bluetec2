@@ -109,6 +109,53 @@ const ProductSpecifications = ({
         placeholder: "Ingresa los slots de expansión disponibles" 
       }
     ],
+    procesador: [
+      {
+          label: "Socket",
+          name: "processorSocket",
+          placeholder: "Ingresa el tipo de socket (Ej: LGA1200, AM4)"
+      },
+      {
+          label: "Núcleos",
+          name: "processorCores",
+          placeholder: "Ingresa el número de núcleos (Ej: 6, 8)"
+      },
+      {
+          label: "Hilos",
+          name: "processorThreads",
+          placeholder: "Ingresa el número de hilos (Ej: 12, 16)"
+      },
+      {
+          label: "Frecuencia Base",
+          name: "processorBaseFreq",
+          placeholder: "Ingresa la frecuencia base (Ej: 3.6 GHz)"
+      },
+      {
+          label: "Frecuencia Turbo",
+          name: "processorTurboFreq",
+          placeholder: "Ingresa la frecuencia turbo (Ej: 4.9 GHz)"
+      },
+      {
+          label: "Caché",
+          name: "processorCache",
+          placeholder: "Ingresa la cantidad de caché (Ej: 12 MB)"
+      },
+      {
+          label: "TDP",
+          name: "processorTDP",
+          placeholder: "Ingresa el TDP (Ej: 65W, 95W)"
+      },
+      {
+          label: "Gr�ficos Integrados",
+          name: "processorIntegratedGraphics",
+          placeholder: "Indica si tiene gráficos integrados (Ej: Sí/No)"
+      },
+      {
+          label: "Tecnología de Fabricación",
+          name: "processorManufacturingTech",
+          placeholder: "Ingresa la tecnología de fabricación (Ej: 7nm, 14nm)"
+      }
+  ],
     memorias_ram: [
       { 
         label: "Tipo de RAM", 

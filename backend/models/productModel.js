@@ -45,6 +45,23 @@ const productSchema = mongoose.Schema({
     diskReadSpeed: { type: String },
     diskWriteSpeed: { type: String },
     
+    // Informática - Procesador
+    processorModel: { type: String },
+    processorSocket: { type: String },
+    processorCores: { type: String },
+    processorThreads: { type: String },
+    processorBaseFreq: { type: String },
+    processorTurboFreq: { type: String },
+    processorCache: { type: String },
+    processorTDP: { type: String },
+    
+    // Informática - Fuentes de Poder (Movido desde Accesorios)
+    psuWattage: { type: String },
+    psuEfficiency: { type: String },
+    psuModular: { type: String },
+    psuFormFactor: { type: String },
+    psuProtections: { type: String },
+    
     // Periféricos - Monitores
     monitorSize: { type: String },
     monitorResolution: { type: String },
@@ -103,14 +120,7 @@ const productSchema = mongoose.Schema({
     printerDisplay: { type: String },
     printerTrayCapacity: { type: String },
     
-    // Accesorios - Fuentes de Alimentación
-    psuWattage: { type: String },
-    psuEfficiency: { type: String },
-    psuModular: { type: String },
-    psuFormFactor: { type: String },
-    psuProtections: { type: String },
-    
-    // Accesorios - UPS
+    // Energía - UPS (Movido desde Accesorios)
     upsCapacity: { type: String },
     upsOutputPower: { type: String },
     upsBackupTime: { type: String },
