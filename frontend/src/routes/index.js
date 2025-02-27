@@ -13,6 +13,8 @@ import Cart from '../pages/Cart'
 import SearchProduct from "../pages/SearchProduct"
 import MobileCategoriesPage from "../pages/MobileCategoriesPage";
 import ResetPassword from "../pages/ResetPassword"; // Asegúrate de que ResetPassword esté importado
+import Nosotros from "../pages/Nosotros";
+
 
 // Archivo: routes/index.js del frontend
 
@@ -40,6 +42,10 @@ const router = createBrowserRouter([
             {
                 path: "registro", // Antes: sign-up
                 element: <SignUp />
+            },
+            {
+                path: "nosotros", // Nueva ruta para la página Nosotros
+                element: <Nosotros />
             },
             {
                 path: "/",

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import BannerProduct from '../components/BannerProduct';
 import HorizontalCardProduct from '../components/HorizontalCardProduct';
 import VerticalCardProduct from '../components/VerticalCardProduct';
@@ -46,6 +47,13 @@ const Home = () => {
     
     prefetchImages();
   }, []);
+
+  // Función para abrir WhatsApp
+  const openWhatsApp = () => {
+    const message = "Hola, necesito asesoramiento sobre productos de informática. ¿Podrían ayudarme?";
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/595972971353?text=${encodedMessage}`, '_blank');
+  };
 
   return (
     <>
@@ -105,9 +113,11 @@ const Home = () => {
                     <div className="text-white">
                       <h3 className="text-xl sm:text-2xl font-bold">Notebooks Premium</h3>
                       <p className="text-sm mt-2 opacity-90">Potencia y rendimiento en cualquier lugar</p>
-                      <button className="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg text-sm font-medium transition duration-300 shine-button">
-                        Explorar
-                      </button>
+                      <Link to="/categoria-producto?category=informatica&subcategory=notebooks">
+                        <button className="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg text-sm font-medium transition duration-300 shine-button">
+                          Explorar
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -155,9 +165,11 @@ const Home = () => {
                     <p className="mt-2 text-gray-600 max-w-lg">La base perfecta para tu próximo sistema de alto rendimiento</p>
                     <div className="h-1 w-24 bg-blue-600 mt-2 rounded-full"></div>
                   </div>
-                  <button className="mt-4 md:mt-0 px-6 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
-                    Ver toda la colección
-                  </button>
+                  <Link to="/categoria-producto?category=informatica&subcategory=placas_madre">
+                    <button className="mt-4 md:mt-0 px-6 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver toda la colección
+                    </button>
+                  </Link>
                 </div>
                 
                 <div className="mt-6">
@@ -171,7 +183,7 @@ const Home = () => {
             </div>
           </motion.section>
 
-          {/* Grid de 2x2 para Computadoras, Monitores, Memorias RAM y Discos Duros */}
+          {/* Grid de 4x2 para componentes */}
           <motion.section 
             initial="hidden"
             whileInView="visible"
@@ -200,6 +212,13 @@ const Home = () => {
                     heading=""
                   />
                 </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=informatica&subcategory=computadoras_ensambladas">
+                    <button className="px-6 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
               </motion.div>
               
               {/* Monitores */}
@@ -221,6 +240,13 @@ const Home = () => {
                     subcategory="monitores"
                     heading=""
                   />
+                </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=perifericos&subcategory=monitores">
+                    <button className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
                 </div>
               </motion.div>
               
@@ -244,6 +270,13 @@ const Home = () => {
                     heading=""
                   />
                 </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=informatica&subcategory=memorias_ram">
+                    <button className="px-6 py-2 bg-purple-600 text-white hover:bg-purple-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
               </motion.div>
               
               {/* Discos Duros */}
@@ -266,6 +299,129 @@ const Home = () => {
                     heading=""
                   />
                 </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=informatica&subcategory=discos_duros">
+                    <button className="px-6 py-2 bg-red-600 text-white hover:bg-red-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+              
+              {/* Tarjetas Gráficas - NUEVO */}
+              <motion.div variants={fadeIn} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6 text-white">
+                  <h2 className="text-2xl font-bold flex items-center">
+                    <span className="mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                      </svg>
+                    </span>
+                    Tarjetas Gráficas
+                  </h2>
+                  <div className="h-1 w-24 bg-teal-300 mt-2 mb-4 rounded-full"></div>
+                </div>
+                <div className="p-4">
+                  <VerticalCardProduct
+                    category="informatica"
+                    subcategory="tarjetas_graficas"
+                    heading=""
+                  />
+                </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=informatica&subcategory=tarjetas_graficas">
+                    <button className="px-6 py-2 bg-teal-600 text-white hover:bg-teal-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+              
+              {/* Gabinetes - NUEVO */}
+              <motion.div variants={fadeIn} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-6 text-white">
+                  <h2 className="text-2xl font-bold flex items-center">
+                    <span className="mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </span>
+                    Gabinetes
+                  </h2>
+                  <div className="h-1 w-20 bg-violet-300 mt-2 mb-4 rounded-full"></div>
+                </div>
+                <div className="p-4">
+                  <VerticalCardProduct
+                    category="informatica"
+                    subcategory="gabinetes"
+                    heading=""
+                  />
+                </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=informatica&subcategory=gabinetes">
+                    <button className="px-6 py-2 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+              
+              {/* Procesadores - NUEVO */}
+              <motion.div variants={fadeIn} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-cyan-600 to-blue-600 p-6 text-white">
+                  <h2 className="text-2xl font-bold flex items-center">
+                    <span className="mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                      </svg>
+                    </span>
+                    Procesadores
+                  </h2>
+                  <div className="h-1 w-24 bg-blue-300 mt-2 mb-4 rounded-full"></div>
+                </div>
+                <div className="p-4">
+                  <VerticalCardProduct
+                    category="informatica"
+                    subcategory="procesador"
+                    heading=""
+                  />
+                </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=informatica&subcategory=procesador">
+                    <button className="px-6 py-2 bg-cyan-600 text-white hover:bg-cyan-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+              
+              {/* Teclados - NUEVO */}
+              <motion.div variants={fadeIn} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-pink-600 to-rose-600 p-6 text-white">
+                  <h2 className="text-2xl font-bold flex items-center">
+                    <span className="mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </span>
+                    Teclados
+                  </h2>
+                  <div className="h-1 w-20 bg-rose-300 mt-2 mb-4 rounded-full"></div>
+                </div>
+                <div className="p-4">
+                  <VerticalCardProduct
+                    category="perifericos"
+                    subcategory="teclados"
+                    heading=""
+                  />
+                </div>
+                <div className="p-4 pt-0 text-center">
+                  <Link to="/categoria-producto?category=perifericos&subcategory=teclados">
+                    <button className="px-6 py-2 bg-rose-600 text-white hover:bg-rose-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
+                      Ver más
+                    </button>
+                  </Link>
+                </div>
               </motion.div>
             </div>
           </motion.section>
@@ -283,13 +439,15 @@ const Home = () => {
                 Productos Destacados
               </h2>
               <div className="h-1 w-40 bg-gradient-to-r from-green-500 to-blue-500 mx-auto mt-3 rounded-full"></div>
-              <p className="text-gray-600 mt-4 max-w-2xl mx-auto">Descubre nuestra selección de productos más populares y exclusivos</p>
+              <p className="text-gray-600 mt-4 max-w-2xl mx-auto">Descubre nuestra selección de productos más recientes y exclusivos</p>
             </div>
             
             <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
               <VerticalCardProduct
-                category="informatica"
-                subcategory="destacados"
+                category="all"
+                subcategory="all"
+                limit={5}
+                sort="newest"
                 heading=""
               />
             </div>
@@ -340,12 +498,20 @@ const Home = () => {
                     <p className="text-green-100">Nuestros expertos están listos para asesorarte y encontrar la solución perfecta para ti.</p>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <button className="px-6 py-3 bg-white text-green-700 hover:bg-gray-100 rounded-lg font-medium transition duration-300 shadow-md shine-button">
+                  <button 
+                      onClick={openWhatsApp}
+                      className="px-6 py-3 bg-white text-green-700 hover:bg-gray-100 rounded-lg font-medium transition duration-300 shadow-md shine-button flex items-center justify-center"
+                    >
+                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                      </svg>
                       Contactar Asesor
-                    </button>
-                    <button className="px-6 py-3 bg-green-700 text-white hover:bg-green-800 rounded-lg font-medium transition duration-300 shadow-md border border-green-500 shine-button">
-                      Ver Tiendas
-                    </button>
+                          </button>
+                          <Link to="/nosotros">
+                      <button className="px-6 py-3 bg-green-700 text-white hover:bg-green-800 rounded-lg font-medium transition duration-300 shadow-md border border-green-500 shine-button">
+                        NOSOTROS
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
