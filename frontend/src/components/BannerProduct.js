@@ -37,95 +37,95 @@ const BannerProduct = () => {
       title: "Notebooks de Alto Rendimiento",
       subtitle: "Trabajo y gaming en cualquier lugar",
       description: "Últimos modelos con procesadores Intel y AMD. Envío gratis y garantía extendida.",
-      icon: <Laptop className="w-16 h-16" />,
+      icon: <Laptop className="w-12 h-12 md:w-16 md:h-16" />,
       bgColor: "from-indigo-900 to-blue-700",
       action: "Ver Catálogo",
       category: "informatica",
       subcategory: "notebooks",
       badge: "ENVÍO GRATIS",
       features: [
-        { icon: <Truck className="w-4 h-4" />, text: "Entrega en 48h" },
-        { icon: <Shield className="w-4 h-4" />, text: "Garantía oficial" }
+        { icon: <Truck className="w-3 h-3 md:w-4 md:h-4" />, text: "Entrega en 48h" },
+        { icon: <Shield className="w-3 h-3 md:w-4 md:h-4" />, text: "Garantía oficial" }
       ]
     },
     {
       title: "Componentes Premium",
       subtitle: "Construye el PC de tus sueños",
       description: "Amplio catálogo de componentes. Asesoramiento técnico personalizado.",
-      icon: <Cpu className="w-16 h-16" />,
+      icon: <Cpu className="w-12 h-12 md:w-16 md:h-16" />,
       bgColor: "from-purple-900 to-purple-700",
       action: "Explorar Componentes",
       category: "informatica",
       subcategory: "placas_madre",
       badge: "OFERTAS",
       features: [
-        { icon: <Star className="w-4 h-4" />, text: "Marcas top" },
-        { icon: <Shield className="w-4 h-4" />, text: "Garantía oficial" },
-        { icon: <Truck className="w-4 h-4" />, text: "Envío seguro" }
+        { icon: <Star className="w-3 h-3 md:w-4 md:h-4" />, text: "Marcas top" },
+        { icon: <Shield className="w-3 h-3 md:w-4 md:h-4" />, text: "Garantía oficial" },
+        { icon: <Truck className="w-3 h-3 md:w-4 md:h-4" />, text: "Envío seguro" }
       ]
     },
     {
       title: "Monitores Profesionales",
       subtitle: "Visualiza cada detalle con precisión",
       description: "Alta resolución y fidelidad de color para diseño, programación y gaming.",
-      icon: <Monitor className="w-16 h-16" />,
+      icon: <Monitor className="w-12 h-12 md:w-16 md:h-16" />,
       bgColor: "from-slate-900 to-slate-700",
       action: "Ver Monitores",
       category: "perifericos",
       subcategory: "monitores",
       badge: "TOP VENTAS",
       features: [
-        { icon: <Clock className="w-4 h-4" />, text: "Entrega en 48 horas" },
-        { icon: <CreditCard className="w-4 h-4" />, text: "Múltiples pagos" },
-        { icon: <Download className="w-4 h-4" />, text: "Ficha técnica" }
+        { icon: <Clock className="w-3 h-3 md:w-4 md:h-4" />, text: "Entrega en 48 horas" },
+        { icon: <CreditCard className="w-3 h-3 md:w-4 md:h-4" />, text: "Múltiples pagos" },
+        { icon: <Download className="w-3 h-3 md:w-4 md:h-4" />, text: "Ficha técnica" }
       ]
     },
     {
       title: "Almacenamiento Confiable",
       subtitle: "Tus datos siempre seguros",
       description: "SSDs y HDDs de las mejores marcas con servicio técnico local.",
-      icon: <HardDrive className="w-16 h-16" />,
+      icon: <HardDrive className="w-12 h-12 md:w-16 md:h-16" />,
       bgColor: "from-rose-900 to-red-700",
       action: "Ver Opciones",
       category: "informatica",
       subcategory: "discos_duros",
       badge: "GARANTÍA EXTENDIDA",
       features: [
-        { icon: <Shield className="w-4 h-4" />, text: "Protección de datos" },
-        { icon: <Truck className="w-4 h-4" />, text: "Envío protegido" },
-        { icon: <Star className="w-4 h-4" />, text: "5 estrellas" }
+        { icon: <Shield className="w-3 h-3 md:w-4 md:h-4" />, text: "Protección de datos" },
+        { icon: <Truck className="w-3 h-3 md:w-4 md:h-4" />, text: "Envío protegido" },
+        { icon: <Star className="w-3 h-3 md:w-4 md:h-4" />, text: "5 estrellas" }
       ]
     },
     {
       title: "Periféricos Gaming",
       subtitle: "Mejora tu experiencia de juego",
       description: "Equipamiento profesional para gamers. RGB, precisión y durabilidad.",
-      icon: <Keyboard className="w-16 h-16" />,
+      icon: <Keyboard className="w-12 h-12 md:w-16 md:h-16" />,
       bgColor: "from-cyan-900 to-blue-700",
       action: "Ver Periféricos",
       category: "perifericos",
       subcategory: "",
       badge: "GAMING PRO",
       features: [
-        { icon: <Clock className="w-4 h-4" />, text: "Respuesta inmediata" },
-        { icon: <Shield className="w-4 h-4" />, text: "Resistentes" },
-        { icon: <Star className="w-4 h-4" />, text: "Top marcas" }
+        { icon: <Clock className="w-3 h-3 md:w-4 md:h-4" />, text: "Respuesta inmediata" },
+        { icon: <Shield className="w-3 h-3 md:w-4 md:h-4" />, text: "Resistentes" },
+        { icon: <Star className="w-3 h-3 md:w-4 md:h-4" />, text: "Top marcas" }
       ]
     },
     {
       title: "Smartphones y Tablets",
       subtitle: "Tecnología móvil de vanguardia",
       description: "Dispositivos de última generación desbloqueados con garantía local.",
-      icon: <Smartphone className="w-16 h-16" />,
+      icon: <Smartphone className="w-12 h-12 md:w-16 md:h-16" />,
       bgColor: "from-violet-900 to-indigo-700",
       action: "Ver Dispositivos",
       category: "telefonia",
       subcategory: "",
       badge: "DESBLOQUEADOS",
       features: [
-        { icon: <Shield className="w-4 h-4" />, text: "Garantía oficial" },
-        { icon: <CreditCard className="w-4 h-4" />, text: "Financiación" },
-        { icon: <Truck className="w-4 h-4" />, text: "Envío express" }
+        { icon: <Shield className="w-3 h-3 md:w-4 md:h-4" />, text: "Garantía oficial" },
+        { icon: <CreditCard className="w-3 h-3 md:w-4 md:h-4" />, text: "Financiación" },
+        { icon: <Truck className="w-3 h-3 md:w-4 md:h-4" />, text: "Envío express" }
       ]
     }
   ];
@@ -203,9 +203,6 @@ const BannerProduct = () => {
       
       // Generar PDF con jsPDF
       const doc = new jsPDF();
-      
-      // Agregar logo (reemplazar con la ruta correcta de tu logo)
-      // doc.addImage('/logo.png', 'PNG', 14, 10, 30, 15);
       
       // Título y cabecera
       doc.setFontSize(22);
@@ -356,8 +353,8 @@ const BannerProduct = () => {
   }, [activeTab]);
 
   return (
-    <div className="container mx-auto px-4 py-4">
-      <div className="relative h-72 md:h-96 w-full overflow-hidden rounded-2xl shadow-2xl">
+    <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
+      <div className="relative h-64 sm:h-80 md:h-96 lg:h-96 w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl">
         {/* Background with gradient */}
         <div
           className={`absolute inset-0 bg-gradient-to-r ${bannerData[activeTab].bgColor} transition-all duration-700 ease-in-out`}
@@ -368,81 +365,81 @@ const BannerProduct = () => {
           <div className="absolute inset-0 bg-grid-pattern animate-pulse"></div>
         </div>
 
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full translate-x-8 translate-y-16"></div>
+        {/* Decorative elements - hidden on small screens */}
+        <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-white/5 rounded-full -translate-x-16 sm:-translate-x-32 -translate-y-16 sm:-translate-y-32 hidden sm:block"></div>
+        <div className="absolute bottom-0 left-0 w-24 sm:w-48 h-24 sm:h-48 bg-black/10 rounded-full translate-x-4 sm:translate-x-8 translate-y-8 sm:translate-y-16 hidden sm:block"></div>
         
-        {/* Geometric accents */}
-        <div className="absolute bottom-8 right-8 w-16 h-16 border-4 border-white/10 rounded-full"></div>
-        <div className="absolute top-16 left-32 w-8 h-8 bg-white/10 rounded-full"></div>
-        <div className="absolute top-32 right-48 w-4 h-4 bg-white/20 rounded-full"></div>
+        {/* Geometric accents - hidden on small screens */}
+        <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 w-8 sm:w-16 h-8 sm:h-16 border-2 sm:border-4 border-white/10 rounded-full hidden sm:block"></div>
+        <div className="absolute top-8 sm:top-16 left-16 sm:left-32 w-4 sm:w-8 h-4 sm:h-8 bg-white/10 rounded-full hidden sm:block"></div>
+        <div className="absolute top-16 sm:top-32 right-24 sm:right-48 w-2 sm:w-4 h-2 sm:h-4 bg-white/20 rounded-full hidden sm:block"></div>
 
         {/* Content */}
-        <div className="relative h-full flex items-center z-10 p-6 md:p-10">
-          <div className="w-full md:w-3/5">
+        <div className="relative h-full flex items-center z-10 p-4 sm:p-6 md:p-10">
+          <div className="w-full sm:w-4/5 md:w-3/5">
             <div className={`transition-all duration-500 ease-in-out transform ${animating ? 'translate-y-4 opacity-0' : 'translate-y-0 opacity-100'}`}>
               {/* Badge */}
-              <div className="inline-block px-3 py-1 mb-4 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold tracking-wider animate-pulse">
+              <div className="inline-block px-2 sm:px-3 py-0.5 sm:py-1 mb-2 sm:mb-4 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold tracking-wider animate-pulse">
                 {bannerData[activeTab].badge}
               </div>
               
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 tracking-tight">
+              <h2 className="text-lg sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2 tracking-tight leading-tight">
                 {bannerData[activeTab].title}
               </h2>
               
-              <div className="w-20 h-1 bg-white/40 rounded-full mb-4"></div>
+              <div className="w-12 sm:w-20 h-0.5 sm:h-1 bg-white/40 rounded-full mb-2 sm:mb-4"></div>
               
-              <p className="text-lg md:text-xl text-white/90 font-medium mb-3">
+              <p className="text-sm sm:text-lg md:text-xl text-white/90 font-medium mb-1 sm:mb-3">
                 {bannerData[activeTab].subtitle}
               </p>
               
-              <p className="text-sm md:text-base text-white/80 mb-4 max-w-lg">
+              <p className="text-xs sm:text-sm md:text-base text-white/80 mb-2 sm:mb-4 max-w-xs sm:max-w-sm md:max-w-lg line-clamp-2 sm:line-clamp-none">
                 {bannerData[activeTab].description}
               </p>
               
-              {/* Feature tags */}
-              <div className="flex flex-wrap gap-3 mb-6">
+              {/* Feature tags - responsive layout */}
+              <div className="flex flex-wrap gap-1.5 sm:gap-3 mb-3 sm:mb-6">
                 {bannerData[activeTab].features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                  <div key={index} className="flex items-center gap-1 sm:gap-1.5 bg-white/10 backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
                     {feature.icon}
-                    <span className="text-white text-xs font-medium">{feature.text}</span>
+                    <span className="text-white text-xs font-medium whitespace-nowrap">{feature.text}</span>
                   </div>
                 ))}
               </div>
               
-              {/* Action buttons */}
-              <div className="flex flex-wrap gap-3">
+              {/* Action buttons - responsive layout */}
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 <button 
-                  className="bg-white text-gray-900 hover:bg-gray-100 transition-all px-6 py-2.5 rounded-full font-medium flex items-center gap-2 group shadow-lg hover:shadow-xl active:scale-95"
+                  className="bg-white text-gray-900 hover:bg-gray-100 transition-all px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-medium flex items-center gap-1 sm:gap-2 group shadow-md sm:shadow-lg hover:shadow-xl active:scale-95"
                   onClick={() => handleNavigate(bannerData[activeTab].category, bannerData[activeTab].subcategory)}
                 >
                   {bannerData[activeTab].action}
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
                 
                 <button 
-                  className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-all px-4 py-2.5 rounded-full font-medium flex items-center gap-2 border border-white/20"
+                  className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-all px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-medium flex items-center gap-1 sm:gap-2 border border-white/20"
                   onClick={handleWhatsApp}
                 >
-                  Consultar por WhatsApp
+                  <span className="hidden xs:inline">Consultar por</span> WhatsApp
                 </button>
                 
                 <button 
                   className={`${pdfLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-white/10'} 
-                              bg-transparent text-white transition-all px-4 py-2.5 rounded-full 
-                              font-medium flex items-center gap-2 border border-white/20`}
+                              bg-transparent text-white transition-all px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-full 
+                              text-xs sm:text-sm md:text-base font-medium flex items-center gap-1 sm:gap-2 border border-white/20`}
                   onClick={handlePdf}
                   disabled={pdfLoading}
                 >
                   {pdfLoading ? (
                     <>
-                      <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
-                      Generando PDF...
+                      <span className="animate-spin h-3 w-3 sm:h-4 sm:w-4 border-2 border-white border-t-transparent rounded-full mr-1 sm:mr-2"></span>
+                      <span className="hidden xs:inline">Generando</span> PDF...
                     </>
                   ) : (
                     <>
-                      <Download className="w-4 h-4" />
-                      Catálogo PDF
+                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="hidden xs:inline">Catálogo</span> PDF
                     </>
                   )}
                 </button>
@@ -450,7 +447,7 @@ const BannerProduct = () => {
             </div>
           </div>
 
-          {/* Icon with 3D effect */}
+          {/* Icon with 3D effect - visible only on large screens */}
           <div className="hidden lg:flex absolute right-10 top-1/2 transform -translate-y-1/2">
             <div className={`text-white/95 transition-all duration-500 ease-in-out ${animating ? 'scale-75 opacity-0' : 'scale-100 opacity-100'} 
                             shadow-2xl bg-white/10 p-10 rounded-full backdrop-blur-md border border-white/20`}>
@@ -464,41 +461,51 @@ const BannerProduct = () => {
           </div>
         </div>
 
-        {/* Dots indicator */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {/* Dots indicator - responsive sizing */}
+        <div className="absolute bottom-3 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-1 sm:space-x-2">
           {bannerData.map((_, index) => (
             <button
               key={index}
               onClick={() => setActiveTab(index)}
               className={`transition-all ${
                 activeTab === index 
-                  ? 'w-8 h-2 bg-white rounded-full' 
-                  : 'w-2 h-2 bg-white/50 hover:bg-white/70 rounded-full'
+                  ? 'w-4 sm:w-8 h-1 sm:h-2 bg-white rounded-full' 
+                  : 'w-1 sm:w-2 h-1 sm:h-2 bg-white/50 hover:bg-white/70 rounded-full'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
 
-        {/* Navigation buttons with improved hover effects */}
+        {/* Navigation buttons - responsive sizing */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full p-3 text-white transition-all z-20 hover:scale-110 active:scale-95 border border-white/20"
+          className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full p-1.5 sm:p-3 text-white transition-all z-20 hover:scale-110 active:scale-95 border border-white/20"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
         
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full p-3 text-white transition-all z-20 hover:scale-110 active:scale-95 border border-white/20"
+          className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full p-1.5 sm:p-3 text-white transition-all z-20 hover:scale-110 active:scale-95 border border-white/20"
           aria-label="Next slide"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
         </button>
       </div>
 
-      <style jsx>{`
+              <style jsx>{`
+        @media (max-width: 479px) {
+          .xs\\:inline {
+            display: none;
+          }
+        }
+        @media (min-width: 480px) {
+          .xs\\:inline {
+            display: inline;
+          }
+        }
         .bg-grid-pattern {
           background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
           background-size: 20px 20px;
