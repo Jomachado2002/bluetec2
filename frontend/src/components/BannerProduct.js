@@ -1,107 +1,528 @@
-import React, { useEffect, useState } from 'react'
-import image1 from '../assest/banner/img1.webp'
-import image2 from '../assest/banner/img2.webp'
-import image3 from '../assest/banner/img3.jpg'
-import image4 from '../assest/banner/img4.jpg'
-import image5 from '../assest/banner/img5.webp'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Monitor, 
+  Cpu, 
+  HardDrive, 
+  Laptop, 
+  Keyboard, 
+  Smartphone,
+  Clock,
+  Truck,
+  Shield,
+  Download,
+  CreditCard,
+  Star
+} from 'lucide-react';
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
+import SummaryApi from '../common';
+import displayPYGCurrency from '../helpers/displayCurrency';
 
-
-import image1Mobile from '../assest/banner/img1_mobile.jpg'
-import image2Mobile from '../assest/banner/img2_mobile.webp'
-import image3Mobile from '../assest/banner/img3_mobile.jpg'
-import image4Mobile from '../assest/banner/img4_mobile.jpg'
-import image5Mobile from '../assest/banner/img5_mobile.png'
-
-import { FaAngleRight } from "react-icons/fa6";
-import { FaAngleLeft } from "react-icons/fa6";
-
+// Función para hacer scroll al inicio de la página
+const scrollTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 const BannerProduct = () => {
-    const [currentImage,setCurrentImage] = useState(0)
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
-    const desktopImages = [
-        image1,
-        image2,
-        image3,
-        image4,
-        image5
-    ]
-
-    const mobileImages = [
-        image1Mobile,
-        image2Mobile,
-        image3Mobile,
-        image4Mobile,
-        image5Mobile
-    ]
-
-    const nextImage = () =>{
-        if(desktopImages.length - 1 > currentImage){
-            setCurrentImage(preve => preve + 1)
-        }
+  const bannerData = [
+    {
+      title: "Notebooks de Alto Rendimiento",
+      subtitle: "Trabajo y gaming en cualquier lugar",
+      description: "Últimos modelos con procesadores Intel y AMD. Envío gratis y garantía extendida.",
+      icon: <Laptop className="w-16 h-16" />,
+      bgColor: "from-indigo-900 to-blue-700",
+      action: "Ver Catálogo",
+      category: "informatica",
+      subcategory: "notebooks",
+      badge: "ENVÍO GRATIS",
+      features: [
+        { icon: <Truck className="w-4 h-4" />, text: "Entrega en 48h" },
+        { icon: <Shield className="w-4 h-4" />, text: "Garantía oficial" }
+      ]
+    },
+    {
+      title: "Componentes Premium",
+      subtitle: "Construye el PC de tus sueños",
+      description: "Amplio catálogo de componentes. Asesoramiento técnico personalizado.",
+      icon: <Cpu className="w-16 h-16" />,
+      bgColor: "from-purple-900 to-purple-700",
+      action: "Explorar Componentes",
+      category: "informatica",
+      subcategory: "placas_madre",
+      badge: "OFERTAS",
+      features: [
+        { icon: <Star className="w-4 h-4" />, text: "Marcas top" },
+        { icon: <Shield className="w-4 h-4" />, text: "Garantía oficial" },
+        { icon: <Truck className="w-4 h-4" />, text: "Envío seguro" }
+      ]
+    },
+    {
+      title: "Monitores Profesionales",
+      subtitle: "Visualiza cada detalle con precisión",
+      description: "Alta resolución y fidelidad de color para diseño, programación y gaming.",
+      icon: <Monitor className="w-16 h-16" />,
+      bgColor: "from-slate-900 to-slate-700",
+      action: "Ver Monitores",
+      category: "perifericos",
+      subcategory: "monitores",
+      badge: "TOP VENTAS",
+      features: [
+        { icon: <Clock className="w-4 h-4" />, text: "Entrega en 48 horas" },
+        { icon: <CreditCard className="w-4 h-4" />, text: "Múltiples pagos" },
+        { icon: <Download className="w-4 h-4" />, text: "Ficha técnica" }
+      ]
+    },
+    {
+      title: "Almacenamiento Confiable",
+      subtitle: "Tus datos siempre seguros",
+      description: "SSDs y HDDs de las mejores marcas con servicio técnico local.",
+      icon: <HardDrive className="w-16 h-16" />,
+      bgColor: "from-rose-900 to-red-700",
+      action: "Ver Opciones",
+      category: "informatica",
+      subcategory: "discos_duros",
+      badge: "GARANTÍA EXTENDIDA",
+      features: [
+        { icon: <Shield className="w-4 h-4" />, text: "Protección de datos" },
+        { icon: <Truck className="w-4 h-4" />, text: "Envío protegido" },
+        { icon: <Star className="w-4 h-4" />, text: "5 estrellas" }
+      ]
+    },
+    {
+      title: "Periféricos Gaming",
+      subtitle: "Mejora tu experiencia de juego",
+      description: "Equipamiento profesional para gamers. RGB, precisión y durabilidad.",
+      icon: <Keyboard className="w-16 h-16" />,
+      bgColor: "from-cyan-900 to-blue-700",
+      action: "Ver Periféricos",
+      category: "perifericos",
+      subcategory: "",
+      badge: "GAMING PRO",
+      features: [
+        { icon: <Clock className="w-4 h-4" />, text: "Respuesta inmediata" },
+        { icon: <Shield className="w-4 h-4" />, text: "Resistentes" },
+        { icon: <Star className="w-4 h-4" />, text: "Top marcas" }
+      ]
+    },
+    {
+      title: "Smartphones y Tablets",
+      subtitle: "Tecnología móvil de vanguardia",
+      description: "Dispositivos de última generación desbloqueados con garantía local.",
+      icon: <Smartphone className="w-16 h-16" />,
+      bgColor: "from-violet-900 to-indigo-700",
+      action: "Ver Dispositivos",
+      category: "telefonia",
+      subcategory: "",
+      badge: "DESBLOQUEADOS",
+      features: [
+        { icon: <Shield className="w-4 h-4" />, text: "Garantía oficial" },
+        { icon: <CreditCard className="w-4 h-4" />, text: "Financiación" },
+        { icon: <Truck className="w-4 h-4" />, text: "Envío express" }
+      ]
     }
+  ];
 
-    const preveImage = () =>{
-        if(currentImage != 0){
-            setCurrentImage(preve => preve - 1)
+  const nextSlide = () => {
+    if (animating) return;
+    setAnimating(true);
+    setActiveTab((prev) => (prev === bannerData.length - 1 ? 0 : prev + 1));
+    setTimeout(() => setAnimating(false), 500);
+  };
+
+  const prevSlide = () => {
+    if (animating) return;
+    setAnimating(true);
+    setActiveTab((prev) => (prev === 0 ? bannerData.length - 1 : prev - 1));
+    setTimeout(() => setAnimating(false), 500);
+  };
+
+  const handleNavigate = (category, subcategory) => {
+    scrollTop();
+    navigate(`/categoria-producto?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`);
+  };
+
+  const handleWhatsApp = () => {
+    window.open('https://wa.me/595xxxxxxxxx?text=Estoy%20interesado%20en%20' + 
+      encodeURIComponent(bannerData[activeTab].title), '_blank');
+  };
+
+  const handlePdf = async () => {
+    try {
+      setPdfLoading(true);
+      const currentCategory = bannerData[activeTab].category;
+      const currentSubcategory = bannerData[activeTab].subcategory;
+      
+      // Obtener productos de la categoría seleccionada
+      const response = await fetch(SummaryApi.filterProduct.url, {
+        method: SummaryApi.filterProduct.method,
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({
+          category: [currentCategory],
+          subcategory: currentSubcategory ? [currentSubcategory] : [],
+          brandName: [],
+          specifications: {}
+        })
+      });
+  
+      const responseData = await response.json();
+      
+      if (!responseData.success || !responseData.data || responseData.data.length === 0) {
+        alert("No hay productos disponibles para generar el catálogo");
+        setPdfLoading(false);
+        return;
+      }
+  
+      let products = responseData.data;
+      
+      // Extraer todas las marcas disponibles
+      const availableBrands = [...new Set(products.map(product => product.brandName))].filter(Boolean);
+      
+      // Organizar productos por marca y por precio
+      const productsByBrand = {};
+      availableBrands.forEach(brand => {
+        // Filtrar productos por marca
+        const brandProducts = products.filter(product => product.brandName === brand);
+        
+        // Ordenar productos por precio (de menor a mayor)
+        const sortedProducts = [...brandProducts].sort((a, b) => {
+          return (a.sellingPrice || 0) - (b.sellingPrice || 0);
+        });
+        
+        productsByBrand[brand] = sortedProducts;
+      });
+      
+      // Generar PDF con jsPDF
+      const doc = new jsPDF();
+      
+      // Agregar logo (reemplazar con la ruta correcta de tu logo)
+      // doc.addImage('/logo.png', 'PNG', 14, 10, 30, 15);
+      
+      // Título y cabecera
+      doc.setFontSize(22);
+      doc.setTextColor(41, 128, 185);
+      doc.text(`Catálogo: ${bannerData[activeTab].title}`, 14, 22);
+      
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`JM Computer - Soluciones Tecnológicas`, 14, 32);
+      
+      // Agregar fecha y contacto
+      const today = new Date().toLocaleDateString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      doc.setFontSize(10);
+      doc.text(`Generado el: ${today}`, 14, 42);
+      doc.text(`Tel: +595 XXX XXX XXX`, 14, 48);
+      doc.text(`Email: ventas@jmcomputer.com.py`, 14, 54);
+      
+      // Descripción
+      doc.setFontSize(11);
+      doc.setTextColor(60, 60, 60);
+      doc.text(bannerData[activeTab].description, 14, 64);
+      
+      // Variable para mantener la posición vertical actual
+      let yPosition = 70;
+      
+      // Procesar cada marca y sus productos
+      for (const brand of availableBrands) {
+        // Verificar si necesitamos agregar una nueva página
+        if (yPosition > doc.internal.pageSize.height - 30) {
+          doc.addPage();
+          yPosition = 20;
         }
+        
+        // Encabezado de marca
+        doc.setFontSize(14);
+        doc.setTextColor(41, 128, 185);
+        doc.text(`Productos ${brand}`, 14, yPosition);
+        yPosition += 10;
+        
+        // Si no hay productos para esta marca, pasar a la siguiente
+        if (!productsByBrand[brand] || productsByBrand[brand].length === 0) {
+          continue;
+        }
+        
+        // Crear tabla con los productos de esta marca
+        const tableColumn = ["Producto", "Características", "Precio"];
+        const tableRows = [];
+        
+        productsByBrand[brand].forEach(product => {
+          let specifications = '';
+          
+          // Extraer especificaciones principales si existen
+          if (product.specifications && product.specifications.length > 0) {
+            specifications = product.specifications
+              .map(spec => `${spec.name}: ${spec.value}${spec.unit ? ` ${spec.unit}` : ''}`)
+              .join(', ');
+          } else if (product.description) {
+            specifications = product.description.length > 50 
+              ? product.description.substring(0, 50) + '...' 
+              : product.description;
+          }
+          
+          const productData = [
+            product.productName,
+            specifications,
+            displayPYGCurrency(product.sellingPrice)
+          ];
+          tableRows.push(productData);
+        });
+        
+        // Generar tabla para esta marca
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: yPosition,
+          styles: { fontSize: 8, cellPadding: 3 },
+          columnStyles: {
+            0: { cellWidth: 70 },
+            1: { cellWidth: 80 },
+            2: { cellWidth: 30 }
+          },
+          headStyles: {
+            fillColor: [41, 128, 185],
+            textColor: 255
+          },
+          alternateRowStyles: {
+            fillColor: [245, 245, 245]
+          }
+        });
+        
+        // Actualizar la posición vertical para el siguiente contenido
+        yPosition = doc.lastAutoTable.finalY + 15;
+      }
+      
+      // Agregar información sobre la garantía y envío
+      if (yPosition > doc.internal.pageSize.height - 50) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      doc.setFontSize(10);
+      doc.setTextColor(80, 80, 80);
+      doc.text("Información adicional:", 14, yPosition);
+      doc.setFontSize(8);
+      doc.text("• Todos nuestros productos cuentan con garantía oficial.", 14, yPosition + 6);
+      doc.text("• Ofrecemos envío gratuito en compras superiores a Gs. 1.000.000.", 14, yPosition + 12);
+      doc.text("• Horario de atención: Lunes a Viernes de 8:00 a 17:00, Sábados de 8:30 a 11:00.", 14, yPosition + 18);
+      doc.text("• Formas de pago: efectivo, transferencia bancaria, tarjetas de crédito y débito.", 14, yPosition + 24);
+      
+      // Agregar información de contacto para pedidos
+      yPosition += 34;
+      doc.setFontSize(10);
+      doc.setTextColor(41, 128, 185);
+      doc.text("¿Interesado en algún producto?", 14, yPosition);
+      doc.setFontSize(8);
+      doc.setTextColor(80, 80, 80);
+      doc.text("Contáctenos por WhatsApp: +595 XXX XXX XXX", 14, yPosition + 6);
+      doc.text("O visite nuestra tienda: [Dirección de tu tienda]", 14, yPosition + 12);
+      
+      // Agregar pie de página
+      const pageCount = doc.internal.getNumberOfPages();
+      const footerText = "Los precios pueden variar. Consulte disponibilidad. Válido hasta agotar stock.";
+      
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text(footerText, 14, doc.internal.pageSize.height - 10);
+        doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.width - 25, doc.internal.pageSize.height - 10);
+      }
+      
+      // Guardar el PDF
+      doc.save(`catalogo-${currentCategory}${currentSubcategory ? `-${currentSubcategory}` : ''}.pdf`);
+      
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert("Hubo un error al generar el catálogo. Por favor, inténtelo de nuevo más tarde.");
+    } finally {
+      setPdfLoading(false);
     }
+  };
 
-
-    useEffect(()=>{
-        const interval = setInterval(()=>{
-            if(desktopImages.length - 1 > currentImage){
-                nextImage()
-            }else{
-                setCurrentImage(0)
-            }
-        },5000)
-
-        return ()=> clearInterval(interval)
-    },[currentImage])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [activeTab]);
 
   return (
-    <div className='container mx-auto px-4 rounded '>
-        <div className='h-56 md:h-72 w-full bg-slate-200 relative'>
+    <div className="container mx-auto px-4 py-4">
+      <div className="relative h-72 md:h-96 w-full overflow-hidden rounded-2xl shadow-2xl">
+        {/* Background with gradient */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${bannerData[activeTab].bgColor} transition-all duration-700 ease-in-out`}
+        ></div>
 
-                <div className='absolute z-10 h-full w-full md:flex items-center hidden '>
-                    <div className=' flex justify-between w-full text-2xl'>
-                        <button onClick={preveImage} className='bg-white shadow-md rounded-full p-1'><FaAngleLeft/></button>
-                        <button onClick={nextImage} className='bg-white shadow-md rounded-full p-1'><FaAngleRight/></button> 
-                    </div>
-                </div>
-
-                {/**desktop and tablet version */}
-              <div className='hidden md:flex h-full w-full overflow-hidden'>
-                {
-                        desktopImages.map((imageURl,index)=>{
-                            return(
-                            <div className='w-full h-full min-w-full min-h-full transition-all' key={imageURl} style={{transform : `translateX(-${currentImage * 100}%)`}}>
-                                <img src={imageURl} className='w-full h-full'/>
-                            </div>
-                            )
-                        })
-                }
-              </div>
-
-
-                {/**mobile version */}
-                <div className='flex h-full w-full overflow-hidden md:hidden'>
-                {
-                        mobileImages.map((imageURl,index)=>{
-                            return(
-                            <div className='w-full h-full min-w-full min-h-full transition-all' key={imageURl} style={{transform : `translateX(-${currentImage * 100}%)`}}>
-                                <img src={imageURl} className='w-full h-full object-cover'/>
-                            </div>
-                            )
-                        })
-                }
-              </div>
-
-
+        {/* Animated pattern overlay */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-grid-pattern animate-pulse"></div>
         </div>
-    </div>
-  )
-}
 
-export default BannerProduct
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-x-32 -translate-y-32"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/10 rounded-full translate-x-8 translate-y-16"></div>
+        
+        {/* Geometric accents */}
+        <div className="absolute bottom-8 right-8 w-16 h-16 border-4 border-white/10 rounded-full"></div>
+        <div className="absolute top-16 left-32 w-8 h-8 bg-white/10 rounded-full"></div>
+        <div className="absolute top-32 right-48 w-4 h-4 bg-white/20 rounded-full"></div>
+
+        {/* Content */}
+        <div className="relative h-full flex items-center z-10 p-6 md:p-10">
+          <div className="w-full md:w-3/5">
+            <div className={`transition-all duration-500 ease-in-out transform ${animating ? 'translate-y-4 opacity-0' : 'translate-y-0 opacity-100'}`}>
+              {/* Badge */}
+              <div className="inline-block px-3 py-1 mb-4 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold tracking-wider animate-pulse">
+                {bannerData[activeTab].badge}
+              </div>
+              
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-2 tracking-tight">
+                {bannerData[activeTab].title}
+              </h2>
+              
+              <div className="w-20 h-1 bg-white/40 rounded-full mb-4"></div>
+              
+              <p className="text-lg md:text-xl text-white/90 font-medium mb-3">
+                {bannerData[activeTab].subtitle}
+              </p>
+              
+              <p className="text-sm md:text-base text-white/80 mb-4 max-w-lg">
+                {bannerData[activeTab].description}
+              </p>
+              
+              {/* Feature tags */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                {bannerData[activeTab].features.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    {feature.icon}
+                    <span className="text-white text-xs font-medium">{feature.text}</span>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Action buttons */}
+              <div className="flex flex-wrap gap-3">
+                <button 
+                  className="bg-white text-gray-900 hover:bg-gray-100 transition-all px-6 py-2.5 rounded-full font-medium flex items-center gap-2 group shadow-lg hover:shadow-xl active:scale-95"
+                  onClick={() => handleNavigate(bannerData[activeTab].category, bannerData[activeTab].subcategory)}
+                >
+                  {bannerData[activeTab].action}
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                
+                <button 
+                  className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white transition-all px-4 py-2.5 rounded-full font-medium flex items-center gap-2 border border-white/20"
+                  onClick={handleWhatsApp}
+                >
+                  Consultar por WhatsApp
+                </button>
+                
+                <button 
+                  className={`${pdfLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-white/10'} 
+                              bg-transparent text-white transition-all px-4 py-2.5 rounded-full 
+                              font-medium flex items-center gap-2 border border-white/20`}
+                  onClick={handlePdf}
+                  disabled={pdfLoading}
+                >
+                  {pdfLoading ? (
+                    <>
+                      <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                      Generando PDF...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4" />
+                      Catálogo PDF
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Icon with 3D effect */}
+          <div className="hidden lg:flex absolute right-10 top-1/2 transform -translate-y-1/2">
+            <div className={`text-white/95 transition-all duration-500 ease-in-out ${animating ? 'scale-75 opacity-0' : 'scale-100 opacity-100'} 
+                            shadow-2xl bg-white/10 p-10 rounded-full backdrop-blur-md border border-white/20`}>
+              {bannerData[activeTab].icon}
+              
+              {/* Concentric animated rings */}
+              <div className="absolute inset-0 border-2 border-white/10 rounded-full animate-ping-slow"></div>
+              <div className="absolute inset-[-10px] border border-white/5 rounded-full"></div>
+            </div>
+            <div className="absolute inset-0 bg-white/5 rounded-full blur-2xl -z-10 scale-110"></div>
+          </div>
+        </div>
+
+        {/* Dots indicator */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {bannerData.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveTab(index)}
+              className={`transition-all ${
+                activeTab === index 
+                  ? 'w-8 h-2 bg-white rounded-full' 
+                  : 'w-2 h-2 bg-white/50 hover:bg-white/70 rounded-full'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Navigation buttons with improved hover effects */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full p-3 text-white transition-all z-20 hover:scale-110 active:scale-95 border border-white/20"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full p-3 text-white transition-all z-20 hover:scale-110 active:scale-95 border border-white/20"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+
+      <style jsx>{`
+        .bg-grid-pattern {
+          background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+        @keyframes ping-slow {
+          0% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 0.4;
+          }
+          100% {
+            transform: scale(1.2);
+            opacity: 0;
+          }
+        }
+        .animate-ping-slow {
+          animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default BannerProduct;

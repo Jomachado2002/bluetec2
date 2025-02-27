@@ -111,12 +111,7 @@ const Home = () => {
                   <NotebookBanner />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
                     <div className="text-white">
-                      <h3 className="text-xl sm:text-2xl font-bold">Notebooks Premium</h3>
-                      <p className="text-sm mt-2 opacity-90">Potencia y rendimiento en cualquier lugar</p>
                       <Link to="/categoria-producto?category=informatica&subcategory=notebooks">
-                        <button className="mt-4 px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg text-sm font-medium transition duration-300 shine-button">
-                          Explorar
-                        </button>
                       </Link>
                     </div>
                   </div>
