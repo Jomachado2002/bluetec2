@@ -43,7 +43,7 @@ const BrandCarousel = () => {
       <Slider {...settings}>
         {brands.map((brand) => (
           <div key={brand.id} className="px-2">
-            <Link to={`/search?q=${brand.name}`}>
+            <Link to={`/buscar?q=${brand.name}`}>
               <div className="group relative p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <img
                   src={brand.logo}

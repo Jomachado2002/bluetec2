@@ -14,6 +14,8 @@ import SearchProduct from "../pages/SearchProduct"
 import MobileCategoriesPage from "../pages/MobileCategoriesPage";
 import ResetPassword from "../pages/ResetPassword"; // Asegúrate de que ResetPassword esté importado
 
+// Archivo: routes/index.js del frontend
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -24,19 +26,19 @@ const router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: "login",
+                path: "iniciar-sesion", // Antes: login
                 element: <Login />
             },
             {
-                path: "forgot-password",
+                path: "recuperar-contrasena", // Antes: forgot-password
                 element: <ForgotPassword />
             },
             {
-                path: "reset-password/:token", // Ruta para restablecimiento de contraseña
+                path: "restablecer-contrasena/:token", // Antes: reset-password/:token
                 element: <ResetPassword />
             },
             {
-                path: "sign-up",
+                path: "registro", // Antes: sign-up
                 element: <SignUp />
             },
             {
@@ -44,37 +46,36 @@ const router = createBrowserRouter([
                 element: <App />,
                 children: [
                   { path: "", element: <Home /> },
-                  { path: "mobile-categories", element: <MobileCategoriesPage /> },  // Nueva ruta
-                  { path: "product-category", element: <CategoryProduct /> },
+                  { path: "categorias-movil", element: <MobileCategoriesPage /> }, // Antes: mobile-categories
+                  { path: "categoria-producto", element: <CategoryProduct /> }, // Antes: product-category
                 ]
               },
             {
-                path: "product/:id",
+                path: "producto/:id", // Antes: product/:id
                 element: <ProductDetails />
             },
             {
-                path: "cart",
+                path: "carrito", // Antes: cart
                 element: <Cart />
             },
             {
-                path: "search",
+                path: "buscar", // Antes: search
                 element: <SearchProduct />
             },
             {
-                path: "admin-panel",
+                path: "panel-admin", // Antes: admin-panel
                 element: <AdminPanel />,
                 children: [
                     {
-                        path: "all-users",
+                        path: "todos-usuarios", // Antes: all-users
                         element: <AllUsers />
                     },
                     {
-                        path: "all-products",
+                        path: "todos-productos", // Antes: all-products
                         element: <AllProducts />
                     }
                 ]
             }
-            
         ]
     }
 ]);

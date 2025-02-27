@@ -91,7 +91,7 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                         <div className='h-1 w-20 bg-blue-600 mt-2 rounded-full'></div>
                     </div>
                     <Link 
-                        to={`/product-category?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`}
+                        to={`/categoria-producto?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`}
                         className='text-blue-600 hover:text-blue-700 text-sm font-semibold transition-colors flex items-center'
                         onClick={scrollTop}
                     >
@@ -152,7 +152,7 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                             
                             return (
                                 <Link 
-                                    to={`/product/${product?._id}`} 
+                                    to={`/producto/${product?._id}`} 
                                     key={product?._id} 
                                     className='snap-center flex-none w-[220px] sm:w-[250px] md:w-[280px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 group/card product-card relative'
                                     onClick={scrollTop}

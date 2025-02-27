@@ -6,7 +6,7 @@ const NotebookBanner = () => {
   const navigate = useNavigate();
 
   const handleNavigateToNotebooks = () => {
-    navigate('/product-category?category=informatica&subcategory=notebooks');
+    navigate('/categoria-producto?category=informatica&subcategory=notebooks');
   };
 
   return (

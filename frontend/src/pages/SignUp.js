@@ -58,7 +58,7 @@ const SignUp = () => {
             
             if(dataApi.success){
                 toast.success(dataApi.message)
-                navigate("/login")
+                navigate("/iniciar-sesion")
             }
             if(dataApi.error){
                 toast.error(dataApi.message)
@@ -188,7 +188,7 @@ const SignUp = () => {
                         <p className='text-center mt-4'>
                             ¿Ya tienes una cuenta?
                             <Link
-                                to='/Login'
+                                to='/iniciar-sesion'
                                 className='text-blue-600 hover:text-blue-700 ml-1'
                             >
                                 Inicia sesión

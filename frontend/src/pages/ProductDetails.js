@@ -233,7 +233,7 @@ const ProductDetails = () => {
     e.stopPropagation();
     await addToCart(e, product);
     fetchUserAddToCart();
-    navigate("/cart");
+    navigate("/carrito");
   };
 
   // Actualizado para incluir más información y la URL del producto

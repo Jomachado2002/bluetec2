@@ -29,8 +29,8 @@ const AdminPanel = () => {
                     </div>
                 </div>
                 <nav className='mt-6'>
-                    <Link to={"all-users"} className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'>Todos los Usuarios</Link>
-                    <Link to={"all-products"} className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'>Todos Productos</Link>
+                    <Link to={"todos-usuarios"} className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'>Todos los Usuarios</Link>
+                    <Link to={"todos-productos"} className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'>Todos Productos</Link>
                 </nav>
             </aside>
             <main className='flex-1 p-4'>

@@ -24,7 +24,7 @@ const MobileCategoriesPage = () => {
               {category.subcategories.map((subcategory) => (
                 <Link
                   key={subcategory.id}
-                  to={`/product-category?category=${category.value}&subcategory=${subcategory.value}`}
+                  to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
                   className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
                 >
                   <span className="text-gray-700 group-hover:text-green-600 transition-colors">

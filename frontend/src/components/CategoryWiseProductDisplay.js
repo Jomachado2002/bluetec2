@@ -132,7 +132,7 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
                 const discount = calculateDiscount(product?.price, product?.sellingPrice);
                 return (
                   <Link
-                    to={'/product/' + product?._id}
+                    to={'/producto/' + product?._id}
                     key={product?._id}
                     className='block w-full min-w-[280px] md:min-w-[300px] max-w-[300px] bg-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative group/card'
                     onClick={scrollTop}

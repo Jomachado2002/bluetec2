@@ -1,101 +1,99 @@
-const backendDomain = process.env.REACT_APP_BACKEND_URL ; // Cambiado "backendDomin" a "backendDomain"
+const backendDomain = process.env.REACT_APP_BACKEND_URL;
 
 const SummaryApi = {
+    // Autenticación
     SignUP: { 
-        url: `${backendDomain}/api/signup`,
+        url: `${backendDomain}/api/registro`,  // Cambiar "signup" a "registro"
         method: "post"
     },
-    signIn: {  // Correcto: "signIn" con 'g'
-        url: `${backendDomain}/api/signin`,
-        method: "post"  // Cambiado "metho" a "method"
+    signIn: {
+        url: `${backendDomain}/api/iniciar-sesion`,  // Cambiar "signin" a "iniciar-sesion"
+        method: "post"
     },
     current_user : {
-        url: `${backendDomain}/api/user-details`,
+        url: `${backendDomain}/api/detalles-usuario`,  // Cambiar "user-details" a "detalles-usuario"
         method: "get"
     },
     logout_user: {
-        url: `${backendDomain}/api/userLogout`,
+        url: `${backendDomain}/api/cerrar-sesion`,  // Cambiar "userLogout" a "cerrar-sesion"
         method : "get"
     },
     allUser:{
-        url: `${backendDomain}/api/all-user`,
+        url: `${backendDomain}/api/todos-usuarios`,  // Cambiar "all-user" a "todos-usuarios"
         method : "get" 
     },
     updateUser: {
-        url: `${backendDomain}/api/update-user`,
+        url: `${backendDomain}/api/actualizar-usuario`,  // Cambiar "update-user" a "actualizar-usuario"
         method : "post"
     },
     uploadProduct: {
-        url : `${backendDomain}/api/upload-product`,
+        url : `${backendDomain}/api/cargar-producto`,  // Cambiar "upload-product" a "cargar-producto"
         method : 'post'
     },
     allProduct: {
-        url: `${backendDomain}/api/get-product`,  // <--- Corrección aquí
+        url: `${backendDomain}/api/obtener-productos`,  // Cambiar "get-product" a "obtener-productos"
         method : 'get'
     },
     updateProduct : {
-        url : `${backendDomain}/api/update-product`,
+        url : `${backendDomain}/api/actualizar-producto`,  // Cambiar "update-product" a "actualizar-producto"
         method : 'post'
     },
     categoryProduct : {
-        url: `${backendDomain}/api/get-categoryProduct`,
+        url: `${backendDomain}/api/obtener-categorias`,  // Cambiar "get-categoryProduct" a "obtener-categorias"
         method: 'get'
     },
     categoryWiseProduct : {
-        url : `${backendDomain}/api/category-product`,
+        url : `${backendDomain}/api/productos-por-categoria`,  // Cambiar "category-product" a "productos-por-categoria"
         method : 'post'
     },
     productDetails : {
-        url : `${backendDomain}/api/product-details`,
+        url : `${backendDomain}/api/detalles-producto`,  // Cambiar "product-details" a "detalles-producto"
         method : 'post'
     },
     addToCartProduct : {
-        url : `${backendDomain}/api/addtocart`,
+        url : `${backendDomain}/api/agregar-al-carrito`,  // Cambiar "addtocart" a "agregar-al-carrito"
         method : 'post'
     },
     addToCartProductCount : {
-        url : `${backendDomain}/api/countAddToCartProduct`,
+        url : `${backendDomain}/api/contar-productos-carrito`,  // Cambiar "countAddToCartProduct" a "contar-productos-carrito"
         method : 'get'
     },
     addToCartProductView : {
-        url : `${backendDomain}/api/view-card-product`,
+        url : `${backendDomain}/api/ver-productos-carrito`,  // Cambiar "view-card-product" a "ver-productos-carrito"
         method : 'get'
     },
     updateCartProduct : {
-        url : `${backendDomain}/api/update-cart-product`,
+        url : `${backendDomain}/api/actualizar-producto-carrito`,  // Cambiar "update-cart-product" a "actualizar-producto-carrito"
         method : 'post'
     },
     deleteCartProduct : {
-        url : `${backendDomain}/api/delete-cart-product`,
+        url : `${backendDomain}/api/eliminar-producto-carrito`,  // Cambiar "delete-cart-product" a "eliminar-producto-carrito"
         method : 'post'
     },
     searchProduct : {
-        url : `${backendDomain}/api/search`,
+        url : `${backendDomain}/api/buscar`,  // Mantenido como "search" -> "buscar" (corto y claro)
         method : 'get'
     },
     filterProduct : {
-        url : `${backendDomain}/api/filter-product`,
+        url : `${backendDomain}/api/filtrar-productos`,  // Cambiar "filter-product" a "filtrar-productos"
         method : 'post'
     },
-    // Añadido para el reseteo de contraseñas
     forgotPassword: {
-        url: `${backendDomain}/api/request-password-reset`, // Cambiar la ruta para coincidir con el backend
+        url: `${backendDomain}/api/solicitar-restablecer-contrasena`,  // Cambiar "request-password-reset" a "solicitar-restablecer-contrasena"
         method: 'post'
     },
     resetPassword: {
-        url: `${backendDomain}/api/reset-password`, // Resetear la contraseña con el token
+        url: `${backendDomain}/api/restablecer-contrasena`,  // Cambiar "reset-password" a "restablecer-contrasena"
         method: 'post'
     },
     getCategorySearch: {
-        url: `${backendDomain}/api/get-categorySearch`,  // Agregando el dominio del backend
+        url: `${backendDomain}/api/buscar-por-categoria`,  // Cambiar "get-categorySearch" a "buscar-por-categoria"
         method: "GET"
     },
     deleteProductController: {
-        url: `${backendDomain}/api/delete-product`, 
+        url: `${backendDomain}/api/eliminar-producto`,  // Cambiar "delete-product" a "eliminar-producto"
         method: 'post'
     }
-
-
 };
 
 export default SummaryApi;

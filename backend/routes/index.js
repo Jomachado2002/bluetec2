@@ -28,42 +28,44 @@ const getCategorySearch = require('../controller/product/getCategorySearch');
 const { deleteProductController } = require('../controller/product/deleteproductcontrolle');
 
 
+// Archivo: backend/routes/index.js
+
 // Rutas de usuario
-router.post("/signup", userSignUpController);
-router.post("/signin", userSignInController);
-router.get("/user-details", authToken, userDetailsController);
-router.get("/userLogout", userLogout);
+router.post("/registro", userSignUpController); // Antes: signup
+router.post("/iniciar-sesion", userSignInController); // Antes: signin
+router.get("/detalles-usuario", authToken, userDetailsController); // Antes: user-details
+router.get("/cerrar-sesion", userLogout); // Antes: userLogout
 
 // Admin panel
-router.get("/all-user", authToken, allUsers);
-router.post("/update-user", authToken, updateUser);
+router.get("/todos-usuarios", authToken, allUsers); // Antes: all-user
+router.post("/actualizar-usuario", authToken, updateUser); // Antes: update-user
 
 // Productos
-router.post("/upload-product", authToken, UploadProductController);
-router.get("/get-product", getProductController);
-router.post("/update-product", authToken, updateProductController);
-router.get("/get-categoryProduct", getCategoryProduct);
-router.post("/category-product", getCategoryWiseProduct);
-router.post("/product-details", getProductDetails);
-router.get("/search", searchProduct);
-router.post("/filter-product", filterProductController);
+router.post("/cargar-producto", authToken, UploadProductController); // Antes: upload-product
+router.get("/obtener-productos", getProductController); // Antes: get-product
+router.post("/actualizar-producto", authToken, updateProductController); // Antes: update-product
+router.get("/obtener-categorias", getCategoryProduct); // Antes: get-categoryProduct
+router.post("/productos-por-categoria", getCategoryWiseProduct); // Antes: category-product
+router.post("/detalles-producto", getProductDetails); // Antes: product-details
+router.get("/buscar", searchProduct); // Antes: search
+router.post("/filtrar-productos", filterProductController); // Antes: filter-product
 
-// Carrito de compras
-//router.post("/addtocart", authToken, addToCartController);
-//router.get("/countAddToCartProduct", authToken, countAddToCartProduct);
-//router.get("/view-card-product", authToken, addToCartViewProduct);
-//router.post("/update-cart-product", authToken, updateAddToCartProduct);
-//router.post("/delete-cart-product", authToken, deleteAddToCartProduct);
+// Carrito de compras (si decides reactivarlos)
+//router.post("/agregar-al-carrito", authToken, addToCartController); // Antes: addtocart
+//router.get("/contar-productos-carrito", authToken, countAddToCartProduct); // Antes: countAddToCartProduct
+//router.get("/ver-productos-carrito", authToken, addToCartViewProduct); // Antes: view-card-product
+//router.post("/actualizar-producto-carrito", authToken, updateAddToCartProduct); // Antes: update-cart-product
+//router.post("/eliminar-producto-carrito", authToken, deleteAddToCartProduct); // Antes: delete-cart-product
 
 // Recuperación de contraseña
-router.post("/request-password-reset", requestPasswordReset);
-router.post("/reset-password", resetPassword);
+router.post("/solicitar-restablecer-contrasena", requestPasswordReset); // Antes: request-password-reset
+router.post("/restablecer-contrasena", resetPassword); // Antes: reset-password
 
 // Búsqueda de productos
-router.get("/getsearchProduct", getCategorySearch);
+router.get("/buscar-por-categoria", getCategorySearch); // Antes: getsearchProduct
 
-//eliminarproduct
-router.post("/delete-product", authToken, deleteProductController);
+// Eliminar producto
+router.post("/eliminar-producto", authToken, deleteProductController); // Antes: delete-product
 
 
 module.exports = router;

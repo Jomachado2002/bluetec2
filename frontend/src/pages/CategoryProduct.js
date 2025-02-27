@@ -187,11 +187,11 @@ const CategoryProduct = () => {
 
     const handleSelectCategory = (e) => {
         const category = e.target.value;
-        navigate(`/product-category?category=${category}`);
+        navigate(`/categoria-producto?category=${category}`);
     };
 
     const handleSelectSubcategory = (subcategory) => {
-        navigate(`/product-category?category=${selectedCategory}&subcategory=${subcategory}`);
+        navigate(`/categoria-producto?category=${selectedCategory}&subcategory=${subcategory}`);
     };
 
     const handleSpecFilterChange = (type, value) => {

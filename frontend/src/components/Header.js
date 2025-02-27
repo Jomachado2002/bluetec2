@@ -43,7 +43,7 @@ const Header = () => {
   const handleSearch = (e) => {
     const { value } = e.target;
     setSearch(value);
-    navigate(`/search?q=${value}`);
+    navigate(`/buscar?q=${value}`);
   };
 
   const toggleCategoryMenu = () => setCategoryMenuOpen(!categoryMenuOpen);
@@ -81,7 +81,7 @@ const Header = () => {
 
         {/* Iconos de carrito y perfil/ingresar */}
         <div className="hidden lg:flex items-center gap-6">
-          <Link to="/cart" className="relative">
+        <Link to="/carrito" className="relative">
             <CiShoppingCart className="text-3xl text-gray-600 hover:text-green-600 transition" />
             {context?.cartProductCount > 0 && (
               <div className="absolute -top-2 -right-3 w-5 h-5 text-xs text-white bg-green-600 rounded-full flex items-center justify-center">
@@ -92,7 +92,7 @@ const Header = () => {
 
           <div className="relative">
             {!user ? (
-              <Link to="/login" className="flex items-center text-gray-600 hover:text-green-600">
+              <Link to="/iniciar-sesion" className="flex items-center text-gray-600 hover:text-green-600">
                 <CiUser className="text-3xl" />
               </Link>
             ) : (
@@ -109,7 +109,7 @@ const Header = () => {
                 <nav className="flex flex-col gap-2">
                   {user?.role === ROLE.ADMIN && (
                     <Link
-                      to="/admin-panel/all-products"
+                      to="/panel-admin/todos-productos"
                       className="text-gray-600 hover:text-green-600"
                       onClick={toggleProfileMenu}
                     >
@@ -177,7 +177,7 @@ const Header = () => {
                 {category.subcategories.map((subcategory) => (
                   <Link
                     key={subcategory.id}
-                    to={`/product-category?category=${category.value}&subcategory=${subcategory.value}`}
+                    to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
                     className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
                     onClick={toggleCategoryMenu}
                   >
@@ -237,14 +237,14 @@ const Header = () => {
             <div className="absolute bottom-16 right-0 bg-white shadow-lg rounded-md p-4 z-50">
               <nav className="flex flex-col gap-2">
                 {!user ? (
-                  <Link to="/login" className="text-gray-600 hover:text-green-600">
+                  <Link to="/iniciar-sesion" className="text-gray-600 hover:text-green-600">
                     Ingresar
                   </Link>
                 ) : (
                   <>
                     {user?.role === ROLE.ADMIN && (
                       <Link
-                        to="/admin-panel/all-products"
+                        to="/panel-admin/todos-productos"
                         className="text-gray-600 hover:text-green-600"
                       >
                         Panel de Administrador

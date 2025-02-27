@@ -29,7 +29,7 @@ async function requestPasswordReset(req, res) {
         });
 
         // URL para restablecer contraseña
-        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+        const resetUrl = `${process.env.FRONTEND_URL}/restablecer-contrasena/${token}`;
 
         // Enviar el correo
         await transporter.sendMail({

@@ -46,7 +46,7 @@ const Login = () => {
                 toast.success(dataApi.message);
 
                 if (dataApi.user.role === "ADMIN") {
-                    navigate('/admin-panel/all-products');
+                    navigate('/panel-admin/todos-productos');
                 } else {
                     navigate('/');
                 }
@@ -118,7 +118,7 @@ const Login = () => {
             {/* Olvidó su contraseña */}
             <div className='flex justify-end mb-4'>
               <Link
-                to='/forgot-password'
+                to='/recuperar-contrasena'
                 className='text-sm text-blue-600 hover:text-red-600'
               >
                 ¿Olvidó su contraseña?
@@ -135,7 +135,7 @@ const Login = () => {
           <p className='text-center mt-4'>
             ¿No tienes un registro?
             <Link
-              to='/sign-up'
+              to='/registro'
               className='text-blue-600 hover:text-blue-700 ml-1'
             >
               Crear una cuenta

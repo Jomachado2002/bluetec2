@@ -162,7 +162,7 @@ const HorizontalCardProduct = ({
           </div>
           
           <Link 
-            to={`/product-category?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`} 
+            to={`/categoria-producto?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`} 
             className="text-green-600 hover:text-green-700 text-sm font-semibold transition-colors flex items-center group"
             onClick={scrollTop}
           >
@@ -206,7 +206,7 @@ const HorizontalCardProduct = ({
             
             return (
               <Link
-                to={`${pathname}product/${product?._id}`}
+                to={`${pathname}producto/${product?._id}`}
                 onClick={scrollTop}
                 key={index}
                 className="flex-none w-[260px] sm:w-[300px] lg:w-[340px] h-[260px] sm:h-[300px] lg:h-[320px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 product-card cursor-pointer snap-center block overflow-hidden relative group/card"

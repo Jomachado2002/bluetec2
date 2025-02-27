@@ -34,7 +34,7 @@ const ResetPassword = () => {
       setError("");
 
       // Redirigir al usuario al login después de un breve tiempo
-      setTimeout(() => navigate("/login"), 3000);
+      setTimeout(() => navigate("/iniciar-sesion"), 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Ocurrió un error.");
     }
