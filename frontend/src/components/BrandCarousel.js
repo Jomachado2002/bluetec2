@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import { Link } from 'react-router-dom';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import scrollTop from '../helpers/scrollTop';
 
 const BrandCarousel = () => {
   const settings = {
@@ -43,7 +44,7 @@ const BrandCarousel = () => {
       <Slider {...settings}>
         {brands.map((brand) => (
           <div key={brand.id} className="px-2">
-            <Link to={`/buscar?q=${brand.name}`}>
+            <Link to={`/buscar?q=${brand.name}`} onClick={() => scrollTop()}>  
               <div className="group relative p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <img
                   src={brand.logo}

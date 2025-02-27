@@ -9,6 +9,9 @@ import BrandCarousel from '../components/BrandCarousel';
 import NotebookBanner from '../components/NotebookBanner';
 import '../styles/global.css';
 
+// Importar la función scrollTop mejorada
+import scrollTop from '../helpers/scrollTop';
+
 // Animaciones predefinidas
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -33,6 +36,9 @@ const staggerChildren = {
 const Home = () => {
   // Lazy load imágenes y componentes
   useEffect(() => {
+    // Asegurarse de que la página se cargue desde arriba al entrar
+    scrollTop();
+
     // Prefetch imágenes críticas
     const prefetchImages = () => {
       const imageUrls = [
@@ -53,6 +59,13 @@ const Home = () => {
     const message = "Hola, necesito asesoramiento sobre productos de informática. ¿Podrían ayudarme?";
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/595972971353?text=${encodedMessage}`, '_blank');
+  };
+
+  // Función para navegar a categorías con scroll suave
+  const navigateToCategory = (category, subcategory = '') => {
+    scrollTop();
+    // La navegación se maneja a través de Link, pero si necesitas hacerlo programáticamente:
+    // navigate(`/categoria-producto?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`);
   };
 
   return (
@@ -111,7 +124,8 @@ const Home = () => {
                   <NotebookBanner />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
                     <div className="text-white">
-                      <Link to="/categoria-producto?category=informatica&subcategory=notebooks">
+                      <Link to="/categoria-producto?category=informatica&subcategory=notebooks"
+                            onClick={() => scrollTop()}>
                       </Link>
                     </div>
                   </div>
@@ -160,7 +174,8 @@ const Home = () => {
                     <p className="mt-2 text-gray-600 max-w-lg">La base perfecta para tu próximo sistema de alto rendimiento</p>
                     <div className="h-1 w-24 bg-blue-600 mt-2 rounded-full"></div>
                   </div>
-                  <Link to="/categoria-producto?category=informatica&subcategory=placas_madre">
+                  <Link to="/categoria-producto?category=informatica&subcategory=placas_madre" 
+                        onClick={() => scrollTop()}>
                     <button className="mt-4 md:mt-0 px-6 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver toda la colección
                     </button>
@@ -208,7 +223,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=computadoras_ensambladas">
+                  <Link to="/categoria-producto?category=informatica&subcategory=computadoras_ensambladas"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -237,7 +253,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=perifericos&subcategory=monitores">
+                  <Link to="/categoria-producto?category=perifericos&subcategory=monitores"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -266,7 +283,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=memorias_ram">
+                  <Link to="/categoria-producto?category=informatica&subcategory=memorias_ram"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-purple-600 text-white hover:bg-purple-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -295,7 +313,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=discos_duros">
+                  <Link to="/categoria-producto?category=informatica&subcategory=discos_duros"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-red-600 text-white hover:bg-red-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -324,7 +343,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=tarjetas_graficas">
+                  <Link to="/categoria-producto?category=informatica&subcategory=tarjetas_graficas"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-teal-600 text-white hover:bg-teal-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -353,7 +373,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=gabinetes">
+                  <Link to="/categoria-producto?category=informatica&subcategory=gabinetes"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-indigo-600 text-white hover:bg-indigo-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -382,7 +403,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=procesador">
+                  <Link to="/categoria-producto?category=informatica&subcategory=procesador"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-cyan-600 text-white hover:bg-cyan-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -411,7 +433,8 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=perifericos&subcategory=teclados">
+                  <Link to="/categoria-producto?category=perifericos&subcategory=teclados"
+                        onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-rose-600 text-white hover:bg-rose-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
                     </button>
@@ -493,16 +516,16 @@ const Home = () => {
                     <p className="text-green-100">Nuestros expertos están listos para asesorarte y encontrar la solución perfecta para ti.</p>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
-                  <button 
+                    <button 
                       onClick={openWhatsApp}
                       className="px-6 py-3 bg-white text-green-700 hover:bg-gray-100 rounded-lg font-medium transition duration-300 shadow-md shine-button flex items-center justify-center"
                     >
                       <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                       </svg>
                       Contactar Asesor
-                          </button>
-                          <Link to="/nosotros">
+                    </button>
+                    <Link to="/nosotros" onClick={() => scrollTop()}>
                       <button className="px-6 py-3 bg-green-700 text-white hover:bg-green-800 rounded-lg font-medium transition duration-300 shadow-md border border-green-500 shine-button">
                         NOSOTROS
                       </button>

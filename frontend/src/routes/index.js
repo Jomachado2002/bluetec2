@@ -11,13 +11,11 @@ import CategoryProduct from "../pages/CategoryProduct"
 import ProductDetails from "../pages/ProductDetails"
 import Cart from '../pages/Cart'
 import SearchProduct from "../pages/SearchProduct"
-import MobileCategoriesPage from "../pages/MobileCategoriesPage";
-import ResetPassword from "../pages/ResetPassword"; // Asegúrate de que ResetPassword esté importado
-import Nosotros from "../pages/Nosotros";
-
+import MobileCategoriesPage from "../pages/MobileCategoriesPage"
+import ResetPassword from "../pages/ResetPassword"
+import Nosotros from "../pages/Nosotros"
 
 // Archivo: routes/index.js del frontend
-
 const router = createBrowserRouter([
     {
         path: "/",
@@ -28,56 +26,55 @@ const router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: "iniciar-sesion", // Antes: login
+                path: "iniciar-sesion",
                 element: <Login />
             },
             {
-                path: "recuperar-contrasena", // Antes: forgot-password
+                path: "recuperar-contrasena",
                 element: <ForgotPassword />
             },
             {
-                path: "restablecer-contrasena/:token", // Antes: reset-password/:token
+                path: "restablecer-contrasena/:token",
                 element: <ResetPassword />
             },
             {
-                path: "registro", // Antes: sign-up
+                path: "registro",
                 element: <SignUp />
             },
             {
-                path: "nosotros", // Nueva ruta para la página Nosotros
+                path: "nosotros",
                 element: <Nosotros />
             },
             {
-                path: "/",
-                element: <App />,
-                children: [
-                  { path: "", element: <Home /> },
-                  { path: "categorias-movil", element: <MobileCategoriesPage /> }, // Antes: mobile-categories
-                  { path: "categoria-producto", element: <CategoryProduct /> }, // Antes: product-category
-                ]
-              },
+                path: "categorias-movil",
+                element: <MobileCategoriesPage />
+            },
             {
-                path: "producto/:id", // Antes: product/:id
+                path: "categoria-producto",
+                element: <CategoryProduct />
+            },
+            {
+                path: "producto/:id",
                 element: <ProductDetails />
             },
             {
-                path: "carrito", // Antes: cart
+                path: "carrito",
                 element: <Cart />
             },
             {
-                path: "buscar", // Antes: search
+                path: "buscar",
                 element: <SearchProduct />
             },
             {
-                path: "panel-admin", // Antes: admin-panel
+                path: "panel-admin",
                 element: <AdminPanel />,
                 children: [
                     {
-                        path: "todos-usuarios", // Antes: all-users
+                        path: "todos-usuarios",
                         element: <AllUsers />
                     },
                     {
-                        path: "todos-productos", // Antes: all-products
+                        path: "todos-productos",
                         element: <AllProducts />
                     }
                 ]

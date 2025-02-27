@@ -10,6 +10,7 @@ import { setUserDetails } from '../store/userSlice';
 import ROLE from '../common/role';
 import Context from '../context';
 import productCategory from '../helpers/productCategory';
+import scrollTop from '../helpers/scrollTop';
 
 const Header = () => {
   const user = useSelector(state => state?.user?.user);
@@ -176,11 +177,14 @@ const Header = () => {
               <div>
                 {category.subcategories.map((subcategory) => (
                   <Link
-                    key={subcategory.id}
-                    to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
-                    className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
-                    onClick={toggleCategoryMenu}
-                  >
+                  key={subcategory.id}
+                  to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
+                  className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
+                  onClick={() => {
+                    toggleCategoryMenu();
+                    scrollTop();
+                  }}
+                >
                     <div className="flex items-center space-x-3">
                       <span className="text-gray-700 group-hover:text-green-600 transition-colors">
                         {subcategory.label}
