@@ -220,7 +220,7 @@ const Header = () => {
           <BiCategoryAlt className="text-2xl" />
           <span className="text-xs">Categorías</span>
         </button>
-        <Link to="/carrrito" className="flex flex-col items-center text-gray-600 hover:text-green-600">
+        <Link to="/carrito" className="flex flex-col items-center text-gray-600 hover:text-green-600">
           <CiShoppingCart className="text-2xl" />
           <span className="text-xs">Carrito</span>
         </Link>
