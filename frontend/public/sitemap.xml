@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.jmcomputer.com.py/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Página principal -->
   <url>
     <loc>https://jmcomputer.com.py/</loc>
@@ -8,7 +8,7 @@
     <priority>1.0</priority>
   </url>
   
-  <!-- Páginas importantes -->
+  <!-- Páginas institucionales -->
   <url>
     <loc>https://jmcomputer.com.py/nosotros</loc>
     <lastmod>2025-02-27</lastmod>
@@ -60,57 +60,21 @@
     <priority>0.8</priority>
   </url>
   
-  <!-- Subcategorías populares -->
+  <!-- Subcategorías -->
   <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=notebooks</loc>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&amp;subcategory=notebooks</loc>
     <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=computadoras_ensambladas</loc>
-    <lastmod>2025-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=placas_madre</loc>
-    <lastmod>2025-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=memorias_ram</loc>
-    <lastmod>2025-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=discos_duros</loc>
-    <lastmod>2025-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=procesador</loc>
-    <lastmod>2025-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=perifericos&subcategory=monitores</loc>
-    <lastmod>2025-02-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://jmcomputer.com.py/categoria-producto?category=perifericos&subcategory=teclados</loc>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&amp;subcategory=computadoras_ensambladas</loc>
     <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
-  <!-- Páginas de búsqueda -->
+  <!-- Página de búsqueda -->
   <url>
     <loc>https://jmcomputer.com.py/buscar</loc>
     <lastmod>2025-02-27</lastmod>
