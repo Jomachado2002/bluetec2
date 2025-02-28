@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <urlset xmlns="http://www.jmcomputer.com.py/schemas/sitemap/0.9">
+=======
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+>>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
   <!-- Página principal -->
   <url>
     <loc>https://jmcomputer.com.py/</loc>
@@ -8,7 +12,11 @@
     <priority>1.0</priority>
   </url>
   
+<<<<<<< HEAD
   <!-- Páginas importantes -->
+=======
+  <!-- Páginas institucionales -->
+>>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
   <url>
     <loc>https://jmcomputer.com.py/nosotros</loc>
     <lastmod>2025-02-27</lastmod>
@@ -60,14 +68,21 @@
     <priority>0.8</priority>
   </url>
   
+<<<<<<< HEAD
   <!-- Subcategorías populares -->
   <url>
     <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=notebooks</loc>
+=======
+  <!-- Subcategorías -->
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&amp;subcategory=notebooks</loc>
+>>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
     <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
+<<<<<<< HEAD
     <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=computadoras_ensambladas</loc>
     <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -105,16 +120,27 @@
   </url>
   <url>
     <loc>https://jmcomputer.com.py/categoria-producto?category=perifericos&subcategory=teclados</loc>
+=======
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&amp;subcategory=computadoras_ensambladas</loc>
+>>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
     <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
+<<<<<<< HEAD
   <!-- Páginas de búsqueda -->
+=======
+  <!-- Página de búsqueda -->
+>>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
   <url>
     <loc>https://jmcomputer.com.py/buscar</loc>
     <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
+<<<<<<< HEAD
 </urlset>
+=======
+</urlset>
+>>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
