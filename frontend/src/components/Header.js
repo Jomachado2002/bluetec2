@@ -11,6 +11,7 @@ import ROLE from '../common/role';
 import Context from '../context';
 import productCategory from '../helpers/productCategory';
 import scrollTop from '../helpers/scrollTop';
+import { FaWhatsapp } from "react-icons/fa";
 
 const Header = () => {
   const user = useSelector(state => state?.user?.user);
@@ -216,57 +217,28 @@ const Header = () => {
 
       {/* Barra de navegación móvil */}
       <div className="lg:hidden fixed bottom-0 w-full bg-white shadow-inner border-t p-2 flex justify-around">
-        <Link to="/" className="flex flex-col items-center text-gray-600 hover:text-green-600">
-          <CiHome className="text-2xl" />
-          <span className="text-xs">Inicio</span>
-        </Link>
-        <button onClick={toggleCategoryMenu} className="flex flex-col items-center text-gray-600 hover:text-green-600">
-          <BiCategoryAlt className="text-2xl" />
-          <span className="text-xs">Categorías</span>
-        </button>
-        <Link to="/carrito" className="flex flex-col items-center text-gray-600 hover:text-green-600">
-          <CiShoppingCart className="text-2xl" />
-          <span className="text-xs">Carrito</span>
-        </Link>
-        <div className="relative">
-          <button
-            onClick={toggleProfileMenu}
-            className="flex flex-col items-center text-gray-600 hover:text-green-600"
-          >
-            <CiUser className="text-2xl" />
-            <span className="text-xs">{!user ? 'Ingresar' : 'Perfil'}</span>
-          </button>
-
-          {profileMenuOpen && (
-            <div className="absolute bottom-16 right-0 bg-white shadow-lg rounded-md p-4 z-50">
-              <nav className="flex flex-col gap-2">
-                {!user ? (
-                  <Link to="/iniciar-sesion" className="text-gray-600 hover:text-green-600">
-                    Ingresar
-                  </Link>
-                ) : (
-                  <>
-                    {user?.role === ROLE.ADMIN && (
-                      <Link
-                        to="/panel-admin/todos-productos"
-                        className="text-gray-600 hover:text-green-600"
-                      >
-                        Panel de Administrador
-                      </Link>
-                    )}
-                    <button
-                      onClick={handleLogout}
-                      className="text-gray-600 hover:text-red-600"
-                    >
-                      Cerrar Sesión
-                    </button>
-                  </>
-                )}
-              </nav>
-            </div>
-          )}
-        </div>
-      </div>
+    <Link to="/" className="flex flex-col items-center text-gray-600 hover:text-green-600">
+      <CiHome className="text-2xl" />
+      <span className="text-xs">Inicio</span>
+    </Link>
+    <button onClick={toggleCategoryMenu} className="flex flex-col items-center text-gray-600 hover:text-green-600">
+      <BiCategoryAlt className="text-2xl" />
+      <span className="text-xs">Categorías</span>
+    </button>
+    <Link to="/carrito" className="flex flex-col items-center text-gray-600 hover:text-green-600">
+      <CiShoppingCart className="text-2xl" />
+      <span className="text-xs">Carrito</span>
+    </Link>
+    <a 
+      href="https://wa.me/+595972971353?text=Hola,%20estoy%20interesado%20en%20obtener%20información%20sobre%20insumos%20de%20tecnología." 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="flex flex-col items-center text-gray-600 hover:text-green-600"
+    >
+      <FaWhatsapp className="text-2xl" />
+      <span className="text-xs">WhatsApp</span>
+    </a>
+  </div>
     </header>
   );
 };
