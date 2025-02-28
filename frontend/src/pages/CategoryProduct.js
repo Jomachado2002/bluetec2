@@ -195,9 +195,14 @@ const CategoryProduct = () => {
     };
 
     const handleSelectSubcategory = (subcategory) => {
-        navigate(`/categoria-producto?category=${selectedCategory}&subcategory=${subcategory}`);
+        // Limpiar la lista de categorías antes de navegar
+        setFilterCategoryList([]);
+        setFilterSubcategoryList([subcategory]);
+    
+        // Navegar a la nueva subcategoría
+        navigate(`/categoria-producto?subcategory=${subcategory}`);
     };
-
+    
     const handleSpecFilterChange = (type, value) => {
         setSpecFilters(prev => ({
             ...prev,
