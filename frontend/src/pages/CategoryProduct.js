@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import productCategory from '../helpers/productCategory';
 import VerticalCard from '../components/VerticalCard';
 import SummaryApi from '../common';
 import SpecificationAccordion from '../components/SpecificationAccordion';
+
 
 const CategoryProduct = () => {
     const [data, setData] = useState([]);
@@ -25,6 +26,9 @@ const CategoryProduct = () => {
     });
     const [sortBy, setSortBy] = useState("");
     const [isFiltersVisible, setIsFiltersVisible] = useState(false);
+    const [expandedCategories, setExpandedCategories] = useState({});
+    const [searchBrand, setSearchBrand] = useState('');
+    const [searchSpecification, setSearchSpecification] = useState('');
 
     // Mapeo de etiquetas para especificaciones
     const getSpecificationLabel = (specKey) => {
@@ -216,141 +220,195 @@ const CategoryProduct = () => {
         }));
     };
 
+    // Toggle para expandir/contraer categorías
+    const toggleCategory = (categoryValue) => {
+        setExpandedCategories(prev => ({
+            ...prev,
+            [categoryValue]: !prev[categoryValue]
+        }));
+    };
+
+    // Filtro de marcas con búsqueda
+    const filteredBrands = useMemo(() => {
+        return availableFilters.brands.filter(brand => 
+            brand.toLowerCase().includes(searchBrand.toLowerCase())
+        );
+    }, [availableFilters.brands, searchBrand]);
+
+    // Renderizado de especificaciones con filtro de búsqueda
     const renderSpecificationFilters = (isMobile = false) => {
         const specKeys = Object.keys(availableFilters.specifications);
         if (specKeys.length === 0) return null;
 
         return (
             <div className="mb-6">
-                <h3 className={`text-base uppercase font-medium ${isMobile ? 'text-green-600 border-green-300' : 'text-slate-500 border-slate-300'} border-b pb-1 mb-3`}>
-                    Especificaciones
-                </h3>
+                <div className="flex justify-between items-center border-b pb-1">
+                    <h3 className={`text-base uppercase font-medium ${isMobile ? 'text-green-600' : 'text-slate-500'}`}>
+                        Especificaciones
+                    </h3>
+                </div>
                 
-                {specKeys.map(specKey => (
-                    <SpecificationAccordion
-                        key={specKey}
-                        title={getSpecificationLabel(specKey)}
-                        options={availableFilters.specifications[specKey] || []}
-                        selectedValues={specFilters[specKey] || []}
-                        onChange={(value) => handleSpecFilterChange(specKey, value)}
-                        isMobile={isMobile}
-                    />
-                ))}
+                <input 
+                    type="text" 
+                    placeholder="Buscar especificación..." 
+                    className="w-full p-2 border rounded my-2"
+                    value={searchSpecification}
+                    onChange={(e) => setSearchSpecification(e.target.value)}
+                />
+
+                {specKeys
+                    .filter(specKey => 
+                        specKey.toLowerCase().includes(searchSpecification.toLowerCase())
+                    )
+                    .map(specKey => (
+                        <SpecificationAccordion
+                            key={specKey}
+                            title={getSpecificationLabel(specKey)}
+                            options={availableFilters.specifications[specKey] || []}
+                            selectedValues={specFilters[specKey] || []}
+                            onChange={(value) => handleSpecFilterChange(specKey, value)}
+                            isMobile={isMobile}
+                        />
+                    ))
+                }
             </div>
         );
     };
 
     const renderFilters = (isMobile = false) => (
-        <>
-            {/* Sort by */}
-            <div className="mb-6">
-                <h3 className={`text-base uppercase font-medium ${isMobile ? 'text-green-600 border-green-300' : 'text-slate-500 border-slate-300'} border-b pb-1`}>
+        <div className="space-y-6">
+            {/* Ordenar por */}
+            <div className="border-b pb-4">
+                <h3 className={`text-lg font-semibold mb-3 ${isMobile ? 'text-green-700' : 'text-slate-800'}`}>
                     Ordenar por
                 </h3>
-                <form className='text-sm flex flex-col gap-2 py-2'>
-                    <div className='flex items-center gap-3'>
-                        <input
-                            type='radio'
-                            name='sortBy'
-                            checked={sortBy === 'asc'}
-                            onChange={handleOnChangeSortBy}
-                            value="asc"
-                            id={`${isMobile ? 'mobile-' : ''}sort-asc`}
-                        />
-                        <label htmlFor={`${isMobile ? 'mobile-' : ''}sort-asc`}>Precio - Bajo a Alto</label>
-                    </div>
-                    <div className='flex items-center gap-3'>
-                        <input
-                            type='radio'
-                            name='sortBy'
-                            checked={sortBy === 'dsc'}
-                            onChange={handleOnChangeSortBy}
-                            value="dsc"
-                            id={`${isMobile ? 'mobile-' : ''}sort-dsc`}
-                        />
-                        <label htmlFor={`${isMobile ? 'mobile-' : ''}sort-dsc`}>Precio - Alto a Bajo</label>
-                    </div>
-                </form>
+                <div className="space-y-2">
+                    {[
+                        { label: 'Precio - Bajo a Alto', value: 'asc' },
+                        { label: 'Precio - Alto a Bajo', value: 'dsc' }
+                    ].map((option) => (
+                        <label 
+                            key={option.value} 
+                            className="flex items-center space-x-2 cursor-pointer group"
+                        >
+                            <input
+                                type='radio'
+                                name='sortBy'
+                                checked={sortBy === option.value}
+                                onChange={handleOnChangeSortBy}
+                                value={option.value}
+                                className="form-radio text-green-600 focus:ring-green-500"
+                            />
+                            <span className="text-gray-700 group-hover:text-green-600">
+                                {option.label}
+                            </span>
+                        </label>
+                    ))}
+                </div>
             </div>
-
-            {/* Categories */}
-            <div className="mb-6">
-                <h3 className={`text-base uppercase font-medium ${isMobile ? 'text-green-600 border-green-300' : 'text-slate-500 border-slate-300'} border-b pb-1`}>
-                    Categoría
+    
+            {/* Categorías */}
+            <div className="border-b pb-4">
+                <h3 className={`text-lg font-semibold mb-3 ${isMobile ? 'text-green-700' : 'text-slate-800'}`}>
+                    Categorías
                 </h3>
-                <form className='text-sm flex flex-col gap-2 py-2'>
+                <div className="space-y-3">
                     {productCategory.map((category) => (
-                        <div key={category.value} className={isMobile ? "mb-2" : ""}>
-                            <div className='flex items-center gap-3'>
-                                <input
-                                    type='checkbox'
-                                    name="category"
-                                    checked={filterCategoryList.includes(category.value)}
-                                    value={category.value}
-                                    onChange={handleSelectCategory}
-                                    id={`${isMobile ? 'mobile-' : ''}category-${category.value}`}
-                                />
-                                <label 
-                                    htmlFor={`${isMobile ? 'mobile-' : ''}category-${category.value}`}
-                                    className={isMobile ? "font-medium" : ""}
-                                >
-                                    {category.label}
-                                </label>
+                        <div key={category.value} className="group">
+                            <div 
+                                className="flex justify-between items-center cursor-pointer hover:bg-green-50 p-2 rounded-md"
+                                onClick={() => toggleCategory(category.value)}
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type='checkbox'
+                                        name="category"
+                                        checked={filterCategoryList.includes(category.value)}
+                                        value={category.value}
+                                        onChange={handleSelectCategory}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="form-checkbox text-green-600 focus:ring-green-500"
+                                    />
+                                    <span className="text-gray-700 group-hover:text-green-600">
+                                        {category.label}
+                                    </span>
+                                </div>
+                                {category.subcategories && (
+                                    <span className="text-gray-400">
+                                        {expandedCategories[category.value] ? '▼' : '►'}
+                                    </span>
+                                )}
                             </div>
-
-                            {filterCategoryList.includes(category.value) && category.subcategories && (
-                                <div className={`ml-${isMobile ? '6' : '4'} mt-2`}>
+    
+                            {category.subcategories && expandedCategories[category.value] && (
+                                <div className="pl-6 mt-2 space-y-2">
                                     {category.subcategories.map((subcat) => (
-                                        <div className='flex items-center gap-3 mb-2' key={subcat.value}>
+                                        <div 
+                                            key={subcat.value}
+                                            className="flex items-center space-x-2 hover:bg-green-50 p-2 rounded-md"
+                                        >
                                             <input
                                                 type='checkbox'
                                                 name="subcategory"
                                                 checked={filterSubcategoryList.includes(subcat.value)}
                                                 value={subcat.value}
                                                 onChange={() => handleSelectSubcategory(subcat.value)}
-                                                id={`${isMobile ? 'mobile-' : ''}subcategory-${subcat.value}`}
+                                                className="form-checkbox text-green-600 focus:ring-green-500"
                                             />
-                                            <label htmlFor={`${isMobile ? 'mobile-' : ''}subcategory-${subcat.value}`}>
+                                            <span className="text-gray-600">
                                                 {subcat.label}
-                                            </label>
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
                             )}
                         </div>
                     ))}
-                </form>
+                </div>
             </div>
-
+    
             {/* Marcas */}
             {availableFilters.brands && availableFilters.brands.length > 0 && (
-                <div className="mb-6">
-                    <h3 className={`text-base uppercase font-medium ${isMobile ? 'text-green-600 border-green-300' : 'text-slate-500 border-slate-300'} border-b pb-1`}>
+                <div className="border-b pb-4">
+                    <h3 className={`text-lg font-semibold mb-3 ${isMobile ? 'text-green-700' : 'text-slate-800'}`}>
                         Marcas
                     </h3>
-                    <form className='text-sm flex flex-col gap-2 py-2'>
-                        {availableFilters.brands.map((brand) => (
-                            <label key={brand} className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={filterBrands.includes(brand)}
-                                    onChange={(e) => {
-                                        const newBrands = e.target.checked
-                                            ? [...filterBrands, brand]
-                                            : filterBrands.filter(b => b !== brand);
-                                        setFilterBrands(newBrands);
-                                    }}
-                                />
-                                <span>{brand}</span>
-                            </label>
-                        ))}
-                    </form>
+                    <div className="space-y-3">
+                        <input 
+                            type="text" 
+                            placeholder="Buscar marca..." 
+                            className="w-full p-2 border rounded mb-2 focus:ring-green-500 focus:border-green-500"
+                            value={searchBrand}
+                            onChange={(e) => setSearchBrand(e.target.value)}
+                        />
+                        <div className="max-h-48 overflow-y-auto space-y-2">
+                            {filteredBrands.map((brand) => (
+                                <label 
+                                    key={brand} 
+                                    className="flex items-center space-x-2 hover:bg-green-50 p-2 rounded-md cursor-pointer"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={filterBrands.includes(brand)}
+                                        onChange={(e) => {
+                                            const newBrands = e.target.checked
+                                                ? [...filterBrands, brand]
+                                                : filterBrands.filter(b => b !== brand);
+                                            setFilterBrands(newBrands);
+                                        }}
+                                        className="form-checkbox text-green-600 focus:ring-green-500"
+                                    />
+                                    <span className="text-gray-700">{brand}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             )}
-
-            {/* Especificaciones */}
-            {renderSpecificationFilters(isMobile)}
-        </>
+            
+             {/* Especificaciones */}
+        {renderSpecificationFilters(isMobile)}
+        </div>
     );
 
     return (
