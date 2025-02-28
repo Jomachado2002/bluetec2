@@ -5,6 +5,7 @@ import displayINRCurrency from '../helpers/displayCurrency';
 import CategroyWiseProductDisplay from '../components/CategoryWiseProductDisplay';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
+import CategoryWiseProductDisplay from '../components/CategoryWiseProductDisplay';
 
 // Lista de todas las posibles especificaciones por categoría
 const specificationsByCategory = {
@@ -513,11 +514,15 @@ ${productUrl}
           </div>
         </div>
       </div>
-      {data.category && (
-        <div className="mt-12">
-          <CategroyWiseProductDisplay category={data?.category} heading="Productos Recomendados" />
-        </div>
-      )}
+      {data.subcategory && (
+          <div className="mt-12">
+            <CategoryWiseProductDisplay
+              category={data?.category} 
+              subcategory={data?.subcategory} 
+              heading="Productos Recomendados" 
+            />
+          </div>
+        )}
     </div>
   );
 };

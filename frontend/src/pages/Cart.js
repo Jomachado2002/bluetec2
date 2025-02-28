@@ -323,7 +323,7 @@ const Cart = () => {
 
                                                 {/* Información */}
                                                 <div className="flex-1">
-                                                    <Link to={`/product/${product.productId._id}`} className="text-lg font-semibold text-gray-900 hover:text-green-600 transition-colors">
+                                                    <Link to={`/producto/${product.productId._id}`} className="text-lg font-semibold text-gray-900 hover:text-green-600 transition-colors">
                                                         {product.productId.productName}
                                                     </Link>
                                                     <p className="text-sm text-gray-500 mt-1">{product.productId.category}</p>

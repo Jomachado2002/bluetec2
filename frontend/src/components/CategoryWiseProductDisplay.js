@@ -7,7 +7,7 @@ import Context from '../context';
 import displayPYGCurrency from '../helpers/displayCurrency';
 import scrollTop from '../helpers/scrollTop';
 
-const CategoryWiseProductDisplay = ({ category, heading }) => {
+const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
@@ -43,14 +43,14 @@ const CategoryWiseProductDisplay = ({ category, heading }) => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const categoryProduct = await fetchCategoryWiseProduct(category);
+      const categoryProduct = await fetchCategoryWiseProduct(category, subcategory);
       setData(categoryProduct?.data || []);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
-  }, [category]);
+  }, [category, subcategory]);
 
   // useEffect para cargar datos
   useEffect(() => {

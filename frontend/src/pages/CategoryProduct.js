@@ -344,17 +344,18 @@ const CategoryProduct = () => {
                                     {category.subcategories.map((subcat) => (
                                         <div 
                                             key={subcat.value}
-                                            className="flex items-center space-x-2 hover:bg-green-50 p-2 rounded-md"
+                                            className="flex items-center space-x-2 hover:bg-green-50 p-2 rounded-md cursor-pointer"
+                                            onClick={() => handleSelectSubcategory(subcat.value)}
                                         >
                                             <input
-                                                    type='checkbox'
-                                                    name="subcategory"
-                                                    checked={filterSubcategoryList.includes(subcat.value)}
-                                                    value={subcat.value}
-                                                    onChange={() => handleSelectSubcategory(subcat.value)}
-                                                    className="form-checkbox text-green-600 focus:ring-green-500"
-                                                />
-                                                  <span className="text-gray-600">
+                                                type='checkbox'
+                                                name="subcategory"
+                                                checked={filterSubcategoryList.includes(subcat.value)}
+                                                value={subcat.value}
+                                                onChange={() => handleSelectSubcategory(subcat.value)}
+                                                className="form-checkbox text-green-600 focus:ring-green-500"
+                                            />
+                                            <span className="text-gray-600 cursor-pointer">
                                                 {subcat.label}
                                             </span>
                                         </div>
