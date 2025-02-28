@@ -10,8 +10,49 @@ import { setUserDetails } from '../store/userSlice';
 import ROLE from '../common/role';
 import Context from '../context';
 import productCategory from '../helpers/productCategory';
-import scrollTop from '../helpers/scrollTop';
 import { FaWhatsapp } from "react-icons/fa";
+
+// Función scrollTop mejorada
+const scrollTop = () => {
+  if ('scrollBehavior' in document.documentElement.style) {
+    // Método moderno con comportamiento suave
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  } else {
+    // Fallback para navegadores que no soportan scrollBehavior
+    const scrollToTop = () => {
+      const currentPosition = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+
+      if (currentPosition > 0) {
+        window.requestAnimationFrame(scrollToTop);
+        window.scrollTo(0, currentPosition - currentPosition / 8); // Ajusta la velocidad del scroll
+      }
+    };
+
+    scrollToTop();
+  }
+
+  // Manejo adicional para iOS (Safari móvil)
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+    document.body.scrollTop = 0; // Para Safari en iOS
+    document.documentElement.scrollTop = 0; // Alternativa
+
+    // Forzar un redibujado en caso de que el scroll no se actualice
+    setTimeout(() => {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }, 100); // Timeout para asegurar que se ejecute después de cualquier operación pendiente
+  }
+
+  // Respaldar con un timeout para asegurar que el scroll se complete
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }, 200); // Timeout adicional como respaldo
+};
 
 const Header = () => {
   const user = useSelector(state => state?.user?.user);
@@ -55,7 +96,7 @@ const Header = () => {
     <header className="h-20 bg-white shadow-lg fixed w-full top-0 z-50">
       <div className="h-full container mx-auto flex items-center justify-between px-4 lg:px-6">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center" onClick={scrollTop}>
           <img src="/logo.jpg" alt="Tu Logo" className="w-20" />
         </Link>
 
@@ -83,7 +124,7 @@ const Header = () => {
 
         {/* Iconos de carrito y perfil/ingresar */}
         <div className="hidden lg:flex items-center gap-6">
-        <Link to="/carrito" className="relative">
+          <Link to="/carrito" className="relative" onClick={scrollTop}>
             <CiShoppingCart className="text-3xl text-gray-600 hover:text-green-600 transition" />
             {context?.cartProductCount > 0 && (
               <div className="absolute -top-2 -right-3 w-5 h-5 text-xs text-white bg-green-600 rounded-full flex items-center justify-center">
@@ -94,7 +135,7 @@ const Header = () => {
 
           <div className="relative">
             {!user ? (
-              <Link to="/iniciar-sesion" className="flex items-center text-gray-600 hover:text-green-600">
+              <Link to="/iniciar-sesion" className="flex items-center text-gray-600 hover:text-green-600" onClick={scrollTop}>
                 <CiUser className="text-3xl" />
               </Link>
             ) : (
@@ -113,7 +154,10 @@ const Header = () => {
                     <Link
                       to="/panel-admin/todos-productos"
                       className="text-gray-600 hover:text-green-600"
-                      onClick={toggleProfileMenu}
+                      onClick={() => {
+                        toggleProfileMenu();
+                        scrollTop();
+                      }}
                     >
                       Panel de Administrador
                     </Link>
@@ -178,14 +222,14 @@ const Header = () => {
               <div>
                 {category.subcategories.map((subcategory) => (
                   <Link
-                  key={subcategory.id}
-                  to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
-                  className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
-                  onClick={() => {
-                    toggleCategoryMenu();
-                    scrollTop();
-                  }}
-                >
+                    key={subcategory.id}
+                    to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
+                    className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
+                    onClick={() => {
+                      toggleCategoryMenu();
+                      scrollTop();
+                    }}
+                  >
                     <div className="flex items-center space-x-3">
                       <span className="text-gray-700 group-hover:text-green-600 transition-colors">
                         {subcategory.label}
@@ -217,29 +261,29 @@ const Header = () => {
 
       {/* Barra de navegación móvil */}
       <div className="lg:hidden fixed bottom-0 w-full bg-white shadow-inner border-t p-2 flex justify-around">
-  <Link to="/" className="flex flex-col items-center text-gray-600 hover:text-green-600">
-    <CiHome className="text-2xl" />
-    <span className="text-xs">Inicio</span>
-  </Link>
-  <button onClick={() => { toggleCategoryMenu(); scrollTop(); }} className="flex flex-col items-center text-gray-600 hover:text-green-600">
-    <BiCategoryAlt className="text-2xl" />
-    <span className="text-xs">Categorías</span>
-  </button>
-  <Link to="/carrito" className="flex flex-col items-center text-gray-600 hover:text-green-600">
-    <CiShoppingCart className="text-2xl" />
-    <span className="text-xs">Carrito</span>
-  </Link>
-  <a 
-    href="https://wa.me/+595972971353?text=Hola,%20estoy%20interesado%20en%20obtener%20información%20sobre%20insumos%20de%20tecnología." 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="flex flex-col items-center text-gray-600 hover:text-green-600"
-    onClick={() => { toggleProfileMenu(); scrollTop(); }}
-  >
-    <FaWhatsapp className="text-2xl" />
-    <span className="text-xs">WhatsApp</span>
-  </a>
-</div>
+        <Link to="/" className="flex flex-col items-center text-gray-600 hover:text-green-600" onClick={scrollTop}>
+          <CiHome className="text-2xl" />
+          <span className="text-xs">Inicio</span>
+        </Link>
+        <button onClick={() => { toggleCategoryMenu(); scrollTop(); }} className="flex flex-col items-center text-gray-600 hover:text-green-600">
+          <BiCategoryAlt className="text-2xl" />
+          <span className="text-xs">Categorías</span>
+        </button>
+        <Link to="/carrito" className="flex flex-col items-center text-gray-600 hover:text-green-600" onClick={scrollTop}>
+          <CiShoppingCart className="text-2xl" />
+          <span className="text-xs">Carrito</span>
+        </Link>
+        <a 
+          href="https://wa.me/+595972971353?text=Hola,%20estoy%20interesado%20en%20obtener%20información%20sobre%20insumos%20de%20tecnología." 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex flex-col items-center text-gray-600 hover:text-green-600"
+          onClick={scrollTop}
+        >
+          <FaWhatsapp className="text-2xl" />
+          <span className="text-xs">WhatsApp</span>
+        </a>
+      </div>
     </header>
   );
 };
