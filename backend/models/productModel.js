@@ -157,7 +157,96 @@ const productSchema = mongoose.Schema({
     landlineTechnology: { type: String },
     landlineDisplay: { type: String },
     landlineFunctions: { type: String },
-    landlineHandsets: { type: String }
+    landlineHandsets: { type: String },
+    // Tablets
+tabletScreenSize: { type: String },
+tabletScreenResolution: { type: String },
+tabletProcessor: { type: String },
+tabletRAM: { type: String },
+tabletStorage: { type: String },
+tabletOS: { type: String },
+tabletConnectivity: { type: String },
+
+// Redes - Switch
+switchType: { type: String },
+switchPorts: { type: String },
+switchPortSpeed: { type: String },
+switchNetworkLayer: { type: String },
+switchCapacity: { type: String },
+
+// Servidores
+serverType: { type: String },
+serverProcessor: { type: String },
+serverProcessorCount: { type: String },
+serverRAM: { type: String },
+serverStorage: { type: String },
+serverOS: { type: String },
+
+// Cables de Red
+networkCableType: { type: String },
+networkCableCategory: { type: String },
+networkCableLength: { type: String },
+networkCableShielding: { type: String },
+networkCableRecommendedUse: { type: String },
+
+// Racks
+rackType: { type: String },
+rackUnits: { type: String },
+rackDepth: { type: String },
+rackMaterial: { type: String },
+rackLoadCapacity: { type: String },
+
+// Access Point
+apWiFiStandard: { type: String },
+apSupportedBands: { type: String },
+apMaxSpeed: { type: String },
+apPorts: { type: String },
+apAntennas: { type: String },
+
+// Tarjetas Gráficas
+graphicCardModel: { type: String },
+graphicCardMemory: { type: String },
+graphicCardMemoryType: { type: String },
+graphicCardBaseFrequency: { type: String },
+graphicfabricate: { type: String },
+graphicCardTDP: { type: String },
+
+// Gabinetes
+caseFormFactor: { type: String },
+caseMaterial: { type: String },
+caseExpansionBays: { type: String },
+caseIncludedFans: { type: String },
+caseCoolingSupport: { type: String },
+caseBacklight: { type: String },
+
+// Auriculares
+headphoneConnectionType: { type: String },
+headphoneTechnology: { type: String },
+headphoneFrequencyResponse: { type: String },
+headphoneImpedance: { type: String },
+headphoneNoiseCancel: { type: String },
+headphoneBatteryLife: { type: String },
+
+// Microfonos
+microphoneType: { type: String },
+microphonePolarPattern: { type: String },
+microphoneFrequencyRange: { type: String },
+microphoneConnection: { type: String },
+microphoneSpecialFeatures: { type: String },
+
+// NAS
+nasMaxCapacity: { type: String },
+nasBaysNumber: { type: String },
+nasProcessor: { type: String },
+nasRAM: { type: String },
+nasRAIDSupport: { type: String },
+
+// Cartuchos de Toner
+tonerPrinterType: { type: String },
+tonerColor: { type: String },
+tonerYield: { type: String },
+tonerCartridgeType: { type: String },
+tonerCompatibleModel: { type: String }
 }, {
     timestamps: true
 });

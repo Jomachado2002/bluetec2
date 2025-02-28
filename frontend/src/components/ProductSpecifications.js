@@ -156,6 +156,370 @@ const ProductSpecifications = ({
           placeholder: "Ingresa la tecnología de fabricación (Ej: 7nm, 14nm)"
       }
   ],
+  tarjeta_grafica: [
+    {
+      label: "Modelo",
+      name: "graphicCardModel",
+      placeholder: "Ingresa el modelo de la tarjeta gráfica (Ej: RTX 3080, RX 6800 XT)"
+    },
+    {
+      label: "Memoria",
+      name: "graphicCardMemory",
+      placeholder: "Ingresa la cantidad de memoria gráfica (Ej: 8 GB, 12 GB)"
+    },
+    {
+      label: "Tipo de Memoria",
+      name: "graphicCardMemoryType",
+      placeholder: "Ingresa el tipo de memoria (Ej: GDDR6, GDDR6X)"
+    },
+    {
+      label: "Fabricante",
+      name: "graphicCardManufacturer",
+      placeholder: "Ingresa el fabricante (NVIDIA, AMD, Intel)"
+    },
+    {
+      label: "Frecuencia Base",
+      name: "graphicCardBaseFrequency",
+      placeholder: "Ingresa la frecuencia base de GPU (Ej: 1.5 GHz)"
+    },
+    {
+      label: "Consumo (TDP)",
+      name: "graphicCardTDP",
+      placeholder: "Ingresa el consumo eléctrico (Ej: 320W, 250W)"
+    }
+  ],
+  gabinetes: [
+    {
+      label: "Factor de Forma",
+      name: "caseFormFactor",
+      placeholder: "Ingresa el factor de forma (ATX, mATX, ITX)"
+    },
+    {
+      label: "Material",
+      name: "caseMaterial",
+      placeholder: "Ingresa el material principal (Acero, Aluminio)"
+    },
+    {
+      label: "Bahías de Expansión",
+      name: "caseExpansionBays",
+      placeholder: "Ingresa el número de bahías (Ej: 2x 3.5, 3x 2.5)"
+    },
+    {
+      label: "Ventiladores Incluidos",
+      name: "caseIncludedFans",
+      placeholder: "Ingresa número y tipo de ventiladores"
+    },
+    {
+      label: "Soporte de Refrigeración",
+      name: "caseCoolingSupport",
+      placeholder: "Ingresa opciones de refrigeración líquida"
+    },
+    {
+      label: "Iluminación",
+      name: "caseBacklight",
+      placeholder: "Ingresa el tipo de iluminación (RGB, LED)"
+    }
+  ],
+  // Periféricos
+  auriculares: [
+    { 
+      label: "Tipo de Conexión", 
+      name: "headphoneConnectionType", 
+      placeholder: "Ingresa el tipo de conexión (Alámbrico, Inalámbrico)" 
+    },
+    { 
+      label: "Tecnología de Conexión", 
+      name: "headphoneTechnology", 
+      placeholder: "Ingresa la tecnología (Bluetooth, Jack 3.5mm)" 
+    },
+    { 
+      label: "Respuesta de Frecuencia", 
+      name: "headphoneFrequencyResponse", 
+      placeholder: "Ingresa la respuesta de frecuencia" 
+    },
+    { 
+      label: "Impedancia", 
+      name: "headphoneImpedance", 
+      placeholder: "Ingresa la impedancia" 
+    },
+    { 
+      label: "Tipo de Cancelación de Ruido", 
+      name: "headphoneNoiseCancel", 
+      placeholder: "Ingresa el tipo de cancelación de ruido" 
+    },
+    { 
+      label: "Duración de Batería", 
+      name: "headphoneBatteryLife", 
+      placeholder: "Ingresa la duración de batería" 
+    }
+  ],
+  microfonos: [
+    { 
+      label: "Tipo de Micrófono", 
+      name: "microphoneType", 
+      placeholder: "Ingresa el tipo de micrófono (Condensador, Dinámico)" 
+    },
+    { 
+      label: "Patrón Polar", 
+      name: "microphonePolarPattern", 
+      placeholder: "Ingresa el patrón polar (Cardioide, Omnidireccional)" 
+    },
+    { 
+      label: "Rango de Frecuencia", 
+      name: "microphoneFrequencyRange", 
+      placeholder: "Ingresa el rango de frecuencia" 
+    },
+    { 
+      label: "Conexión", 
+      name: "microphoneConnection", 
+      placeholder: "Ingresa el tipo de conexión (USB, XLR, Jack)" 
+    },
+    { 
+      label: "Características Especiales", 
+      name: "microphoneSpecialFeatures", 
+      placeholder: "Ingresa características especiales" 
+    }
+  ],
+  // CCTV
+  nas: [
+    { 
+      label: "Capacidad Máxima", 
+      name: "nasMaxCapacity", 
+      placeholder: "Ingresa la capacidad máxima de almacenamiento" 
+    },
+    { 
+      label: "Número de Bahías", 
+      name: "nasBaysNumber", 
+      placeholder: "Ingresa el número de bahías" 
+    },
+    { 
+      label: "Procesador", 
+      name: "nasProcessor", 
+      placeholder: "Ingresa el modelo de procesador" 
+    },
+    { 
+      label: "Memoria RAM", 
+      name: "nasRAM", 
+      placeholder: "Ingresa la cantidad de memoria RAM" 
+    },
+    { 
+      label: "Tipos de RAID Soportados", 
+      name: "nasRAIDSupport", 
+      placeholder: "Ingresa los niveles de RAID soportados" 
+    },
+    { 
+      label: "Conectividad", 
+      name: "nasConnectivity", 
+      placeholder: "Ingresa las opciones de conectividad" 
+    }
+  ],
+  // Impresoras
+  cartuchostoner: [
+    { 
+      label: "Tipo de Impresora", 
+      name: "tonerPrinterType", 
+      placeholder: "Ingresa el tipo de impresora compatible" 
+    },
+    { 
+      label: "Color", 
+      name: "tonerColor", 
+      placeholder: "Ingresa el color del tóner (Negro, Color)" 
+    },
+    { 
+      label: "Rendimiento", 
+      name: "tonerYield", 
+      placeholder: "Ingresa el rendimiento de páginas" 
+    },
+    { 
+      label: "Tipo de Cartucho", 
+      name: "tonerCartridgeType", 
+      placeholder: "Ingresa el tipo de cartucho (Original, Compatible)" 
+    },
+    { 
+      label: "Modelo Compatible", 
+      name: "tonerCompatibleModel", 
+      placeholder: "Ingresa los modelos de impresora compatibles" 
+    }
+  ],
+  // Telefonía
+  tablets: [
+    { 
+      label: "Tamaño de Pantalla", 
+      name: "tabletScreenSize", 
+      placeholder: "Ingresa el tamaño de pantalla" 
+    },
+    { 
+      label: "Resolución de Pantalla", 
+      name: "tabletScreenResolution", 
+      placeholder: "Ingresa la resolución de pantalla" 
+    },
+    { 
+      label: "Procesador", 
+      name: "tabletProcessor", 
+      placeholder: "Ingresa el modelo de procesador" 
+    },
+    { 
+      label: "Memoria RAM", 
+      name: "tabletRAM", 
+      placeholder: "Ingresa la cantidad de memoria RAM" 
+    },
+    { 
+      label: "Almacenamiento", 
+      name: "tabletStorage", 
+      placeholder: "Ingresa la capacidad de almacenamiento" 
+    },
+    { 
+      label: "Sistema Operativo", 
+      name: "tabletOS", 
+      placeholder: "Ingresa el sistema operativo" 
+    },
+    { 
+      label: "Conectividad", 
+      name: "tabletConnectivity", 
+      placeholder: "Ingresa las opciones de conectividad" 
+    }
+  ],
+  // Redes
+  switch: [
+    { 
+      label: "Tipo de Switch", 
+      name: "switchType", 
+      placeholder: "Ingresa el tipo de switch (Administrable, No administrable)" 
+    },
+    { 
+      label: "Número de Puertos", 
+      name: "switchPorts", 
+      placeholder: "Ingresa el número de puertos" 
+    },
+    { 
+      label: "Velocidad de Puertos", 
+      name: "switchPortSpeed", 
+      placeholder: "Ingresa la velocidad de los puertos (Ej: 10/100/1000 Mbps)" 
+    },
+    { 
+      label: "Capa de Red", 
+      name: "switchNetworkLayer", 
+      placeholder: "Ingresa la capa de red (Capa 2, Capa 3)" 
+    },
+    { 
+      label: "Capacidad de Conmutación", 
+      name: "switchCapacity", 
+      placeholder: "Ingresa la capacidad de conmutación" 
+    }
+  ],
+  servidores: [
+    { 
+      label: "Tipo de Servidor", 
+      name: "serverType", 
+      placeholder: "Ingresa el tipo de servidor (Torre, Rack, Blade)" 
+    },
+    { 
+      label: "Procesador", 
+      name: "serverProcessor", 
+      placeholder: "Ingresa el modelo de procesador" 
+    },
+    { 
+      label: "Número de Procesadores", 
+      name: "serverProcessorCount", 
+      placeholder: "Ingresa el número de procesadores" 
+    },
+    { 
+      label: "Memoria RAM", 
+      name: "serverRAM", 
+      placeholder: "Ingresa la cantidad de memoria RAM" 
+    },
+    { 
+      label: "Almacenamiento", 
+      name: "serverStorage", 
+      placeholder: "Ingresa el tipo y capacidad de almacenamiento" 
+    },
+    { 
+      label: "Sistema Operativo", 
+      name: "serverOS", 
+      placeholder: "Ingresa el sistema operativo del servidor" 
+    }
+  ],
+  cablesred: [
+    { 
+      label: "Tipo de Cable", 
+      name: "networkCableType", 
+      placeholder: "Ingresa el tipo de cable (UTP, STP, Fibra Óptica)" 
+    },
+    { 
+      label: "Categoría", 
+      name: "networkCableCategory", 
+      placeholder: "Ingresa la categoría (Cat5e, Cat6, Cat6a)" 
+    },
+    { 
+      label: "Longitud", 
+      name: "networkCableLength", 
+      placeholder: "Ingresa la longitud del cable" 
+    },
+    { 
+      label: "Blindaje", 
+      name: "networkCableShielding", 
+      placeholder: "Ingresa el tipo de blindaje" 
+    },
+    { 
+      label: "Uso Recomendado", 
+      name: "networkCableRecommendedUse", 
+      placeholder: "Ingresa el uso recomendado" 
+    }
+  ],
+  racks: [
+    { 
+      label: "Tipo de Rack", 
+      name: "rackType", 
+      placeholder: "Ingresa el tipo de rack (Pared, Piso, Abierto, Cerrado)" 
+    },
+    { 
+      label: "Unidades de Rack (U)", 
+      name: "rackUnits", 
+      placeholder: "Ingresa el número de unidades de rack" 
+    },
+    { 
+      label: "Profundidad", 
+      name: "rackDepth", 
+      placeholder: "Ingresa la profundidad del rack" 
+    },
+    { 
+      label: "Material", 
+      name: "rackMaterial", 
+      placeholder: "Ingresa el material principal" 
+    },
+    { 
+      label: "Capacidad de Carga", 
+      name: "rackLoadCapacity", 
+      placeholder: "Ingresa la capacidad de carga máxima" 
+    }
+  ],
+  ap: [
+    { 
+      label: "Estándar WiFi", 
+      name: "apWiFiStandard", 
+      placeholder: "Ingresa el estándar WiFi (802.11ac, WiFi 6)" 
+    },
+    { 
+      label: "Bandas Soportadas", 
+      name: "apSupportedBands", 
+      placeholder: "Ingresa las bandas soportadas (2.4 GHz, 5 GHz)" 
+    },
+    { 
+      label: "Velocidad Máxima", 
+      name: "apMaxSpeed", 
+      placeholder: "Ingresa la velocidad máxima" 
+    },
+    { 
+      label: "Puertos", 
+      name: "apPorts", 
+      placeholder: "Ingresa los puertos disponibles" 
+    },
+    { 
+      label: "Antenas", 
+      name: "apAntennas", 
+      placeholder: "Ingresa detalles de las antenas" 
+    }
+  ],
     memorias_ram: [
       { 
         label: "Tipo de RAM", 

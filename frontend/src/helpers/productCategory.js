@@ -9,7 +9,9 @@ const productCategory = [
           { id: 103, label: "Placas Madre", value: "placas_madre" },
           { id: 104, label: "Memorias RAM", value: "memorias_ram" },
           { id: 105, label: "Discos Duros", value: "discos_duros" },
-          { id: 105, label: "Procesador", value: "procesador" },
+          { id: 106, label: "Procesador", value: "procesador" },
+          { id: 107, label: "Tarjeta Grafica", value: "tarjeta_grafica" },
+          { id: 108, label: "Gabinetes", value: "gabinetes" },
       ]
   },
   {
@@ -21,7 +23,9 @@ const productCategory = [
           { id: 202, label: "Teclados", value: "teclados" },
           { id: 203, label: "Mouses", value: "mouses" },
           { id: 204, label: "Adaptadores", value: "adaptadores" },
-          { id: 503, label: "Airpods", value: "airpods" }
+          { id: 503, label: "Auriculares", value: "auriculares" },
+          { id: 205, label: "Microfonos", value: "microfonos"}
+          
       ]
   },
   {
@@ -40,13 +44,14 @@ const productCategory = [
       value: "impresoras",
       subcategories: [
           { id: 401, label: "Impresoras Láser", value: "impresoras_laser" },
-          { id: 402, label: "Impresoras Multifunción", value: "impresoras_multifuncion" }
+          { id: 402, label: "Impresoras Multifunción", value: "impresoras_multifuncion" },
+          { id: 403, label: "Cartuchos y toner", value: "cartuchostoner" }
       ]
   },
   {
       id: 5,
-      label: "Accesorios",
-      value: "accesorios",
+      label: "Energia",
+      value: "energia",
       subcategories: [
           { id: 501, label: "Fuentes de Alimentación", value: "fuentes_alimentacion" },
           { id: 502, label: "UPS", value: "ups" },
@@ -67,9 +72,23 @@ const productCategory = [
       value: "telefonia",
       subcategories: [
           { id: 701, label: "Teléfonos Móviles", value: "telefonos_moviles" },
-          { id: 702, label: "Teléfonos Fijos", value: "telefonos_fijos" }
+          { id: 702, label: "Teléfonos Fijos", value: "telefonos_fijos" },
+          { id: 702, label: "Tablets", value: "tablets" },
       ]
-  }
+  },
+  {
+    id: 8,
+    label: "Redes",
+    value: "redes",
+    subcategories: [
+        { id: 801, label: "Switch", value: "switch" },
+        { id: 802, label: "Servidores", value: "servidores" },
+        { id: 803, label: "Cables de Red y conectores", value: "cablesred" },
+        { id: 804, label: "Racks", value: "racks" },
+        { id: 805, label: "Access Point", value: "ap" },
+
+    ]
+}
 ];
 
 export default productCategory;

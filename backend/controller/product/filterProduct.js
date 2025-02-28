@@ -20,104 +20,150 @@ const filterProductController = async (req, res) => {
     const specificationMappings = {
       // Informática
       notebooks: [
-          'processor', 'memory', 'storage', 'disk', 
-          'graphicsCard', 'notebookScreen', 'notebookBattery'
+        'processor', 'memory', 'storage', 'disk', 
+        'graphicsCard', 'notebookScreen', 'notebookBattery'
       ],
       computadoras_ensambladas: [
-          'processor', 'memory', 'storage', 'graphicsCard', 
-          'pcCase', 'pcPowerSupply', 'pcCooling'
+        'processor', 'memory', 'storage', 'graphicsCard',
+        'pcCase', 'pcPowerSupply', 'pcCooling'
       ],
       placas_madre: [
-          'motherboardSocket', 'motherboardChipset', 
-          'motherboardFormFactor', 'expansionSlots', 'ramType'
+        'motherboardSocket', 'motherboardChipset',
+        'motherboardFormFactor', 'expansionSlots', 'ramType'
+      ],
+      tarjeta_grafica: [
+        'graphicCardModel', 'graphicCardMemory', 'graphicCardMemoryType',
+        'graphicCardBaseFrequency', 'graphicCardManufacturer' ,'graphicCardTDP'
+      ],
+      gabinetes: [
+        'caseFormFactor', 'caseMaterial', 'caseExpansionBays',
+        'caseIncludedFans', 'caseCoolingSupport', 'caseBacklight'
       ],
       memorias_ram: [
-          'ramType', 'ramSpeed', 'ramCapacity', 'ramLatency'
+        'ramType', 'ramSpeed', 'ramCapacity', 'ramLatency'
       ],
       discos_duros: [
-          'hddCapacity', 'diskType', 'hddInterface', 
-          'hddRPM', 'diskReadSpeed', 'diskWriteSpeed'
+        'hddCapacity', 'diskType', 'hddInterface',
+        'hddRPM', 'diskReadSpeed', 'diskWriteSpeed'
       ],
       procesador: [
-          'processorSocket', 'processorCores', 'processorThreads', 
-          'processorBaseFreq', 'processorTurboFreq', 
-          'processorCache', 'processorTDP'
+        'processorSocket', 'processorCores', 'processorThreads',
+        'processorBaseFreq', 'processorTurboFreq',
+        'processorCache', 'processorTDP'
       ],
       fuentes_alimentacion: [
-          'psuWattage', 'psuEfficiency', 'psuModular', 
-          'psuFormFactor', 'psuProtections'
+        'psuWattage', 'psuEfficiency', 'psuModular',
+        'psuFormFactor', 'psuProtections'
       ],
-  
+    
       // Periféricos
       monitores: [
-          'monitorSize', 'monitorResolution', 
-          'monitorRefreshRate', 'monitorPanel', 'monitorConnectivity'
+        'monitorSize', 'monitorResolution',
+        'monitorRefreshRate', 'monitorPanel', 'monitorConnectivity'
       ],
       teclados: [
-          'keyboardInterface', 'keyboardLayout', 
-          'keyboardBacklight', 'keyboardSwitches', 'keyboardFeatures'
+        'keyboardInterface', 'keyboardLayout',
+        'keyboardBacklight', 'keyboardSwitches', 'keyboardFeatures'
       ],
       mouses: [
-          'mouseInterface', 'mouseSensor', 
-          'mouseDPI', 'mouseButtons', 'mouseBacklight'
+        'mouseInterface', 'mouseSensor',
+        'mouseDPI', 'mouseButtons', 'mouseBacklight'
       ],
       adaptadores: [
-          'adapterType', 'adapterInterface', 
-          'adapterSpeed', 'adapterProtocol'
+        'adapterType', 'adapterInterface',
+        'adapterSpeed', 'adapterProtocol'
       ],
-  
+      auriculares: [
+        'headphoneConnectionType', 'headphoneTechnology', 
+        'headphoneFrequencyResponse', 'headphoneImpedance', 
+        'headphoneNoiseCancel', 'headphoneBatteryLife'
+      ],
+      microfonos: [
+        'microphoneType', 'microphonePolarPattern', 
+        'microphoneFrequencyRange', 'microphoneConnection', 
+        'microphoneSpecialFeatures'
+      ],
+    
       // CCTV
       camaras_seguridad: [
-          'cameraResolution', 'cameraLensType', 
-          'cameraIRDistance', 'cameraType', 'cameraConnectivity', 
-          'cameraProtection'
+        'cameraResolution', 'cameraLensType',
+        'cameraIRDistance', 'cameraType', 'cameraConnectivity',
+        'cameraProtection'
       ],
       dvr: [
-          'dvrChannels', 'dvrResolution', 
-          'dvrStorageCapacity', 'dvrConnectivity', 'dvrSmartFeatures'
+        'dvrChannels', 'dvrResolution',
+        'dvrStorageCapacity', 'dvrConnectivity', 'dvrSmartFeatures'
       ],
       nas: [
-          'nasCapacity', 'nasBays', 
-          'nasRAID', 'nasConnectivity'
+        'nasMaxCapacity', 'nasBaysNumber',
+        'nasProcessor', 'nasRAM', 'nasRAIDSupport', 'nasConnectivity'
       ],
-  
+    
       // Impresoras
       impresoras_laser: [
-          'printerType', 'printerResolution', 
-          'printerSpeed', 'printerDuplex', 'printerConnectivity', 
-          'printerTrayCapacity'
+        'printerType', 'printerResolution',
+        'printerSpeed', 'printerDuplex', 'printerConnectivity',
+        'printerTrayCapacity'
       ],
       impresoras_multifuncion: [
-          'printerType', 'printerFunctions', 
-          'printerResolution', 'printerSpeed', 'printerDuplex', 
-          'printerConnectivity', 'printerDisplay'
+        'printerType', 'printerFunctions',
+        'printerResolution', 'printerSpeed', 'printerDuplex',
+        'printerConnectivity', 'printerDisplay'
       ],
-  
+      cartuchostoner: [
+        'tonerPrinterType', 'tonerColor', 
+        'tonerYield', 'tonerCartridgeType', 'tonerCompatibleModel'
+      ],
+    
       // Accesorios
       ups: [
-          'upsCapacity', 'upsOutputPower', 
-          'upsBackupTime', 'upsOutlets', 'upsType', 'upsConnectivity'
+        'upsCapacity', 'upsOutputPower',
+        'upsBackupTime', 'upsOutlets', 'upsType', 'upsConnectivity'
       ],
-      airpods: [
-          'airpodsModel', 'airpodsBatteryLife', 
-          'airpodsCharging', 'airpodsResistance', 'airpodsFeatures'
-      ],
-  
+    
       // Software y Licencias
       licencias: [
-          'softwareLicenseType', 'softwareLicenseDuration', 
-          'softwareLicenseQuantity', 'softwareVersion', 'softwareFeatures'
+        'softwareLicenseType', 'softwareLicenseDuration',
+        'softwareLicenseQuantity', 'softwareVersion', 'softwareFeatures'
       ],
-  
+    
       // Telefonía
       telefonos_moviles: [
-          'phoneType', 'phoneScreenSize', 
-          'phoneRAM', 'phoneStorage', 'phoneProcessor', 
-          'phoneCameras', 'phoneBattery', 'phoneOS'
+        'phoneType', 'phoneScreenSize',
+        'phoneRAM', 'phoneStorage', 'phoneProcessor',
+        'phoneCameras', 'phoneBattery', 'phoneOS'
       ],
       telefonos_fijos: [
-          'landlineType', 'landlineTechnology', 
-          'landlineDisplay', 'landlineFunctions', 'landlineHandsets'
+        'landlineType', 'landlineTechnology',
+        'landlineDisplay', 'landlineFunctions', 'landlineHandsets'
+      ],
+      tablets: [
+        'tabletScreenSize', 'tabletScreenResolution',
+        'tabletProcessor', 'tabletRAM', 'tabletStorage',
+        'tabletOS', 'tabletConnectivity'
+      ],
+    
+      // Redes
+      switch: [
+        'switchType', 'switchPorts', 'switchPortSpeed',
+        'switchNetworkLayer', 'switchCapacity'
+      ],
+      servidores: [
+        'serverType', 'serverProcessor', 'serverProcessorCount',
+        'serverRAM', 'serverStorage', 'serverOS'
+      ],
+      cablesred: [
+        'networkCableType', 'networkCableCategory', 
+        'networkCableLength', 'networkCableShielding', 
+        'networkCableRecommendedUse'
+      ],
+      racks: [
+        'rackType', 'rackUnits', 'rackDepth',
+        'rackMaterial', 'rackLoadCapacity'
+      ],
+      ap: [
+        'apWiFiStandard', 'apSupportedBands', 
+        'apMaxSpeed', 'apPorts', 'apAntennas'
       ]
   };
 

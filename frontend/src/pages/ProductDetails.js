@@ -16,36 +16,51 @@ const specificationsByCategory = {
     'hddCapacity', 'diskType', 'hddInterface', 'hddRPM', 'diskReadSpeed', 'diskWriteSpeed',
     'processorModel', 'processorSocket', 'processorCores', 'processorThreads',
     'processorBaseFreq', 'processorTurboFreq', 'processorCache', 'processorTDP',
-    'psuWattage', 'psuEfficiency', 'psuModular', 'psuFormFactor', 'psuProtections'
+    'psuWattage', 'psuEfficiency', 'psuModular', 'psuFormFactor', 'psuProtections',
+    'graphicCardModel', 'graphicCardMemory', 'graphicCardMemoryType', 'graphicCardBaseFrequency', 'graphicCardTDP',
+    'caseFormFactor', 'caseMaterial', 'caseExpansionBays', 'caseIncludedFans', 'caseCoolingSupport', 'caseBacklight'
   ],
   perifericos: [
     'monitorSize', 'monitorResolution', 'monitorRefreshRate', 'monitorPanel', 'monitorConnectivity',
     'keyboardInterface', 'keyboardLayout', 'keyboardBacklight', 'keyboardSwitches', 'keyboardFeatures',
     'mouseInterface', 'mouseSensor', 'mouseDPI', 'mouseButtons', 'mouseBacklight',
-    'adapterType', 'adapterInterface', 'adapterSpeed', 'adapterProtocol'
+    'adapterType', 'adapterInterface', 'adapterSpeed', 'adapterProtocol',
+    'headphoneConnectionType', 'headphoneTechnology', 'headphoneFrequencyResponse', 'headphoneImpedance', 
+    'headphoneNoiseCancel', 'headphoneBatteryLife',
+    'microphoneType', 'microphonePolarPattern', 'microphoneFrequencyRange', 'microphoneConnection', 
+    'microphoneSpecialFeatures'
   ],
   cctv: [
     'cameraResolution', 'cameraLensType', 'cameraIRDistance', 'cameraType', 'cameraConnectivity', 'cameraProtection',
     'dvrChannels', 'dvrResolution', 'dvrStorageCapacity', 'dvrConnectivity', 'dvrSmartFeatures',
-    'nasCapacity', 'nasBays', 'nasRAID', 'nasConnectivity'
+    'nasMaxCapacity', 'nasBaysNumber', 'nasProcessor', 'nasRAM', 'nasRAIDSupport', 'nasConnectivity'
   ],
   impresoras: [
-    'printerType', 'printerResolution', 'printerSpeed', 'printerDuplex', 'printerConnectivity', 
-    'printerTrayCapacity', 'printerFunctions', 'printerDisplay'
+    'printerType', 'printerResolution', 'printerSpeed', 'printerDuplex', 'printerConnectivity',
+    'printerTrayCapacity', 'printerFunctions', 'printerDisplay',
+    'tonerPrinterType', 'tonerColor', 'tonerYield', 'tonerCartridgeType', 'tonerCompatibleModel'
   ],
   energia: [
     'upsCapacity', 'upsOutputPower', 'upsBackupTime', 'upsOutlets', 'upsType', 'upsConnectivity'
-  ],
-  accesorios: [
-    'airpodsModel', 'airpodsBatteryLife', 'airpodsCharging', 'airpodsResistance', 'airpodsFeatures'
   ],
   software_licencias: [
     'softwareLicenseType', 'softwareLicenseDuration', 'softwareLicenseQuantity', 'softwareVersion', 'softwareFeatures'
   ],
   telefonia: [
-    'phoneType', 'phoneScreenSize', 'phoneRAM', 'phoneStorage', 'phoneProcessor', 'phoneCameras', 
-    'phoneBattery', 'phoneOS', 'landlineType', 'landlineTechnology', 'landlineDisplay', 
-    'landlineFunctions', 'landlineHandsets'
+    'phoneType', 'phoneScreenSize', 'phoneRAM', 'phoneStorage', 'phoneProcessor', 'phoneCameras',
+    'phoneBattery', 'phoneOS', 'landlineType', 'landlineTechnology', 'landlineDisplay',
+    'landlineFunctions', 'landlineHandsets',
+    'tabletScreenSize', 'tabletScreenResolution', 'tabletProcessor', 'tabletRAM', 
+    'tabletStorage', 'tabletOS', 'tabletConnectivity'
+  ],
+  redes: [
+    'switchType', 'switchPorts', 'switchPortSpeed', 'switchNetworkLayer', 'switchCapacity',
+    'serverType', 'serverProcessor', 'serverProcessorCount', 'serverRAM', 
+    'serverStorage', 'serverOS',
+    'networkCableType', 'networkCableCategory', 'networkCableLength', 
+    'networkCableShielding', 'networkCableRecommendedUse',
+    'rackType', 'rackUnits', 'rackDepth', 'rackMaterial', 'rackLoadCapacity',
+    'apWiFiStandard', 'apSupportedBands', 'apMaxSpeed', 'apPorts', 'apAntennas'
   ]
 };
 
@@ -158,7 +173,96 @@ const fieldNameMapping = {
   landlineTechnology: "Tecnología",
   landlineDisplay: "Pantalla",
   landlineFunctions: "Funciones",
-  landlineHandsets: "Auriculares"
+  landlineHandsets: "Auriculares",
+    // Tarjetas Gráficas
+    graphicCardModel: "Modelo",
+    graphicCardMemory: "Memoria",
+    graphicCardMemoryType: "Tipo de Memoria",
+    graphicCardBaseFrequency: "Frecuencia Base",
+    graphicfabricate: "Fabricante",
+    graphicCardTDP: "Consumo (TDP)",
+  
+    // Gabinetes
+    caseFormFactor: "Factor de Forma",
+    caseMaterial: "Material",
+    caseExpansionBays: "Bahías de Expansión",
+    caseIncludedFans: "Ventiladores Incluidos",
+    caseCoolingSupport: "Soporte de Refrigeración",
+    caseBacklight: "Iluminación",
+  
+    // Auriculares
+    headphoneConnectionType: "Tipo de Conexión",
+    headphoneTechnology: "Tecnología de Conexión",
+    headphoneFrequencyResponse: "Respuesta de Frecuencia",
+    headphoneImpedance: "Impedancia",
+    headphoneNoiseCancel: "Cancelación de Ruido",
+    headphoneBatteryLife: "Duración de Batería",
+  
+    // Microfonos
+    microphoneType: "Tipo de Micrófono",
+    microphonePolarPattern: "Patrón Polar",
+    microphoneFrequencyRange: "Rango de Frecuencia",
+    microphoneConnection: "Conexión",
+    microphoneSpecialFeatures: "Características Especiales",
+  
+    // NAS
+    nasMaxCapacity: "Capacidad Máxima",
+    nasBaysNumber: "Número de Bahías",
+    nasProcessor: "Procesador",
+    nasRAM: "Memoria RAM",
+    nasRAIDSupport: "Tipos de RAID Soportados",
+  
+    // Cartuchos de Toner
+    tonerPrinterType: "Tipo de Impresora",
+    tonerColor: "Color",
+    tonerYield: "Rendimiento",
+    tonerCartridgeType: "Tipo de Cartucho",
+    tonerCompatibleModel: "Modelo Compatible",
+  
+    // Tablets
+    tabletScreenSize: "Tamaño de Pantalla",
+    tabletScreenResolution: "Resolución de Pantalla",
+    tabletProcessor: "Procesador",
+    tabletRAM: "Memoria RAM",
+    tabletStorage: "Almacenamiento",
+    tabletOS: "Sistema Operativo",
+    tabletConnectivity: "Conectividad",
+  
+    // Redes - Switch
+    switchType: "Tipo de Switch",
+    switchPorts: "Número de Puertos",
+    switchPortSpeed: "Velocidad de Puertos",
+    switchNetworkLayer: "Capa de Red",
+    switchCapacity: "Capacidad de Conmutación",
+  
+    // Servidores
+    serverType: "Tipo de Servidor",
+    serverProcessor: "Procesador",
+    serverProcessorCount: "Número de Procesadores",
+    serverRAM: "Memoria RAM",
+    serverStorage: "Almacenamiento",
+    serverOS: "Sistema Operativo",
+  
+    // Cables de Red
+    networkCableType: "Tipo de Cable",
+    networkCableCategory: "Categoría",
+    networkCableLength: "Longitud",
+    networkCableShielding: "Blindaje",
+    networkCableRecommendedUse: "Uso Recomendado",
+  
+    // Racks
+    rackType: "Tipo de Rack",
+    rackUnits: "Unidades de Rack (U)",
+    rackDepth: "Profundidad",
+    rackMaterial: "Material",
+    rackLoadCapacity: "Capacidad de Carga",
+  
+    // Access Point
+    apWiFiStandard: "Estándar WiFi",
+    apSupportedBands: "Bandas Soportadas",
+    apMaxSpeed: "Velocidad Máxima",
+    apPorts: "Puertos",
+    apAntennas: "Antenas"
 };
 
 const ProductDetails = () => {
