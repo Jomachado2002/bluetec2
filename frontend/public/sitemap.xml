@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.jmcomputer.com.py/schemas/sitemap/0.9">
+  <!-- Página principal -->
+  <url>
+    <loc>https://jmcomputer.com.py/</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Páginas importantes -->
+  <url>
+    <loc>https://jmcomputer.com.py/nosotros</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Categorías principales -->
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=perifericos</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=cctv</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=impresoras</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=accesorios</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=software_licencias</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=telefonia</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Subcategorías populares -->
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=notebooks</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=computadoras_ensambladas</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=placas_madre</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=memorias_ram</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=discos_duros</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=informatica&subcategory=procesador</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=perifericos&subcategory=monitores</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://jmcomputer.com.py/categoria-producto?category=perifericos&subcategory=teclados</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Páginas de búsqueda -->
+  <url>
+    <loc>https://jmcomputer.com.py/buscar</loc>
+    <lastmod>2025-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
