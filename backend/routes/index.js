@@ -68,4 +68,5 @@ router.get("/buscar-por-categoria", getCategorySearch); // Antes: getsearchProdu
 router.post("/eliminar-producto", authToken, deleteProductController); // Antes: delete-product
 
 
+
 module.exports = router;

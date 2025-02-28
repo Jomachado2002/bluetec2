@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { FaAngleRight } from 'react-icons/fa';
 import BannerProduct from '../components/BannerProduct';
 import HorizontalCardProduct from '../components/HorizontalCardProduct';
 import VerticalCardProduct from '../components/VerticalCardProduct';
 import BrandCarousel from '../components/BrandCarousel';
 import NotebookBanner from '../components/NotebookBanner';
-import '../styles/global.css';
+import LatestProductsMix from '../components/LatestProductsMix';
+import '../styles/global.css';  
 
 // Importar la función scrollTop mejorada
 import scrollTop from '../helpers/scrollTop';
@@ -461,13 +463,21 @@ const Home = () => {
             </div>
             
             <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-              <VerticalCardProduct
-                category="all"
-                subcategory="all"
-                limit={5}
-                sort="newest"
-                heading=""
-              />
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">Últimas novedades</h3>
+                  <div className="h-1 w-20 bg-green-600 mt-2 rounded-full"></div>
+                </div>
+                <Link 
+                  to="/categoria-producto"
+                  className="text-blue-600 hover:text-blue-700 text-sm font-semibold transition-colors flex items-center"
+                  onClick={scrollTop}
+                >
+                  Ver todos <FaAngleRight className="ml-1 transition-transform hover:translate-x-1" />
+                </Link>
+              </div>
+              
+              <LatestProductsMix limit={5} />
             </div>
           </motion.section>
 
@@ -514,7 +524,7 @@ const Home = () => {
                   <div className="mb-6 sm:mb-0">
                     <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">¿Necesitas ayuda para elegir?</h2>
                     <p className="text-green-100">Nuestros expertos están listos para asesorarte y encontrar la solución perfecta para ti.</p>
-                  </div>
+                    </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <button 
                       onClick={openWhatsApp}

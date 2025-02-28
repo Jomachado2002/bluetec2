@@ -2,9 +2,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import productCategory from '../helpers/productCategory';
 import VerticalCard from '../components/VerticalCard';
+import SidebarFilter from '../components/SidebarFilter';
 import SummaryApi from '../common';
 import SpecificationAccordion from '../components/SpecificationAccordion';
-
 
 const CategoryProduct = () => {
     const [data, setData] = useState([]);
@@ -209,8 +209,7 @@ const CategoryProduct = () => {
         }));
     };
 
-    const handleOnChangeSortBy = (e) => {
-        const { value } = e.target;
+    const handleOnChangeSortBy = (value) => {
         setSortBy(value);
 
         setData(prev => [...prev].sort((a, b) => {
@@ -348,14 +347,14 @@ const CategoryProduct = () => {
                                             className="flex items-center space-x-2 hover:bg-green-50 p-2 rounded-md"
                                         >
                                             <input
-                                                type='checkbox'
-                                                name="subcategory"
-                                                checked={filterSubcategoryList.includes(subcat.value)}
-                                                value={subcat.value}
-                                                onChange={() => handleSelectSubcategory(subcat.value)}
-                                                className="form-checkbox text-green-600 focus:ring-green-500"
-                                            />
-                                            <span className="text-gray-600">
+                                                    type='checkbox'
+                                                    name="subcategory"
+                                                    checked={filterSubcategoryList.includes(subcat.value)}
+                                                    value={subcat.value}
+                                                    onChange={() => handleSelectSubcategory(subcat.value)}
+                                                    className="form-checkbox text-green-600 focus:ring-green-500"
+                                                />
+                                                  <span className="text-gray-600">
                                                 {subcat.label}
                                             </span>
                                         </div>

@@ -2,7 +2,7 @@ const backendDomain = process.env.REACT_APP_BACKEND_URL;
 
 const SummaryApi = {
     // Autenticación
-    SignUP: { 
+    SignUP: {
         url: `${backendDomain}/api/registro`,  // Cambiar "signup" a "registro"
         method: "post"
     },
@@ -20,8 +20,8 @@ const SummaryApi = {
     },
     allUser:{
         url: `${backendDomain}/api/todos-usuarios`,  // Cambiar "all-user" a "todos-usuarios"
-        method : "get" 
-    },
+        method : "get"
+     },
     updateUser: {
         url: `${backendDomain}/api/actualizar-usuario`,  // Cambiar "update-user" a "actualizar-usuario"
         method : "post"
@@ -54,22 +54,6 @@ const SummaryApi = {
         url : `${backendDomain}/api/agregar-al-carrito`,  // Cambiar "addtocart" a "agregar-al-carrito"
         method : 'post'
     },
-    addToCartProductCount : {
-        url : `${backendDomain}/api/contar-productos-carrito`,  // Cambiar "countAddToCartProduct" a "contar-productos-carrito"
-        method : 'get'
-    },
-    addToCartProductView : {
-        url : `${backendDomain}/api/ver-productos-carrito`,  // Cambiar "view-card-product" a "ver-productos-carrito"
-        method : 'get'
-    },
-    updateCartProduct : {
-        url : `${backendDomain}/api/actualizar-producto-carrito`,  // Cambiar "update-cart-product" a "actualizar-producto-carrito"
-        method : 'post'
-    },
-    deleteCartProduct : {
-        url : `${backendDomain}/api/eliminar-producto-carrito`,  // Cambiar "delete-cart-product" a "eliminar-producto-carrito"
-        method : 'post'
-    },
     searchProduct : {
         url : `${backendDomain}/api/buscar`,  // Mantenido como "search" -> "buscar" (corto y claro)
         method : 'get'
@@ -93,7 +77,8 @@ const SummaryApi = {
     deleteProductController: {
         url: `${backendDomain}/api/eliminar-producto`,  // Cambiar "delete-product" a "eliminar-producto"
         method: 'post'
-    }
+    },
+    
 };
 
 export default SummaryApi;
