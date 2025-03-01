@@ -174,7 +174,7 @@ const ProductSpecifications = ({
     },
     {
       label: "Fabricante",
-      name: "graphicCardManufacturer",
+      name: "graphicfabricate",  // Aquí estaba el problema, debe coincidir con el modelo
       placeholder: "Ingresa el fabricante (NVIDIA, AMD, Intel)"
     },
     {
@@ -187,7 +187,7 @@ const ProductSpecifications = ({
       name: "graphicCardTDP",
       placeholder: "Ingresa el consumo eléctrico (Ej: 320W, 250W)"
     }
-  ],
+  ],  
   gabinetes: [
     {
       label: "Factor de Forma",

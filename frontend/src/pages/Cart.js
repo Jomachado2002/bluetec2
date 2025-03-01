@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Context from '../context';
 import displayINRCurrency from '../helpers/displayCurrency';
-import { MdDelete, MdShoppingCart } from "react-icons/md";
+import { MdDelete, MdShoppingCart, MdPictureAsPdf, MdDownload, MdWhatsapp } from "react-icons/md";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import logo from '../helpers/logo.jpg';
@@ -12,6 +12,12 @@ import { localCartHelper } from '../helpers/addToCart';
 const Cart = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [customerData, setCustomerData] = useState({
+        name: '',
+        phone: '',
+        email: '',
+    });
+    const [showCustomerForm, setShowCustomerForm] = useState(false);
     const context = useContext(Context);
 
     // Función simplificada para cargar datos directamente desde localStorage
@@ -124,45 +130,120 @@ const Cart = () => {
         return prev;
     }, 0);
 
-    // Generar PDF de presupuesto (sin cambios)
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCustomerData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Generar PDF mejorado
     const generatePDF = () => {
-        const clientName = prompt("Por favor, ingrese el nombre del cliente:");
-        if (!clientName) {
-            alert("El nombre del cliente es obligatorio.");
+        if (!customerData.name) {
+            toast.error("Por favor ingrese el nombre del cliente");
             return;
         }
     
-        const doc = new jsPDF('p', 'mm', 'a4');
+        const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
-    
-        const imgWidth = 25;
-        const imgHeight = 12;
+        
+        // Colores corporativos
+        const primaryColor = [0, 128, 0]; // Verde
+        const secondaryColor = [0, 0, 0]; // Negro
+        
+        // Agregar logo
+        const imgWidth = 30;
+        const imgHeight = 15;
         doc.addImage(logo, 'JPEG', 10, 10, imgWidth, imgHeight);
-    
-        doc.setFontSize(18);
-        doc.text("Presupuesto de Compra", pageWidth / 2, 20, { align: "center" });
-    
-        const currentDate = new Date().toLocaleDateString('es-ES', { 
+        
+        // Agregar encabezado
+        doc.setFontSize(22);
+        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+        doc.setFont("helvetica", "bold");
+        doc.text("PRESUPUESTO", pageWidth - 10, 20, { align: "right" });
+        
+        // Línea divisoria
+        doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+        doc.setLineWidth(0.5);
+        doc.line(10, 30, pageWidth - 10, 30);
+        
+        // Agregar información de la empresa
+        doc.setFontSize(10);
+        doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+        doc.setFont("helvetica", "normal");
+        doc.text([
+            "JM Computer",
+            "Tel: +595 972 971353",
+            "Email: info@jmcomputer.com.py",
+            "Web: www.jmcomputer.com.py"
+        ], pageWidth - 10, 40, { align: "right" });
+        
+        // Número de presupuesto y fecha
+        const presupuestoNo = `PRE-${Math.floor(100000 + Math.random() * 900000)}`;
+        const currentDate = new Date().toLocaleDateString('es-PY', { 
             day: '2-digit', 
             month: '2-digit', 
             year: 'numeric' 
         });
-    
-        doc.setFontSize(12);
-        doc.text(`Cliente: ${clientName}`, 10, 35);
-        doc.text(`Fecha: ${currentDate}`, 10, 45);
-    
-        const tableColumn = ["N", "Producto", "Cantidad", "Precio Unitario", "Subtotal"];
+        
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("N° PRESUPUESTO:", 10, 45);
+        doc.text("FECHA:", 10, 52);
+        doc.text("VALIDEZ:", 10, 59);
+        
+        doc.setFont("helvetica", "normal");
+        doc.text(presupuestoNo, 50, 45);
+        doc.text(currentDate, 50, 52);
+        doc.text("5 días hábiles", 50, 59);
+        
+        // Información del cliente
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+        doc.text("DATOS DEL CLIENTE", 10, 70);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+        doc.setFont("helvetica", "bold");
+        doc.text("NOMBRE:", 10, 80);
+        
+        if (customerData.phone) {
+            doc.text("TELÉFONO:", 10, 87);
+        }
+        
+        if (customerData.email) {
+            doc.text("EMAIL:", 10, customerData.phone ? 94 : 87);
+        }
+        
+        doc.setFont("helvetica", "normal");
+        doc.text(customerData.name, 50, 80);
+        
+        if (customerData.phone) {
+            doc.text(customerData.phone, 50, 87);
+        }
+        
+        if (customerData.email) {
+            doc.text(customerData.email, 50, customerData.phone ? 94 : 87);
+        }
+        
+        // Encabezado de productos
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+        doc.text("DETALLE DE PRODUCTOS", 10, customerData.email ? 105 : (customerData.phone ? 98 : 91));
+        
+        // Tabla de productos
+        const tableColumn = ["#", "Descripción", "Cant.", "Precio Unitario", "Subtotal"];
         const tableRows = [];
-        let totalPrice = 0;
         
         // Filtrar productos válidos para el PDF
         const validProducts = data.filter(isValidProduct);
         
         validProducts.forEach((product, index) => {
             const subtotal = product.quantity * product.productId.sellingPrice;
-            totalPrice += subtotal;
             tableRows.push([
                 (index + 1).toString(),
                 product.productId.productName,
@@ -171,79 +252,140 @@ const Cart = () => {
                 displayINRCurrency(subtotal),
             ]);
         });
-    
+        
         doc.autoTable({
             head: [tableColumn],
             body: tableRows,
-            startY: 50,
+            startY: customerData.email ? 110 : (customerData.phone ? 103 : 96),
             theme: 'grid',
-            tableWidth: pageWidth - 20,
-            styles: {
-                fontSize: 8,
-                cellPadding: 3,
-                overflow: 'linebreak',
-                textColor: [0, 0, 0],
+            headStyles: {
+                fillColor: [0, 128, 0],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
                 halign: 'center'
             },
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+                lineColor: [200, 200, 200],
+                lineWidth: 0.1
+            },
             columnStyles: {
-                0: { cellWidth: 10 },
+                0: { cellWidth: 15, halign: 'center' },
                 1: { cellWidth: 'auto' },
-                2: { cellWidth: 25, halign: 'right' },
-                3: { cellWidth: 30, halign: 'right' },
-                4: { cellWidth: 30, halign: 'right' }
+                2: { cellWidth: 25, halign: 'center' },
+                3: { cellWidth: 35, halign: 'right' },
+                4: { cellWidth: 35, halign: 'right' }
             },
-            didDrawPage: (data) => {
-                const yPosition = data.cursor.y;
-                if (yPosition > pageHeight - 30) {
-                    doc.addPage();
-                    data.cursor.y = 50;
-                }
-    
-                const pageCount = doc.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    doc.setPage(i);
-                    doc.setFontSize(8);
-                    doc.setTextColor(150, 150, 150);
-                    doc.text(`Página ${i} de ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-                    doc.line(10, pageHeight - 20, pageWidth - 10, pageHeight - 20);
-                }
+            alternateRowStyles: {
+                fillColor: [240, 240, 240]
             }
         });
-    
+        
+        // Resumen del presupuesto
+        const finalY = doc.lastAutoTable.finalY + 15;
+        
+        // Recuadro para totales
+        doc.setFillColor(248, 248, 248);
+        doc.rect(pageWidth - 90, finalY - 5, 80, 30, 'F');
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.text("TOTAL GUARANÍES:", pageWidth - 85, finalY + 5);
+        doc.text("TOTAL USD (referencial):", pageWidth - 85, finalY + 15);
+        
         const totalInUSD = totalPrice / 7850;
-        const totalTableColumns = ["Moneda", "Total"];
-        const totalTableRows = [
-            ["Guaraníes (GS)", displayINRCurrency(totalPrice)],
-            ["Dólares (USD)", `$${totalInUSD.toFixed(2)}`]
+        
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(displayINRCurrency(totalPrice), pageWidth - 10, finalY + 5, { align: "right" });
+        doc.text(`$${totalInUSD.toFixed(2)}`, pageWidth - 10, finalY + 15, { align: "right" });
+        
+        // Información adicional
+        doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+        doc.setLineWidth(0.5);
+        doc.line(10, finalY + 30, pageWidth - 10, finalY + 30);
+        
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        
+        const infoText = [
+            "• Forma de Pago: Contado",
+            "• Tiempo de entrega: 48 horas hábiles",
+            "• Garantía según políticas del fabricante",
+            "• Precios válidos por 5 días hábiles"
         ];
-    
-        doc.autoTable({
-            head: [totalTableColumns],
-            body: totalTableRows,
-            startY: doc.lastAutoTable.finalY + 10,
-            theme: 'grid',
-            styles: { 
-                fontSize: 8, 
-                cellPadding: 3, 
-                overflow: 'linebreak', 
-                textColor: [0, 0, 0], 
-                halign: 'center' 
-            },
-            columnStyles: {
-                0: { cellWidth: 50, halign: 'left' },
-                1: { cellWidth: 50, halign: 'right' }
-            }
+        
+        infoText.forEach((text, index) => {
+            doc.text(text, 10, finalY + 40 + (index * 7));
         });
-    
-        const finalY = doc.lastAutoTable.finalY + 20;
+        
+        // Pie de página
         doc.setFontSize(8);
-        doc.text("Forma de Pago: Contado", 10, finalY);
-        doc.text("Validez de la oferta: 5 días", 10, finalY + 10);
-        doc.text("Entrega: 48 horas", 10, finalY + 20);
-        doc.text("En caso de aceptar esta oferta puede firmarlo y enviar al correo electrónico o al número +595 972 971353", 10, finalY + 30);
-        doc.text("JMComputer", 10, finalY + 40);
+        doc.setTextColor(100, 100, 100);
+        doc.text("Este presupuesto no constituye una factura. Para realizar el pedido, contáctenos al WhatsApp +595 972 971353.", pageWidth/2, pageHeight - 15, { align: "center" });
+        doc.text("JM Computer - Tecnología a tu alcance", pageWidth/2, pageHeight - 10, { align: "center" });
+        
+        // Numeración de páginas
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text(`Página ${i} de ${pageCount}`, pageWidth - 20, pageHeight - 10);
+        }
     
-        doc.save("presupuesto_compra.pdf");
+        // Guardar el PDF
+        doc.save(`Presupuesto-${presupuestoNo}.pdf`);
+        toast.success("Presupuesto generado exitosamente");
+    };
+
+    // Función para enviar presupuesto por WhatsApp
+    const sendToWhatsApp = () => {
+        if (!customerData.name) {
+            toast.error("Por favor ingrese el nombre del cliente");
+            return;
+        }
+
+        const validProducts = data.filter(isValidProduct);
+        
+        if (validProducts.length === 0) {
+            toast.error("No hay productos válidos en el carrito");
+            return;
+        }
+
+        // Construir el mensaje de WhatsApp
+        let message = `*SOLICITUD DE PRESUPUESTO - JM Computer*\n\n`;
+        message += `*Cliente:* ${customerData.name}\n`;
+        
+        if (customerData.phone) {
+            message += `*Teléfono:* ${customerData.phone}\n`;
+        }
+        
+        if (customerData.email) {
+            message += `*Email:* ${customerData.email}\n`;
+        }
+        
+        message += `\n*Productos solicitados:*\n`;
+        
+        validProducts.forEach((product, index) => {
+            message += `${index + 1}. ${product.productId.productName} (${product.quantity} unid.) - ${displayINRCurrency(product.productId.sellingPrice * product.quantity)}\n`;
+        });
+        
+        message += `\n*Total:* ${displayINRCurrency(totalPrice)}\n`;
+        message += `\nSolicito confirmación de disponibilidad y coordinación para el pago. Gracias.`;
+        
+        // Codificar el mensaje para URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        // Abrir WhatsApp con el mensaje
+        window.open(`https://wa.me/+595972971353?text=${encodedMessage}`, '_blank');
+        toast.success("Redirigiendo a WhatsApp...");
+    };
+
+    const toggleCustomerForm = () => {
+        setShowCustomerForm(!showCustomerForm);
     };
 
     const validProducts = data.filter(isValidProduct);
@@ -251,17 +393,19 @@ const Cart = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Botones para debug */}
-                <div className="flex gap-2 mb-4">
-                    <button onClick={() => console.log("Carrito actual:", localCartHelper.getCart())} 
-                            className="px-3 py-1 bg-gray-200 rounded text-sm">
-                        Debug: Ver carrito en consola
-                    </button>
-                    <button onClick={clearCart} 
-                            className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">
-                        Limpiar carrito
-                    </button>
-                </div>
+                {/* Botones para debug - solo visibles en desarrollo */}
+                {process.env.NODE_ENV === 'development' && (
+                    <div className="flex gap-2 mb-4">
+                        <button onClick={() => console.log("Carrito actual:", localCartHelper.getCart())} 
+                                className="px-3 py-1 bg-gray-200 rounded text-sm">
+                            Debug: Ver carrito en consola
+                        </button>
+                        <button onClick={clearCart} 
+                                className="px-3 py-1 bg-red-100 text-red-700 rounded text-sm">
+                            Limpiar carrito
+                        </button>
+                    </div>
+                )}
                 
                 {/* Encabezado del carrito */}
                 <div className="flex items-center justify-between mb-8">
@@ -393,13 +537,84 @@ const Cart = () => {
                                         <span className="text-xl font-bold text-green-600">{displayINRCurrency(totalPrice)}</span>
                                     </div>
                                 </div>
-                
-                                <button
-                                    onClick={generatePDF}
-                                    className="mt-6 w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2 font-medium"
-                                >
-                                    <span>Descargar Presupuesto</span>
-                                </button>
+
+                                {/* Información del cliente para presupuesto */}
+                                <div className="mt-6">
+                                    <button 
+                                        onClick={toggleCustomerForm}
+                                        className="w-full text-center text-green-600 hover:text-green-700 mb-4 flex items-center justify-center gap-2"
+                                    >
+                                        <MdPictureAsPdf />
+                                        <span>{showCustomerForm ? 'Ocultar formulario' : 'Generar presupuesto'}</span>
+                                    </button>
+
+                                    {showCustomerForm && (
+                                        <div className="space-y-3 bg-gray-50 p-4 rounded-lg mt-2 mb-4">
+                                            <h3 className="font-semibold text-gray-700">Datos para el presupuesto</h3>
+                                            
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                                    Nombre del cliente *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value={customerData.name}
+                                                    onChange={handleInputChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                                    placeholder="Nombre completo"
+                                                    required
+                                                />
+                                            </div>
+                                            
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                                    Teléfono (opcional)
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="phone"
+                                                    value={customerData.phone}
+                                                    onChange={handleInputChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                                    placeholder="Número de contacto"
+                                                />
+                                            </div>
+                                            
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-medium mb-1">
+                                                    Email (opcional)
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={customerData.email}
+                                                    onChange={handleInputChange}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                                    placeholder="Correo electrónico"
+                                                />
+                                            </div>
+
+                                            <div className="flex gap-2 pt-2">
+                                                <button
+                                                    onClick={generatePDF}
+                                                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center gap-1 text-sm"
+                                                >
+                                                    <MdDownload />
+                                                    <span>Descargar PDF</span>
+                                                </button>
+                                                
+                                                <button
+                                                    onClick={sendToWhatsApp}
+                                                    className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-1 text-sm"
+                                                >
+                                                    <MdWhatsapp />
+                                                    <span>Enviar a WhatsApp</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                 
                                 <Link
                                     to="/"

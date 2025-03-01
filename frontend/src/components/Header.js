@@ -65,6 +65,7 @@ const Header = () => {
   const URLSearch = new URLSearchParams(searchInput?.search);
   const searchQuery = URLSearch.getAll("q");
   const [search, setSearch] = useState(searchQuery);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -91,17 +92,19 @@ const Header = () => {
 
   const toggleCategoryMenu = () => setCategoryMenuOpen(!categoryMenuOpen);
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen);
+  const toggleMobileSearch = () => setShowMobileSearch(!showMobileSearch);
 
   return (
-    <header className="h-20 bg-white shadow-lg fixed w-full top-0 z-50">
-      <div className="h-full container mx-auto flex items-center justify-between px-4 lg:px-6">
+    <header className="bg-white shadow-lg fixed w-full top-0 z-50">
+      {/* Versión de escritorio */}
+      <div className="container mx-auto px-4 lg:px-6 h-20 hidden lg:flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center" onClick={scrollTop}>
-          <img src="/logo.jpg" alt="Tu Logo" className="w-20" />
+          <img src="/logo.jpg" alt="JM Computers" className="w-20" />
         </Link>
 
-        {/* Barra de búsqueda y botón de categorías */}
-        <div className="flex items-center flex-1 justify-center">
+        {/* Barra de búsqueda */}
+        <div className="flex items-center flex-1 justify-center mx-8">
           <div className="flex items-center w-full max-w-md border rounded-full shadow-md focus-within:shadow-lg pl-4">
             <input
               type="text"
@@ -110,20 +113,14 @@ const Header = () => {
               onChange={handleSearch}
               value={search}
             />
-            <div className="text-xl pr-2 text-gray-500 flex items-center gap-2">
+            <div className="text-xl p-2 text-gray-500">
               <GrSearch className="cursor-pointer" />
-              <button
-                onClick={toggleCategoryMenu}
-                className="text-gray-600 text-sm font-normal hover:text-green-600"
-              >
-                Categorías
-              </button>
             </div>
           </div>
         </div>
 
-        {/* Iconos de carrito y perfil/ingresar */}
-        <div className="hidden lg:flex items-center gap-6">
+        {/* Carrito */}
+        <div className="flex items-center gap-6">
           <Link to="/carrito" className="relative" onClick={scrollTop}>
             <CiShoppingCart className="text-3xl text-gray-600 hover:text-green-600 transition" />
             {context?.cartProductCount > 0 && (
@@ -132,47 +129,58 @@ const Header = () => {
               </div>
             )}
           </Link>
+        </div>
+      </div>
 
-          <div className="relative">
-            {!user ? (
-              <Link to="/iniciar-sesion" className="flex items-center text-gray-600 hover:text-green-600" onClick={scrollTop}>
-                <CiUser className="text-3xl" />
-              </Link>
-            ) : (
-              <button
-                onClick={toggleProfileMenu}
-                className="flex items-center text-gray-600 hover:text-green-600"
-              >
-                <CiUser className="text-3xl" />
-              </button>
-            )}
+      {/* Versión móvil mejorada */}
+      <div className="lg:hidden flex flex-col">
+        {/* Barra superior con logo y iconos */}
+        <div className="flex items-center justify-between px-4 h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center" onClick={scrollTop}>
+            <img src="/logo.jpg" alt="JM Computers" className="h-10" />
+          </Link>
 
-            {user && profileMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50 p-4">
-                <nav className="flex flex-col gap-2">
-                  {user?.role === ROLE.ADMIN && (
-                    <Link
-                      to="/panel-admin/todos-productos"
-                      className="text-gray-600 hover:text-green-600"
-                      onClick={() => {
-                        toggleProfileMenu();
-                        scrollTop();
-                      }}
-                    >
-                      Panel de Administrador
-                    </Link>
-                  )}
-                  <button
-                    onClick={handleLogout}
-                    className="text-gray-600 hover:text-red-600"
-                  >
-                    Cerrar Sesión
-                  </button>
-                </nav>
-              </div>
-            )}
+          {/* Iconos: búsqueda y carrito */}
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={toggleMobileSearch}
+              className="text-gray-600 hover:text-green-600"
+            >
+              <GrSearch className="text-2xl" />
+            </button>
+            <Link to="/carrito" className="relative" onClick={scrollTop}>
+              <CiShoppingCart className="text-2xl text-gray-600 hover:text-green-600 transition" />
+              {context?.cartProductCount > 0 && (
+                <div className="absolute -top-2 -right-3 w-5 h-5 text-xs text-white bg-green-600 rounded-full flex items-center justify-center">
+                  {context?.cartProductCount}
+                </div>
+              )}
+            </Link>
           </div>
         </div>
+
+        {/* Barra de búsqueda móvil expandible */}
+        {showMobileSearch && (
+          <div className="px-4 pb-3 pt-1 bg-white shadow-md">
+            <div className="flex items-center w-full border rounded-full shadow-md focus-within:shadow-lg pl-4 pr-2">
+              <input
+                type="text"
+                placeholder="Busca tus productos..."
+                className="w-full outline-none py-2 text-gray-600 text-sm"
+                onChange={handleSearch}
+                value={search}
+                autoFocus
+              />
+              <button 
+                onClick={toggleMobileSearch}
+                className="text-sm text-gray-600 hover:text-green-600 py-1 px-2"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Menú lateral de categorías */}

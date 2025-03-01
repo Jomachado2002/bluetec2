@@ -18,7 +18,7 @@ const specificationsByCategory = {
     'processorModel', 'processorSocket', 'processorCores', 'processorThreads',
     'processorBaseFreq', 'processorTurboFreq', 'processorCache', 'processorTDP',
     'psuWattage', 'psuEfficiency', 'psuModular', 'psuFormFactor', 'psuProtections',
-    'graphicCardModel', 'graphicCardMemory', 'graphicCardMemoryType', 'graphicCardBaseFrequency', 'graphicCardTDP',
+    'graphicCardModel', 'graphicCardMemory', 'graphicCardMemoryType', 'graphicCardBaseFrequency', 'graphicCardTDP','graphicfabricate',
     'caseFormFactor', 'caseMaterial', 'caseExpansionBays', 'caseIncludedFans', 'caseCoolingSupport', 'caseBacklight'
   ],
   perifericos: [

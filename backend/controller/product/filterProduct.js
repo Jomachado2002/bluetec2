@@ -33,7 +33,7 @@ const filterProductController = async (req, res) => {
       ],
       tarjeta_grafica: [
         'graphicCardModel', 'graphicCardMemory', 'graphicCardMemoryType',
-        'graphicCardBaseFrequency', 'graphicCardManufacturer' ,'graphicCardTDP'
+        'graphicCardBaseFrequency', 'graphicfabricate' ,'graphicCardTDP'
       ],
       gabinetes: [
         'caseFormFactor', 'caseMaterial', 'caseExpansionBays',
