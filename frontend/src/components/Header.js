@@ -58,6 +58,7 @@ const Header = () => {
   const user = useSelector(state => state?.user?.user);
   const dispatch = useDispatch();
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const [desktopCategoryMenuOpen, setDesktopCategoryMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const context = useContext(Context);
   const navigate = useNavigate();
@@ -91,6 +92,7 @@ const Header = () => {
   };
 
   const toggleCategoryMenu = () => setCategoryMenuOpen(!categoryMenuOpen);
+  const toggleDesktopCategoryMenu = () => setDesktopCategoryMenuOpen(!desktopCategoryMenuOpen);
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen);
   const toggleMobileSearch = () => setShowMobileSearch(!showMobileSearch);
 
@@ -102,6 +104,72 @@ const Header = () => {
         <Link to="/" className="flex items-center" onClick={scrollTop}>
           <img src="/logo.jpg" alt="JM Computers" className="w-20" />
         </Link>
+
+        {/* Categorías con menú desplegable */}
+        <div className="relative">
+          <button 
+            onClick={toggleDesktopCategoryMenu}
+            className="flex items-center text-gray-700 hover:text-green-600 transition"
+          >
+            <BiCategoryAlt className="mr-2 text-xl" />
+            Categorías
+          </button>
+
+          {desktopCategoryMenuOpen && (
+            <div className="absolute top-full left-0 mt-2 w-80 bg-white shadow-lg rounded-lg border">
+              <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
+                {productCategory.map((category) => (
+                  <div 
+                    key={category.id} 
+                    className="bg-white rounded-xl shadow-md overflow-hidden"
+                  >
+                    <div className="bg-green-50 p-4 border-b border-green-100">
+                      <h2 className="text-lg font-bold text-green-800 flex items-center justify-between">
+                        {category.label}
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-5 w-5 text-green-600" 
+                          viewBox="0 0 20 20" 
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 10l-2.293 2.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </h2>
+                    </div>
+                    
+                    <div>
+                      {category.subcategories.map((subcategory) => (
+                        <Link
+                          key={subcategory.id}
+                          to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
+                          className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
+                          onClick={() => {
+                            setDesktopCategoryMenuOpen(false);
+                            scrollTop();
+                          }}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <span className="text-gray-700 group-hover:text-green-600 transition-colors">
+                              {subcategory.label}
+                            </span>
+                          </div>
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className="h-5 w-5 text-gray-400 group-hover:text-green-600 transition-colors" 
+                            viewBox="0 0 20 20" 
+                            fill="currentColor"
+                          >
+                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Barra de búsqueda */}
         <div className="flex items-center flex-1 justify-center mx-8">
@@ -132,7 +200,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Versión móvil mejorada */}
+      {/* Versión móvil */}
       <div className="lg:hidden flex flex-col">
         {/* Barra superior con logo y iconos */}
         <div className="flex items-center justify-between px-4 h-16">
@@ -183,7 +251,7 @@ const Header = () => {
         )}
       </div>
 
-      {/* Menú lateral de categorías */}
+      {/* Menú lateral de categorías para móvil */}
       <div
         className={`fixed top-0 left-0 h-screen bg-white w-80 shadow-lg transform ${
           categoryMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -258,14 +326,6 @@ const Header = () => {
           ))}
         </div>
       </div>
-
-      {/* Overlay oscuro detrás del menú */}
-      {categoryMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={toggleCategoryMenu}
-        ></div>
-      )}
 
       {/* Barra de navegación móvil */}
       <div className="lg:hidden fixed bottom-0 w-full bg-white shadow-inner border-t p-2 flex justify-around">
