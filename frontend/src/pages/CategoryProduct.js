@@ -7,7 +7,8 @@ import SummaryApi from '../common';
 import SpecificationAccordion from '../components/SpecificationAccordion';
 
 const CategoryProduct = () => {
-    const [data, setData] = useState([]);
+    const [rawData, setRawData] = useState([]); // Datos sin ordenar
+    const [data, setData] = useState([]);       // Datos ordenados para mostrar
     const [loading, setLoading] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
@@ -164,7 +165,8 @@ const CategoryProduct = () => {
 
             const dataResponse = await response.json();
             if (dataResponse.success) {
-                setData(dataResponse.data || []);
+                // Guardar datos sin ordenar
+                setRawData(dataResponse.data || []);
                 setAvailableFilters({
                     brands: dataResponse.filters.brands || [],
                     specifications: dataResponse.filters.specifications || {}
@@ -172,11 +174,29 @@ const CategoryProduct = () => {
             }
         } catch (error) {
             console.error('Error al cargar productos:', error);
-            setData([]);
+            setRawData([]);
         } finally {
             setLoading(false);
         }
     };
+
+    // Efecto para ordenar los datos cuando cambia rawData o sortBy
+    useEffect(() => {
+        if (rawData.length > 0) {
+            if (sortBy) {
+                const sortedData = [...rawData].sort((a, b) => {
+                    const priceA = Number(a.sellingPrice) || 0;
+                    const priceB = Number(b.sellingPrice) || 0;
+                    return sortBy === 'asc' ? priceA - priceB : priceB - priceA;
+                });
+                setData(sortedData);
+            } else {
+                setData(rawData);
+            }
+        } else {
+            setData([]);
+        }
+    }, [rawData, sortBy]);
 
     useEffect(() => {
         setFilterCategoryList(selectedCategory ? [selectedCategory] : []);
@@ -216,12 +236,7 @@ const CategoryProduct = () => {
 
     const handleOnChangeSortBy = (value) => {
         setSortBy(value);
-
-        setData(prev => [...prev].sort((a, b) => {
-            const priceA = Number(a.sellingPrice) || 0;
-            const priceB = Number(b.sellingPrice) || 0;
-            return value === 'asc' ? priceA - priceB : priceB - priceA;
-        }));
+        // Ya no necesitamos ordenar aquí, el efecto se encargará de eso
     };
 
     // Toggle para expandir/contraer categorías
@@ -299,7 +314,7 @@ const CategoryProduct = () => {
                                 type='radio'
                                 name='sortBy'
                                 checked={sortBy === option.value}
-                                onChange={handleOnChangeSortBy}
+                                onChange={() => handleOnChangeSortBy(option.value)}
                                 value={option.value}
                                 className="form-radio text-green-600 focus:ring-green-500"
                             />
@@ -411,8 +426,8 @@ const CategoryProduct = () => {
                 </div>
             )}
             
-             {/* Especificaciones */}
-        {renderSpecificationFilters(isMobile)}
+            {/* Especificaciones */}
+            {renderSpecificationFilters(isMobile)}
         </div>
     );
 
