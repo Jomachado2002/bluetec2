@@ -1,0 +1,478 @@
+// src/components/filters/MobileFilters.js - Corregido para evitar la barra de navegación inferior
+
+import React, { useRef, useEffect, useState } from 'react';
+import { BiX, BiFilter, BiChevronDown, BiChevronUp, BiCheck } from 'react-icons/bi';
+import { FiSearch } from 'react-icons/fi';
+import { useFilters } from '../../context/FilterContext'; // Ajustada la ruta a context sin 's'
+import productCategory from '../../helpers/productCategory';
+
+const MobileFilters = () => {
+  const { 
+    mobileFilterOpen, 
+    setMobileFilterOpen, 
+    activeMobileFilter, 
+    setActiveMobileFilter,
+    filterCategoryList,
+    filterSubcategoryList,
+    filterBrands,
+    setFilterBrands,
+    specFilters,
+    priceRange, 
+    tempPriceRange,
+    sortBy,
+    setSortBy,
+    handleSelectCategory,
+    handleSelectSubcategory,
+    handleSpecFilterChange,
+    handlePriceChange,
+    applyPriceFilter,
+    availableFilters,
+    filterCount,
+    clearAllFilters
+  } = useFilters();
+  
+  const [searchBrand, setSearchBrand] = useState('');
+  const [searchSpecification, setSearchSpecification] = useState('');
+  const mobileFilterRef = useRef(null);
+  
+  // Filtrar marcas por término de búsqueda
+  const filteredBrands = availableFilters.brands.filter(brand => 
+    brand.toLowerCase().includes(searchBrand.toLowerCase())
+  );
+  
+  // Función para obtener etiqueta legible para la especificación
+  const getSpecificationLabel = (specKey) => {
+    const labels = {
+      processor: "Procesador",
+      memory: "Memoria RAM",
+      storage: "Almacenamiento",
+      // ...otros mappings según tu modelo de datos
+    };
+    
+    return labels[specKey] || specKey;
+  };
+  
+  // Cerrar el filtro móvil al tocar fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileFilterRef.current && !mobileFilterRef.current.contains(event.target)) {
+        setMobileFilterOpen(false);
+      }
+    };
+    
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setMobileFilterOpen(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [setMobileFilterOpen]);
+  
+  // Renderizado del botón para abrir filtros en móvil - POSICIONADO PARA EVITAR LA BARRA INFERIOR
+  const renderMobileFilterButton = () => (
+    <button 
+      className="lg:hidden fixed left-4 bottom-24 z-40 flex items-center justify-center py-2 px-4 bg-green-600 text-white rounded-full shadow-lg"
+      onClick={() => setMobileFilterOpen(true)}
+      style={{ minWidth: '120px' }}
+    >
+      <BiFilter className="mr-2" size={20} />
+      Filtrar
+      {filterCount > 0 && (
+        <span className="ml-1 px-1.5 bg-white text-green-800 rounded-full text-xs">
+          {filterCount}
+        </span>
+      )}
+    </button>
+  );
+  
+  return (
+    <>
+      {/* Botón para abrir filtros - MODIFICADO para evitar la barra inferior */}
+      {renderMobileFilterButton()}
+      
+      {/* Panel de filtros móvil - AJUSTADO PARA EVITAR LA BARRA INFERIOR */}
+      <div 
+        className={`fixed inset-0 z-50 ${mobileFilterOpen ? 'flex' : 'hidden'} flex-col`}
+      >
+        {/* Overlay para cerrar al tocar fuera del panel */}
+        <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setMobileFilterOpen(false)} />
+        
+        {/* Panel de filtro - Ahora respeta la barra inferior */}
+        <div 
+          ref={mobileFilterRef}
+          className="absolute inset-x-0 top-0 bottom-16 flex flex-col bg-white z-10" // Ajustado bottom para evitar la barra inferior
+        >
+          {/* Cabecera del panel de filtros personalizado */}
+          <div className="flex-shrink-0 bg-green-600 text-white p-4 flex items-center justify-between shadow-md">
+            <h2 className="text-lg font-semibold">Filtros</h2>
+            <button 
+              onClick={() => setMobileFilterOpen(false)}
+              className="p-2 rounded-full bg-green-700 text-white hover:bg-green-800"
+              aria-label="Cerrar filtros"
+            >
+              <BiX size={24} />
+            </button>
+          </div>
+          
+          {/* Botones de categorías de filtro en pestañas */}
+          <div className="flex-shrink-0 overflow-x-auto bg-white shadow-md border-b">
+            <div className="flex p-3 space-x-2">
+              <button 
+                onClick={() => setActiveMobileFilter('categories')}
+                className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium ${
+                  activeMobileFilter === 'categories' 
+                    ? 'bg-green-600 text-white shadow-md' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                Categorías
+                {(filterCategoryList.length || filterSubcategoryList.length) > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                    {filterCategoryList.length + filterSubcategoryList.length}
+                  </span>
+                )}
+              </button>
+              
+              <button 
+                onClick={() => setActiveMobileFilter('price')}
+                className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium ${
+                  activeMobileFilter === 'price' 
+                    ? 'bg-green-600 text-white shadow-md' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                Precio
+                {(priceRange.min || priceRange.max) && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                    1
+                  </span>
+                )}
+              </button>
+              
+              <button 
+                onClick={() => setActiveMobileFilter('brands')}
+                className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium ${
+                  activeMobileFilter === 'brands' 
+                    ? 'bg-green-600 text-white shadow-md' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                Marcas
+                {filterBrands.length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                    {filterBrands.length}
+                  </span>
+                )}
+              </button>
+              
+              <button 
+                onClick={() => setActiveMobileFilter('specs')}
+                className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium ${
+                  activeMobileFilter === 'specs' 
+                    ? 'bg-green-600 text-white shadow-md' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                Especificaciones
+                {Object.values(specFilters).flat().length > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                    {Object.values(specFilters).flat().length}
+                  </span>
+                )}
+              </button>
+              
+              <button 
+                onClick={() => setActiveMobileFilter('sort')}
+                className={`px-4 py-2 whitespace-nowrap rounded-full text-sm font-medium ${
+                  activeMobileFilter === 'sort' 
+                    ? 'bg-green-600 text-white shadow-md' 
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                Ordenar
+                {sortBy && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                    1
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+          
+          {/* Contenido del filtro con scroll independiente */}
+          <div className="flex-1 p-4 overflow-y-auto">
+            {/* Categorías */}
+            {activeMobileFilter === 'categories' && (
+              <div>
+                <h3 className="text-lg font-medium mb-3">Categorías</h3>
+                <div className="space-y-2">
+                  {productCategory.map((category) => (
+                    <div key={category.value} className="mb-3">
+                      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div 
+                          className={`flex items-center justify-between py-3 px-4 cursor-pointer ${
+                            filterCategoryList.includes(category.value) ? 'bg-green-50' : ''
+                          }`}
+                          onClick={() => handleSelectCategory(category.value)}
+                        >
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                              checked={filterCategoryList.includes(category.value)}
+                              onChange={() => {}} // Manejado por onClick del div
+                              id={`category-${category.value}`}
+                            />
+                            <label 
+                              htmlFor={`category-${category.value}`} 
+                              className="text-gray-800 font-medium cursor-pointer"
+                            >
+                              {category.label}
+                            </label>
+                          </div>
+                        </div>
+                        
+                        {filterCategoryList.includes(category.value) && category.subcategories && (
+                          <div className="border-t border-gray-100 bg-gray-50">
+                            {category.subcategories.map((subcat) => (
+                              <div 
+                                key={subcat.value}
+                                className="flex items-center py-3 px-4 border-b border-gray-100 last:border-b-0"
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                                  checked={filterSubcategoryList.includes(subcat.value)}
+                                  onChange={() => handleSelectSubcategory(subcat.value)}
+                                  id={`subcategory-${subcat.value}`}
+                                />
+                                <label 
+                                  htmlFor={`subcategory-${subcat.value}`} 
+                                  className="text-gray-700 cursor-pointer"
+                                >
+                                  {subcat.label}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Precio */}
+            {activeMobileFilter === 'price' && (
+              <div>
+                <h3 className="text-lg font-medium mb-3">Rango de Precio</h3>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 space-y-4">
+                  <div>
+                    <label htmlFor="mobile-min-price" className="block text-sm text-gray-600 mb-1">Precio mínimo</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Gs.</span>
+                      <input
+                        id="mobile-min-price"
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="Mínimo"
+                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm"
+                        value={tempPriceRange.min}
+                        onChange={(e) => handlePriceChange('min', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="mobile-max-price" className="block text-sm text-gray-600 mb-1">Precio máximo</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Gs.</span>
+                      <input
+                        id="mobile-max-price"
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="Máximo"
+                        className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm"
+                        value={tempPriceRange.max}
+                        onChange={(e) => handlePriceChange('max', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    className="w-full py-3 bg-green-600 text-white text-md font-medium rounded-lg hover:bg-green-700 transition"
+                    onClick={applyPriceFilter}
+                  >
+                    Aplicar filtro de precio
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* Marcas */}
+            {activeMobileFilter === 'brands' && (
+              <div>
+                <h3 className="text-lg font-medium mb-3">Marcas</h3>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                  <div className="relative mb-3">
+                    <input
+                      type="text"
+                      placeholder="Buscar marca..."
+                      className="w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg shadow-sm"
+                      value={searchBrand}
+                      onChange={(e) => setSearchBrand(e.target.value)}
+                    />
+                    <FiSearch className="absolute right-3 top-3.5 text-gray-400" />
+                  </div>
+                  
+                  <div className="max-h-[40vh] overflow-y-auto bg-white rounded-lg">
+                    {filteredBrands.length > 0 ? (
+                      filteredBrands.map((brand) => (
+                        <label key={brand} className="flex items-center py-3 px-3 border-b border-gray-100 last:border-b-0">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                            checked={filterBrands.includes(brand)}
+                            onChange={() => {
+                              const newBrands = filterBrands.includes(brand)
+                                ? filterBrands.filter(b => b !== brand)
+                                : [...filterBrands, brand];
+                              setFilterBrands(newBrands);
+                            }}
+                            id={`brand-${brand}`}
+                          />
+                          <span className="text-gray-700">{brand}</span>
+                        </label>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500 py-3 text-center">No se encontraron marcas</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Especificaciones */}
+            {activeMobileFilter === 'specs' && (
+              <div>
+                <h3 className="text-lg font-medium mb-3">Especificaciones</h3>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                  <div className="relative mb-3">
+                    <input
+                      type="text"
+                      placeholder="Buscar especificación..."
+                      className="w-full pl-3 pr-10 py-3 border border-gray-300 rounded-lg shadow-sm"
+                      value={searchSpecification}
+                      onChange={(e) => setSearchSpecification(e.target.value)}
+                    />
+                    <FiSearch className="absolute right-3 top-3.5 text-gray-400" />
+                  </div>
+                  
+                  <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-1">
+                    {Object.keys(availableFilters.specifications)
+                      .filter(key => getSpecificationLabel(key).toLowerCase().includes(searchSpecification.toLowerCase()))
+                      .map(specKey => (
+                        <div key={specKey} className="border-b pb-4 last:border-0">
+                          <h4 className="font-medium text-gray-800 mb-2 bg-gray-100 p-2 rounded">
+                            {getSpecificationLabel(specKey)}
+                          </h4>
+                          <div className="space-y-2 ml-1 border-l-2 border-green-100 pl-2">
+                            {availableFilters.specifications[specKey].map(value => (
+                              <label key={`${specKey}-${value}`} className="flex items-center py-2 px-2 rounded hover:bg-gray-100">
+                                <input
+                                  type="checkbox"
+                                  className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                                  checked={(specFilters[specKey] || []).includes(value)}
+                                  onChange={() => handleSpecFilterChange(specKey, value)}
+                                  id={`spec-${specKey}-${value}`}
+                                />
+                                <span className="text-sm text-gray-700">{value}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      ))
+                    }
+                    {Object.keys(availableFilters.specifications).length === 0 && (
+                      <p className="text-sm text-gray-500 py-2 text-center italic">
+                        Selecciona una categoría para ver las especificaciones disponibles
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Ordenar */}
+            {activeMobileFilter === 'sort' && (
+              <div>
+                <h3 className="text-lg font-medium mb-3">Ordenar por</h3>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <label className="flex items-center py-3.5 px-4 cursor-pointer border-b border-gray-100">
+                    <input
+                      type="radio"
+                      name="sortByMobile"
+                      value="asc"
+                      checked={sortBy === 'asc'}
+                      onChange={() => setSortBy('asc')}
+                      className="text-green-600 focus:ring-green-500 mr-3"
+                    />
+                    <span className="text-gray-700">Precio: Menor a mayor</span>
+                  </label>
+                  <label className="flex items-center py-3.5 px-4 cursor-pointer border-b border-gray-100">
+                    <input
+                      type="radio"
+                      name="sortByMobile"
+                      value="dsc"
+                      checked={sortBy === 'dsc'}
+                      onChange={() => setSortBy('dsc')}
+                      className="text-green-600 focus:ring-green-500 mr-3"
+                    />
+                    <span className="text-gray-700">Precio: Mayor a menor</span>
+                  </label>
+                  <label className="flex items-center py-3.5 px-4 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="sortByMobile"
+                      value=""
+                      checked={!sortBy}
+                      onChange={() => setSortBy('')}
+                      className="text-green-600 focus:ring-green-500 mr-3"
+                    />
+                    <span className="text-gray-700">Sin ordenar</span>
+                  </label>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Pie del panel con botones de acción */}
+          <div className="flex-shrink-0 border-t border-gray-200 p-4 bg-white shadow-inner">
+            <div className="flex justify-between">
+              <button
+                onClick={clearAllFilters}
+                className="px-4 py-3 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 flex-1 mr-2"
+              >
+                Limpiar filtros
+              </button>
+              <button
+                onClick={() => setMobileFilterOpen(false)}
+                className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex-1 ml-2"
+              >
+                Ver {filterCount > 0 ? `(${filterCount} filtros)` : 'productos'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default MobileFilters;
