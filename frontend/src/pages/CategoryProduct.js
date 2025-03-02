@@ -6,6 +6,7 @@ import SummaryApi from '../common';
 import { BiChevronDown, BiChevronUp, BiCheck, BiX, BiFilter, BiSort } from 'react-icons/bi';
 import { FiSearch } from 'react-icons/fi';
 import { IoGridOutline, IoMenuOutline } from 'react-icons/io5';
+import PriceFilterAccordion from '../components/PriceFilterAccordion';
 
 const CategoryProduct = () => {
     const [rawData, setRawData] = useState([]);
@@ -897,7 +898,12 @@ const CategoryProduct = () => {
                     )}
                 </div>
             </div>
+                    {/* Precio */}
 
+                <PriceFilterAccordion
+                currentPriceRange={priceRange}
+                onApplyPriceFilter={(range) => setPriceRange(range)}
+                />
             {/* Ordenar por */}
             <FilterAccordion
                 id="sort"
@@ -1319,27 +1325,6 @@ const renderMobileFilterPanel = () => (
                             </div>
                         </div>
                     )}
-                </div>
-                
-                {/* Botones de acción */}
-                <div className="flex-shrink-0 p-4 border-t sticky bottom-0 bg-white">
-                    <div className="flex space-x-3">
-                        <button 
-                            onClick={() => {
-                                clearAllFilters();
-                                setMobileFilterOpen(false);
-                            }}
-                            className="flex-1 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50"
-                        >
-                            Limpiar
-                        </button>
-                        <button 
-                            onClick={() => setMobileFilterOpen(false)}
-                            className="flex-1 py-3 bg-green-600 rounded-md text-white font-medium hover:bg-green-700"
-                        >
-                            Ver productos ({data.length})
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
