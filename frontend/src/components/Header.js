@@ -144,6 +144,17 @@ const Header = () => {
     setActiveCategoryIndex(index);
   };
 
+  // Nueva función para gestionar la navegación con recarga
+  const handleNavigateWithReload = (url) => {
+    navigate(url);
+    scrollTop();
+    
+    // Pequeño delay para asegurar que la navegación se complete
+    setTimeout(() => {
+      window.location.reload();
+    }, 10);
+  };
+
   return (
     <header className="fixed w-full top-0 z-[100] transition-all duration-300" style={{backgroundColor: scrolled ? 'rgba(255,255,255,0.95)' : 'white', boxShadow: scrolled ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : '0 2px 4px -1px rgba(0, 0, 0, 0.06)'}}>
       {/* Versión de escritorio */}
@@ -301,13 +312,14 @@ const Header = () => {
                     
                     <div className="grid grid-cols-2 gap-4">
                       {activeSubcategories.map((subcategory) => (
-                        <Link
+                        <a
                           key={subcategory.id}
-                          to={`/categoria-producto?category=${productCategory[activeCategoryIndex].value}&subcategory=${subcategory.value}`}
+                          href="#"
                           className="group p-3 hover:bg-green-50 transition-colors flex items-center"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
                             setDesktopMenuOpen(false);
-                            scrollTop();
+                            handleNavigateWithReload(`/categoria-producto?category=${productCategory[activeCategoryIndex].value}&subcategory=${subcategory.value}`);
                           }}
                         >
                           <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full text-green-600 group-hover:bg-green-200 transition-colors flex-shrink-0 mr-3">
@@ -316,21 +328,22 @@ const Header = () => {
                           <span className="font-medium text-gray-800 group-hover:text-green-600 transition-colors text-sm">
                             {subcategory.label}
                           </span>
-                        </Link>
+                        </a>
                       ))}
                     </div>
                     
                     <div className="mt-8 flex justify-end">
-                      <Link
-                        to={`/categoria-producto?category=${productCategory[activeCategoryIndex].value}`}
+                      <a
+                        href="#"
                         className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
                           setDesktopMenuOpen(false);
-                          scrollTop();
+                          handleNavigateWithReload(`/categoria-producto?category=${productCategory[activeCategoryIndex].value}`);
                         }}
                       >
                         Ver toda la colección
-                      </Link>
+                      </a>
                     </div>
                   </>
                 ) : (
@@ -349,7 +362,7 @@ const Header = () => {
         </>
       )}
 
-      {/* Versión móvil - SIN CAMBIOS */}
+      {/* Versión móvil */}
       <div className="lg:hidden flex flex-col">
         {/* Barra superior con logo y iconos */}
         <div className="flex items-center justify-between px-4 h-16">
@@ -400,7 +413,7 @@ const Header = () => {
         )}
       </div>
 
-      {/* Menú lateral de categorías para móvil - SIN CAMBIOS */}
+      {/* Menú lateral de categorías para móvil */}
       <div
         className={`fixed top-0 left-0 h-screen bg-white w-80 shadow-lg transform ${
           categoryMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -446,13 +459,14 @@ const Header = () => {
               
               <div>
                 {category.subcategories.map((subcategory) => (
-                  <Link
+                  <a
                     key={subcategory.id}
-                    to={`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`}
+                    href="#"
                     className="flex items-center justify-between p-4 border-b border-gray-100 last:border-b-0 hover:bg-green-50 transition-colors group"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       toggleCategoryMenu();
-                      scrollTop();
+                      handleNavigateWithReload(`/categoria-producto?category=${category.value}&subcategory=${subcategory.value}`);
                     }}
                   >
                     <div className="flex items-center space-x-3">
@@ -468,7 +482,7 @@ const Header = () => {
                     >
                       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
@@ -476,7 +490,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Barra de navegación móvil - MODIFICADO para añadir número de teléfono */}
+      {/* Barra de navegación móvil */}
       <div className="lg:hidden fixed bottom-0 w-full bg-white shadow-inner border-t p-2 flex justify-around">
         <Link to="/" className="flex flex-col items-center text-gray-600 hover:text-green-600" onClick={scrollTop}>
           <CiHome className="text-2xl" />
