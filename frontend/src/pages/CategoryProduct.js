@@ -268,6 +268,16 @@ const CategoryProduct = () => {
         setPriceRange(tempPriceRange);
     };
 
+    // Función para manejar cambios en el campo de precio - CORREGIDA
+    const handlePriceChange = (field, value) => {
+        // Solo permite números
+        const numericValue = value.replace(/[^0-9]/g, '');
+        setTempPriceRange(prev => ({
+            ...prev,
+            [field]: numericValue
+        }));
+    };
+
     // Funciones para manipular filtros
     const handleSelectCategory = (category) => {
         // Si ya está seleccionada, la deseleccionamos
@@ -881,63 +891,50 @@ const CategoryProduct = () => {
             </div>
 
             {/* Precio */}
-{/* Precio */}
-<FilterAccordion
-    id="price"
-    title="Precio"
-    icon={<RiPriceTag3Line />}
-    count={(priceRange.min || priceRange.max) ? 1 : 0}
->
-    <div className="px-1 py-2">
-        <div className="flex items-center space-x-2 mb-4">
-            <div className="w-1/2">
-                <label htmlFor="min-price" className="block text-xs text-gray-600 mb-1">Mínimo</label>
-                <input
-                    id="min-price"
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    placeholder="Min"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                    value={tempPriceRange.min}
-                    onChange={(e) => {
-                        // Solo permite números
-                        const value = e.target.value.replace(/[^0-9]/g, '');
-                        setTempPriceRange({ ...tempPriceRange, min: value });
-                    }}
-                    onFocus={(e) => e.target.select()} // Selecciona el texto al hacer foco
-                />
-            </div>
-            <span className="text-gray-500 mt-5">-</span>
-            <div className="w-1/2">
-                <label htmlFor="max-price" className="block text-xs text-gray-600 mb-1">Máximo</label>
-                <input
-                    id="max-price"
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    placeholder="Max"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                    value={tempPriceRange.max}
-                    onChange={(e) => {
-                        // Solo permite números
-                        const value = e.target.value.replace(/[^0-9]/g, '');
-                        setTempPriceRange({ ...tempPriceRange, max: value });
-                    }}
-                    onFocus={(e) => e.target.select()} // Selecciona el texto al hacer foco
-                />
-            </div>
-        </div>
-        <div className="flex justify-end">
-            <button
-                className="px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
-                onClick={applyPriceFilter}
+            <FilterAccordion
+                id="price"
+                title="Precio"
+                icon={<RiPriceTag3Line />}
+                count={(priceRange.min || priceRange.max) ? 1 : 0}
             >
-                Aplicar
-            </button>
+               <div className="px-1 py-2">
+    <div className="flex items-center space-x-2 mb-4">
+        <div className="w-1/2">
+            <label htmlFor="min-price" className="block text-xs text-gray-600 mb-1">Mínimo</label>
+            <input
+                id="min-price"
+                type="number"
+                placeholder="Min"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                value={tempPriceRange.min}
+                onChange={(e) => setTempPriceRange(prev => ({...prev, min: e.target.value}))}
+            />
+        </div>
+        <span className="text-gray-500 mt-5">-</span>
+        <div className="w-1/2">
+            <label htmlFor="max-price" className="block text-xs text-gray-600 mb-1">Máximo</label>
+            <input
+                id="max-price"
+                type="number"
+                placeholder="Max"
+                min="0"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                value={tempPriceRange.max}
+                onChange={(e) => setTempPriceRange(prev => ({...prev, max: e.target.value}))}
+            />
         </div>
     </div>
-</FilterAccordion>
+    <div className="flex justify-end">
+        <button
+            className="px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
+            onClick={applyPriceFilter}
+        >
+            Aplicar
+        </button>
+    </div>
+</div>
+            </FilterAccordion>
 
             {/* Ordenar por */}
             <FilterAccordion
@@ -1218,11 +1215,10 @@ const CategoryProduct = () => {
                                         id="mobile-min-price"
                                         type="text"
                                         inputMode="numeric"
-                                        pattern="[0-9]*"
                                         placeholder="Mínimo"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                         value={tempPriceRange.min}
-                                        onChange={(e) => setTempPriceRange({...tempPriceRange, min: e.target.value})}
+                                        onChange={(e) => handlePriceChange('min', e.target.value)}
                                     />
                                 </div>
                                 <div>
@@ -1231,11 +1227,10 @@ const CategoryProduct = () => {
                                         id="mobile-max-price"
                                         type="text"
                                         inputMode="numeric"
-                                        pattern="[0-9]*"
                                         placeholder="Máximo"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                                         value={tempPriceRange.max}
-                                        onChange={(e) => setTempPriceRange({...tempPriceRange, max: e.target.value})}
+                                        onChange={(e) => handlePriceChange('max', e.target.value)}
                                     />
                                 </div>
                                 <div className="flex justify-end">
