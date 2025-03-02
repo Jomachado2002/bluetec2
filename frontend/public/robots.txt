@@ -11,8 +11,5 @@ Disallow: /cgi-bin/
 Disallow: /tmp/
 
 # Sitemap
-<<<<<<< HEAD
 Sitemap: https://jmcomputer.com.py/sitemap.xml
-=======
 Sitemap: https://jmcomputer.com.py/sitemap.xml
->>>>>>> 865d519a38387f292f5e614ae2164a7cc52f5999
