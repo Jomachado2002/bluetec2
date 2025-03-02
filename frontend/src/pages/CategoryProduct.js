@@ -5,7 +5,6 @@ import VerticalCard from '../components/VerticalCard';
 import SummaryApi from '../common';
 import { BiChevronDown, BiChevronUp, BiCheck, BiX, BiFilter, BiSort } from 'react-icons/bi';
 import { FiSearch } from 'react-icons/fi';
-import { RiPriceTag3Line } from 'react-icons/ri';
 import { IoGridOutline, IoMenuOutline } from 'react-icons/io5';
 
 const CategoryProduct = () => {
@@ -33,7 +32,7 @@ const CategoryProduct = () => {
     const [searchBrand, setSearchBrand] = useState('');
     const [searchSpecification, setSearchSpecification] = useState('');
 
-    // Para el filtro de precio
+    // Para el filtro de precio (solo para móvil)
     const [tempPriceRange, setTempPriceRange] = useState({ min: '', max: '' });
     const [priceRange, setPriceRange] = useState({ min: '', max: '' });
 
@@ -42,7 +41,6 @@ const CategoryProduct = () => {
     const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
     const [filterCount, setFilterCount] = useState(0);
     const [activeAccordions, setActiveAccordions] = useState({
-        price: true,
         sort: true,
         categories: true,
         brands: true
@@ -50,16 +48,26 @@ const CategoryProduct = () => {
     const mobileFilterRef = useRef(null);
     const prevLocationRef = useRef(location.search);
 
-    // Cerrar el filtro móvil al hacer clic fuera de él
+    // Cerrar el filtro móvil al tocar fuera o con la tecla Escape
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (mobileFilterRef.current && !mobileFilterRef.current.contains(event.target)) {
                 setMobileFilterOpen(false);
             }
         };
+        
+        const handleEscape = (event) => {
+            if (event.key === 'Escape') {
+                setMobileFilterOpen(false);
+            }
+        };
+        
         document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleEscape);
+        
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleEscape);
         };
     }, []);
 
@@ -268,7 +276,7 @@ const CategoryProduct = () => {
         setPriceRange(tempPriceRange);
     };
 
-    // Función para manejar cambios en el campo de precio - CORREGIDA
+    // Función para manejar cambios en el campo de precio
     const handlePriceChange = (field, value) => {
         // Solo permite números
         const numericValue = value.replace(/[^0-9]/g, '');
@@ -890,52 +898,6 @@ const CategoryProduct = () => {
                 </div>
             </div>
 
-            {/* Precio */}
-            <FilterAccordion
-                id="price"
-                title="Precio"
-                icon={<RiPriceTag3Line />}
-                count={(priceRange.min || priceRange.max) ? 1 : 0}
-            >
-               <div className="px-1 py-2">
-    <div className="flex items-center space-x-2 mb-4">
-        <div className="w-1/2">
-            <label htmlFor="min-price" className="block text-xs text-gray-600 mb-1">Mínimo</label>
-            <input
-                id="min-price"
-                type="number"
-                placeholder="Min"
-                min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                value={tempPriceRange.min}
-                onChange={(e) => setTempPriceRange(prev => ({...prev, min: e.target.value}))}
-            />
-        </div>
-        <span className="text-gray-500 mt-5">-</span>
-        <div className="w-1/2">
-            <label htmlFor="max-price" className="block text-xs text-gray-600 mb-1">Máximo</label>
-            <input
-                id="max-price"
-                type="number"
-                placeholder="Max"
-                min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                value={tempPriceRange.max}
-                onChange={(e) => setTempPriceRange(prev => ({...prev, max: e.target.value}))}
-            />
-        </div>
-    </div>
-    <div className="flex justify-end">
-        <button
-            className="px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition"
-            onClick={applyPriceFilter}
-        >
-            Aplicar
-        </button>
-    </div>
-</div>
-            </FilterAccordion>
-
             {/* Ordenar por */}
             <FilterAccordion
                 id="sort"
@@ -1065,27 +1027,30 @@ const CategoryProduct = () => {
     );
 
     // Render de filtros móviles
-    const renderMobileFilterPanel = () => (
+    // Render de filtros móviles
+const renderMobileFilterPanel = () => (
+    <div 
+        className={`fixed inset-0 z-50 ${mobileFilterOpen ? 'block' : 'hidden'}`}
+    >
+        {/* Overlay para cerrar al tocar fuera del panel */}
+        <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setMobileFilterOpen(false)} />
+        
+        {/* Panel de filtro - modificado para ocupar solo parte de la pantalla */}
         <div 
-            className={`fixed inset-0 z-40 ${mobileFilterOpen ? 'block' : 'hidden'}`}
+            ref={mobileFilterRef}
+            className="absolute right-0 top-0 h-full w-4/5 max-w-md bg-white shadow-xl flex flex-col"
         >
-            <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setMobileFilterOpen(false)} />
-            
-            <div 
-                ref={mobileFilterRef}
-                className="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl transform transition-transform ease-in-out duration-300 flex flex-col"
-                style={{ transform: mobileFilterOpen ? 'translateX(0)' : 'translateX(100%)' }}
-            >
-                {/* Cabecera del filtro */}
-                <div className="flex-shrink-0 flex items-center justify-between p-4 border-b">
-                    <h2 className="text-lg font-semibold">Filtros</h2>
-                    <button 
-                        onClick={() => setMobileFilterOpen(false)}
-                        className="p-2 rounded-full hover:bg-gray-100"
-                    >
-                        <BiX size={24} />
-                    </button>
-                </div>
+            {/* Cabecera del filtro con botón de cerrar más grande y visible */}
+            <div className="flex-shrink-0 flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-semibold">Filtros</h2>
+                <button 
+                    onClick={() => setMobileFilterOpen(false)}
+                    className="p-3 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    aria-label="Cerrar filtros"
+                >
+                    <BiX size={28} />
+                </button>
+            </div>
                 
                 {/* Botones de categorías de filtro */}
                 <div className="flex-shrink-0 p-4 border-b overflow-x-auto">
@@ -1357,22 +1322,22 @@ const CategoryProduct = () => {
                 </div>
                 
                 {/* Botones de acción */}
-                <div className="flex-shrink-0 p-4 border-t">
-                    <div className="flex space-x-2">
+                <div className="flex-shrink-0 p-4 border-t sticky bottom-0 bg-white">
+                    <div className="flex space-x-3">
                         <button 
                             onClick={() => {
                                 clearAllFilters();
                                 setMobileFilterOpen(false);
                             }}
-                            className="flex-1 py-2 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50"
+                            className="flex-1 py-3 border border-gray-300 rounded-md text-gray-700 font-medium hover:bg-gray-50"
                         >
                             Limpiar
                         </button>
                         <button 
                             onClick={() => setMobileFilterOpen(false)}
-                            className="flex-1 py-2 bg-green-600 rounded-md text-white font-medium hover:bg-green-700"
+                            className="flex-1 py-3 bg-green-600 rounded-md text-white font-medium hover:bg-green-700"
                         >
-                            Aplicar ({data.length})
+                            Ver productos ({data.length})
                         </button>
                     </div>
                 </div>
@@ -1437,48 +1402,49 @@ const CategoryProduct = () => {
             )}
 
             {/* Contenido principal grid */}
-            <div className="flex flex-col lg:flex-row lg:space-x-6">
-                {/* Sidebar filtros (solo desktop) */}
-                <div className="hidden lg:block w-64 flex-shrink-0">
-                    <div className="sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-                        {renderDesktopFilters()}
-                    </div>
-                </div>
+{/* Sidebar filtros (solo desktop) */}
+<div className="flex flex-col lg:flex-row lg:space-x-6">
+  {/* Sidebar filtros (solo desktop) */}
+  <div className="hidden lg:block w-64 flex-shrink-0">
+    <div className="sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+      {renderDesktopFilters()}
+    </div>
+  </div>
 
-                {/* Lista de productos */}
-                <div className="flex-grow">
-                    {loading ? (
-                        <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-sm">
-                            <div className="text-center">
-                                <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600 mb-3"></div>
-                                <p className="text-gray-600">Cargando productos...</p>
-                            </div>
-                        </div>
-                    ) : data.length > 0 ? (
-                        <div className="transition-opacity duration-300" style={{ opacity: loading ? 0.5 : 1 }}>
-                            <VerticalCard data={data} loading={loading} gridView={gridView} />
-                        </div>
-                    ) : (
-                        <div className="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-100">
-                            <div className="mb-4 text-gray-400">
-                                <BiX size={48} className="mx-auto" />
-                            </div>
-                            <p className="text-lg text-gray-600 mb-4">No se encontraron productos con los filtros seleccionados</p>
-                            <button 
-                                onClick={clearAllFilters}
-                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-                            >
-                                Limpiar filtros
-                            </button>
-                        </div>
-                    )}
-                </div>
+{/* Lista de productos */}
+<div className="flex-grow">
+    {loading ? (
+        <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-sm">
+            <div className="text-center">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600 mb-3"></div>
+                <p className="text-gray-600">Cargando productos...</p>
             </div>
-
-            {/* Panel de filtro móvil */}
-            {renderMobileFilterPanel()}
         </div>
-    );
+    ) : data.length > 0 ? (
+        <div className="transition-opacity duration-300" style={{ opacity: loading ? 0.5 : 1 }}>
+            <VerticalCard data={data} loading={loading} gridView={gridView} />
+        </div>
+    ) : (
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-100">
+            <div className="mb-4 text-gray-400">
+                <BiX size={48} className="mx-auto" />
+            </div>
+            <p className="text-lg text-gray-600 mb-4">No se encontraron productos con los filtros seleccionados</p>
+            <button 
+                onClick={clearAllFilters}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+                Limpiar filtros
+            </button>
+        </div>
+    )}
+</div>
+</div>
+
+{/* Panel de filtro móvil */}
+{renderMobileFilterPanel()}
+</div>
+);
 };
 
 export default CategoryProduct;
