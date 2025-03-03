@@ -1,14 +1,362 @@
-// src/pages/CategoryProduct.js - Actualizado para usar el drawer lateral
-
+// src/pages/CategoryProduct.js
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { IoGridOutline, IoMenuOutline } from 'react-icons/io5';
-import { BiX } from 'react-icons/bi';
-import { FilterProvider, useFilters } from '../context/FilterContext'; // Ajustada la ruta a context sin 's'
+import { BiX, BiFilter } from 'react-icons/bi';
+import { FilterProvider, useFilters } from '../context/FilterContext';
 import VerticalCard from '../components/VerticalCard';
 import DesktopFilters from '../components/filters/DesktopFilters';
-import SideDrawerFilters from '../components/filters/SideDrawerFilters'; // Nuevo componente de drawer
-import ActiveFiltersBar from '../components/filters/ActiveFiltersBar';
+import SideDrawerFilters from '../components/filters/SideDrawerFilters';
+import productCategory from '../helpers/productCategory';
+import getSeoTitle from '../utils/getSeoTitle';
+
+// Componente para filtros activos en línea
+const InlineActiveFilters = ({ productCategories }) => {
+  const { 
+    filterCategoryList, 
+    filterSubcategoryList, 
+    filterBrands, 
+    specFilters, 
+    priceRange, 
+    handleSelectCategory, 
+    handleSelectSubcategory, 
+    setFilterBrands, 
+    handleSpecFilterChange,
+    setPriceRange,
+    clearAllFilters,
+    hasActiveFilters
+  } = useFilters();
+  
+  if (!hasActiveFilters()) return null;
+  
+  // Función para obtener etiqueta de especificación
+  const getSpecificationLabel = (specKey) => {
+    const labels = {
+      // Notebooks
+      processor: "Procesador",
+      memory: "Memoria RAM",
+      storage: "Almacenamiento",
+      disk: "Disco",
+      graphicsCard: "Tarjeta Gráfica",
+      notebookScreen: "Pantalla",
+      notebookBattery: "Batería",
+
+      // Computadoras Ensambladas
+      pcCase: "Gabinete",
+      pcPowerSupply: "Fuente de Poder",
+      pcCooling: "Sistema de Enfriamiento",
+
+      // Placas Madre
+      motherboardSocket: "Socket",
+      motherboardChipset: "Chipset",
+      motherboardFormFactor: "Factor de Forma",
+      expansionSlots: "Slots de Expansión",
+
+      // Memorias RAM
+      ramType: "Tipo de RAM",
+      ramSpeed: "Velocidad",
+      ramCapacity: "Capacidad",
+      ramLatency: "Latencia",
+
+      // Discos Duros
+      hddCapacity: "Capacidad",
+      diskType: "Tipo de Disco",
+      hddInterface: "Interfaz",
+      hddRPM: "RPM",
+      diskReadSpeed: "Velocidad de Lectura",
+      diskWriteSpeed: "Velocidad de Escritura",
+
+      // Procesadores
+      processorModel: "Modelo",
+      processorSocket: "Socket",
+      processorCores: "Núcleos",
+      processorThreads: "Hilos",
+      processorBaseFreq: "Frecuencia Base",
+      processorTurboFreq: "Frecuencia Turbo",
+      processorCache: "Caché",
+      processorTDP: "TDP",
+      processorIntegratedGraphics: "Gráficos Integrados",
+      processorManufacturingTech: "Tecnología de Fabricación",
+
+      // Tarjetas Gráficas
+      graphicCardModel: "Modelo",
+      graphicCardMemory: "Memoria",
+      graphicCardMemoryType: "Tipo de Memoria",
+      graphicCardBaseFrequency: "Frecuencia Base",
+      graphicfabricate: "Fabricante",
+      graphicCardTDP: "Consumo (TDP)",
+
+      // Gabinetes
+      caseFormFactor: "Factor de Forma",
+      caseMaterial: "Material",
+      caseExpansionBays: "Bahías de Expansión",
+      caseIncludedFans: "Ventiladores Incluidos",
+      caseCoolingSupport: "Soporte de Refrigeración",
+      caseBacklight: "Iluminación",
+
+      // Fuentes de Alimentación
+      psuWattage: "Vataje",
+      psuEfficiency: "Eficiencia",
+      psuModular: "Modularidad",
+      psuFormFactor: "Factor de Forma",
+      psuProtections: "Protecciones",
+
+      // Monitores
+      monitorSize: "Tamaño",
+      monitorResolution: "Resolución",
+      monitorRefreshRate: "Tasa de Refresco",
+      monitorPanel: "Tipo de Panel",
+      monitorConnectivity: "Conectividad",
+
+      // Teclados
+      keyboardInterface: "Interfaz",
+      keyboardLayout: "Layout",
+      keyboardBacklight: "Iluminación",
+      keyboardSwitches: "Switches",
+      keyboardFeatures: "Características",
+
+      // Mouses
+      mouseInterface: "Interfaz",
+      mouseSensor: "Sensor",
+      mouseDPI: "DPI",
+      mouseButtons: "Botones",
+      mouseBacklight: "Iluminación",
+
+      // Adaptadores
+      adapterType: "Tipo",
+      adapterInterface: "Interfaz",
+      adapterSpeed: "Velocidad",
+      adapterProtocol: "Protocolo",
+
+      // Auriculares
+      headphoneConnectionType: "Tipo de Conexión",
+      headphoneTechnology: "Tecnología de Conexión",
+      headphoneFrequencyResponse: "Respuesta de Frecuencia",
+      headphoneImpedance: "Impedancia",
+      headphoneNoiseCancel: "Cancelación de Ruido",
+      headphoneBatteryLife: "Duración de Batería",
+
+      // Micrófonos
+      microphoneType: "Tipo de Micrófono",
+      microphonePolarPattern: "Patrón Polar",
+      microphoneFrequencyRange: "Rango de Frecuencia",
+      microphoneConnection: "Conexión",
+      microphoneSpecialFeatures: "Características Especiales",
+
+      // Cámaras de Seguridad
+      cameraResolution: "Resolución",
+      cameraLensType: "Tipo de Lente",
+      cameraIRDistance: "Distancia IR",
+      cameraType: "Tipo de Cámara",
+      cameraConnectivity: "Conectividad",
+      cameraProtection: "Protección",
+
+      // DVR
+      dvrChannels: "Canales",
+      dvrResolution: "Resolución",
+      dvrStorageCapacity: "Almacenamiento",
+      dvrConnectivity: "Conectividad",
+      dvrSmartFeatures: "Funciones Inteligentes",
+
+      // NAS
+      nasMaxCapacity: "Capacidad Máxima",
+      nasBaysNumber: "Número de Bahías",
+      nasProcessor: "Procesador",
+      nasRAM: "Memoria RAM",
+      nasRAIDSupport: "Tipos de RAID Soportados",
+      nasConnectivity: "Conectividad",
+      nasCapacity: "Capacidad",
+      nasBays: "Bahías",
+      nasRAID: "Soporte RAID",
+
+      // Impresoras
+      printerType: "Tipo",
+      printerResolution: "Resolución",
+      printerSpeed: "Velocidad",
+      printerDuplex: "Impresión Dúplex",
+      printerConnectivity: "Conectividad",
+      printerTrayCapacity: "Capacidad de Bandeja",
+      printerFunctions: "Funciones",
+      printerDisplay: "Display",
+
+      // Cartuchos/Toner
+      tonerPrinterType: "Tipo de Impresora",
+      tonerColor: "Color",
+      tonerYield: "Rendimiento",
+      tonerCartridgeType: "Tipo de Cartucho",
+      tonerCompatibleModel: "Modelo Compatible",
+
+      // UPS
+      upsCapacity: "Capacidad",
+      upsOutputPower: "Potencia de Salida",
+      upsBackupTime: "Tiempo de Respaldo",
+      upsOutlets: "Tomas",
+      upsType: "Tipo",
+      upsConnectivity: "Conectividad",
+
+      // Accesorios
+      airpodsModel: "Modelo",
+      airpodsBatteryLife: "Duración de Batería",
+      airpodsCharging: "Tipo de Carga",
+      airpodsResistance: "Resistencia",
+      airpodsFeatures: "Características",
+
+      // Software y Licencias
+      softwareLicenseType: "Tipo de Licencia",
+      softwareLicenseDuration: "Duración",
+      softwareLicenseQuantity: "Cantidad de Usuarios",
+      softwareVersion: "Versión",
+      softwareFeatures: "Características",
+
+      // Telefonía - Móviles
+      phoneType: "Tipo",
+      phoneScreenSize: "Tamaño de Pantalla",
+      phoneRAM: "RAM",
+      phoneStorage: "Almacenamiento",
+      phoneProcessor: "Procesador",
+      phoneCameras: "Cámaras",
+      phoneBattery: "Batería",
+      phoneOS: "Sistema Operativo",
+
+      // Telefonía - Fijos
+      landlineType: "Tipo",
+      landlineTechnology: "Tecnología",
+      landlineDisplay: "Pantalla",
+      landlineFunctions: "Funciones",
+      landlineHandsets: "Auriculares",
+
+      // Telefonía - Tablets
+      tabletScreenSize: "Tamaño de Pantalla",
+      tabletScreenResolution: "Resolución de Pantalla",
+      tabletProcessor: "Procesador",
+      tabletRAM: "Memoria RAM",
+      tabletStorage: "Almacenamiento",
+      tabletOS: "Sistema Operativo",
+      tabletConnectivity: "Conectividad",
+
+      // Redes - Switch
+      switchType: "Tipo de Switch",
+      switchPorts: "Número de Puertos",
+      switchPortSpeed: "Velocidad de Puertos",
+      switchNetworkLayer: "Capa de Red",
+      switchCapacity: "Capacidad de Conmutación",
+
+      // Redes - Servidores
+      serverType: "Tipo de Servidor",
+      serverProcessor: "Procesador",
+      serverProcessorCount: "Número de Procesadores",
+      serverRAM: "Memoria RAM",
+      serverStorage: "Almacenamiento",
+      serverOS: "Sistema Operativo",
+
+      // Redes - Cables
+      networkCableType: "Tipo de Cable",
+      networkCableCategory: "Categoría",
+      networkCableLength: "Longitud",
+      networkCableShielding: "Blindaje",
+      networkCableRecommendedUse: "Uso Recomendado",
+
+      // Redes - Racks
+      rackType: "Tipo de Rack",
+      rackUnits: "Unidades de Rack (U)",
+      rackDepth: "Profundidad",
+      rackMaterial: "Material",
+      rackLoadCapacity: "Capacidad de Carga",
+
+      // Redes - Access Point
+      apWiFiStandard: "Estándar WiFi",
+      apSupportedBands: "Bandas Soportadas",
+      apMaxSpeed: "Velocidad Máxima",
+      apPorts: "Puertos",
+      apAntennas: "Antenas",
+
+      // Periféricos - Otros
+      operatingSystem: "Sistema Operativo"
+    };
+    
+    return labels[specKey] || specKey;
+  };
+  
+  // Componente para chip de filtro
+  const FilterChip = ({ label, onRemove }) => (
+    <div className="inline-flex items-center bg-green-100 rounded-full px-2 py-0.5 text-xs text-green-800 mr-1.5 mb-1 border border-green-200">
+      <span className="mr-1">{label}</span>
+      <button 
+        onClick={onRemove} 
+        className="text-green-700 hover:text-green-900 p-0.5 rounded-full"
+        aria-label={`Eliminar filtro ${label}`}
+      >
+        <BiX className="text-sm" />
+      </button>
+    </div>
+  );
+  
+  return (
+    <div className="flex flex-wrap items-center">
+      {/* Chips de filtros */}
+      <div className="flex flex-wrap flex-grow">
+        {productCategories && filterCategoryList.map(cat => {
+          const category = productCategories.find(c => c.value === cat);
+          return (
+            <FilterChip 
+              key={`cat-${cat}`} 
+              label={`${category?.label || cat}`} 
+              onRemove={() => handleSelectCategory(cat)} 
+            />
+          );
+        })}
+        
+        {productCategories && filterSubcategoryList.map(sub => {
+          let subcategoryLabel = sub;
+          productCategories.forEach(cat => {
+            const foundSub = cat.subcategories?.find(s => s.value === sub);
+            if (foundSub) subcategoryLabel = foundSub.label;
+          });
+          return (
+            <FilterChip 
+              key={`sub-${sub}`} 
+              label={subcategoryLabel} 
+              onRemove={() => handleSelectSubcategory(sub)} 
+            />
+          );
+        })}
+        
+        {filterBrands.map(brand => (
+          <FilterChip 
+            key={`brand-${brand}`} 
+            label={brand} 
+            onRemove={() => setFilterBrands(prev => prev.filter(b => b !== brand))} 
+          />
+        ))}
+        
+        {Object.entries(specFilters).map(([specKey, values]) => 
+          values.map(value => (
+            <FilterChip 
+              key={`spec-${specKey}-${value}`} 
+              label={`${getSpecificationLabel(specKey)}: ${value}`} 
+              onRemove={() => handleSpecFilterChange(specKey, value)} 
+            />
+          ))
+        )}
+        
+        {(priceRange.min || priceRange.max) && (
+          <FilterChip 
+            label={`Precio: ${priceRange.min || '0'} - ${priceRange.max || '∞'}`} 
+            onRemove={() => setPriceRange({ min: '', max: '' })} 
+          />
+        )}
+      </div>
+      
+      {/* Botón para limpiar todos los filtros */}
+      <button 
+        onClick={clearAllFilters}
+        className="text-xs text-green-600 hover:text-green-800 hover:underline font-medium ml-2"
+      >
+        Limpiar todos
+      </button>
+    </div>
+  );
+};
 
 // Componente interno que utiliza el contexto de filtros
 const CategoryProductContent = () => {
@@ -17,17 +365,17 @@ const CategoryProductContent = () => {
     loading, 
     gridView, 
     setGridView,
-    hasActiveFilters,
-    clearAllFilters
+    clearAllFilters,
+    filterCount,
+    setMobileFilterOpen
   } = useFilters();
   
   const location = useLocation();
-  const navigate = useNavigate();
   
   // Configurar metadatos de SEO
   useEffect(() => {
     // Cambiar el título del documento para SEO
-    const seoTitle = getSeoTitle();
+    const seoTitle = getSeoTitle(location);
     document.title = `${seoTitle} | JM Computer`;
     
     // Actualizar meta description
@@ -35,58 +383,52 @@ const CategoryProductContent = () => {
     if (metaDescription) {
       metaDescription.setAttribute('content', `Compra online ${seoTitle.toLowerCase()} con garantía oficial. Envío a todo Paraguay. Precios competitivos y atención personalizada.`);
     }
-  }, [location.search]);
-  
-  // Función auxiliar para el título SEO
-  const getSeoTitle = () => {
-    const urlSearch = new URLSearchParams(location.search);
-    const selectedCategory = urlSearch.get("category") || "";
-    const selectedSubcategory = urlSearch.get("subcategory") || "";
-    
-    // Títulos específicos para ciertas subcategorías
-    if (selectedSubcategory === "notebooks") 
-      return "Las mejores notebooks para estudiantes y profesionales en Paraguay";
-    if (selectedSubcategory === "placasMadre") 
-      return "Placas madre de alto rendimiento para gaming y diseño";
-    if (selectedSubcategory === "procesador") 
-      return "Procesadores de última generación al mejor precio en Paraguay";
-    if (selectedSubcategory === "graficas") 
-      return "Tarjetas gráficas para gaming y diseño profesional en Paraguay";
-    if (selectedSubcategory === "monitores") 
-      return "Monitores de alta resolución para productividad y gaming";
-    if (selectedSubcategory === "almacenamiento") 
-      return "Discos duros y SSDs con la mejor relación precio-rendimiento";
-      
-    // Título genérico basado en la categoría si no hay título específico
-    if (selectedCategory) {
-      // Buscar la categoría en el array de productCategory
-      // (Nota: Asumimos que productCategory está importado en FilterContext)
-      return `Productos de ${selectedCategory} al mejor precio en Paraguay`;
-    }
-      
-    if (selectedSubcategory) {
-      return `${selectedSubcategory} con envío gratis y garantía oficial`;
-    }
-      
-    return 'Equipos de tecnología al mejor precio en Paraguay';
-  };
-  
+  }, [location]);
+
   return (
-    <div className="container mx-auto px-4" style={{ paddingTop: '70px' }}>
-      {/* MODIFICACIÓN: Usado paddingTop fijo en lugar de pt-clase para más control */}
+    <>
+      {/* Nueva barra de filtros justo debajo del header */}
+      <div className="sticky top-18 z-22 bg-white shadow-sm border-b border-gray-200 px-4 py-2">
+        <div className="container mx-auto">
+          <div className="flex flex-col sm:flex-row items-center">
+            <div className="flex items-center w-full">
+              {/* Botón de filtros móvil */}
+              <button 
+                className="lg:hidden flex items-center py-1.5 px-3 bg-green-600 text-white text-sm rounded-lg shadow-sm mr-3"
+                onClick={() => setMobileFilterOpen(true)}
+              >
+                <BiFilter className="mr-1" />
+                Filtros
+                {filterCount > 0 && (
+                  <span className="ml-1 px-1.5 bg-white text-green-800 rounded-full text-xs">
+                    {filterCount}
+                  </span>
+                )}
+              </button>
+              
+              {/* Título de página reducido */}
+              <h1 className="text-base sm:text-lg font-semibold text-gray-800 truncate flex-grow">
+                {getSeoTitle(location)}
+              </h1>
+            </div>
+            
+            {/* Filtros activos - Pasamos productCategory como prop */}
+            <div className="w-full mt-2 sm:mt-0 sm:ml-4">
+              <InlineActiveFilters productCategories={productCategory} />
+            </div>
+          </div>
+        </div>
+      </div>
       
-      {/* Header de la página y controles - REPOSICIONADO más arriba */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2 lg:mb-0">
-          {getSeoTitle()}
-        </h1>
-        
-        <div className="flex flex-wrap items-center space-x-2">
-          {/* Contador de resultados para móvil */}
-          <span className="lg:hidden text-sm text-gray-600 mr-auto">
+      {/* Contenido principal */}
+      <div className="container mx-auto px-4 pt-2">
+        {/* Controles de visualización */}
+        <div className="flex items-center justify-end mb-4">
+          {/* Contador de resultados */}
+          <span className="text-sm text-gray-600 mr-auto">
             {data.length} {data.length === 1 ? 'producto' : 'productos'}
           </span>
-      
+          
           {/* Botones de vista cuadrícula/lista (solo desktop) */}
           <div className="hidden lg:flex items-center bg-gray-100 rounded-lg p-1">
             <button 
@@ -104,60 +446,51 @@ const CategoryProductContent = () => {
               <IoMenuOutline size={20} />
             </button>
           </div>
-          
-          {/* Contador para desktop */}
-          <div className="hidden lg:block text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg">
-            {data.length} {data.length === 1 ? 'producto' : 'productos'}
+        </div>
+
+        {/* Contenido principal grid */}
+        <div className="flex flex-col lg:flex-row lg:space-x-6">
+          {/* Sidebar filtros (solo desktop) */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
+            <div className="sticky top-24 max-h-[calc(100vh-150px)] overflow-y-auto bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+              <DesktopFilters />
+            </div>
+          </div>
+
+          {/* Lista de productos - Incluye el drawer de filtros en móvil */}
+          <div className="flex-grow relative mb-20">
+            {/* Drawer lateral para filtros en móvil */}
+            <SideDrawerFilters />
+            
+            {loading ? (
+              <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-sm">
+                <div className="text-center">
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600 mb-3"></div>
+                  <p className="text-gray-600">Cargando productos...</p>
+                </div>
+              </div>
+            ) : data.length > 0 ? (
+              <div className="transition-opacity duration-300" style={{ opacity: loading ? 0.5 : 1 }}>
+                <VerticalCard data={data} loading={loading} gridView={gridView} />
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-100">
+                <div className="mb-4 text-gray-400">
+                  <BiX size={48} className="mx-auto" />
+                </div>
+                <p className="text-lg text-gray-600 mb-4">No se encontraron productos con los filtros seleccionados</p>
+                <button 
+                  onClick={clearAllFilters}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                >
+                  Limpiar filtros
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Mostrar filtros activos */}
-      {hasActiveFilters() && <ActiveFiltersBar />}
-
-      {/* Contenido principal grid */}
-      <div className="flex flex-col lg:flex-row lg:space-x-6">
-        {/* Sidebar filtros (solo desktop) */}
-        <div className="hidden lg:block w-64 flex-shrink-0">
-          <div className="sticky top-20 max-h-[calc(100vh-120px)] overflow-y-auto bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-            {/* MODIFICACIÓN: Cambiado top-24 a top-20 para acercarlo más al header */}
-            <DesktopFilters />
-          </div>
-        </div>
-
-        {/* Lista de productos - Incluye el drawer de filtros en móvil */}
-        <div className="flex-grow relative mb-20">
-          {/* Drawer lateral para filtros en móvil */}
-          <SideDrawerFilters />
-          
-          {loading ? (
-            <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-sm">
-              <div className="text-center">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600 mb-3"></div>
-                <p className="text-gray-600">Cargando productos...</p>
-              </div>
-            </div>
-          ) : data.length > 0 ? (
-            <div className="transition-opacity duration-300" style={{ opacity: loading ? 0.5 : 1 }}>
-              <VerticalCard data={data} loading={loading} gridView={gridView} />
-            </div>
-          ) : (
-            <div className="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-100">
-              <div className="mb-4 text-gray-400">
-                <BiX size={48} className="mx-auto" />
-              </div>
-              <p className="text-lg text-gray-600 mb-4">No se encontraron productos con los filtros seleccionados</p>
-              <button 
-                onClick={clearAllFilters}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-              >
-                Limpiar filtros
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 
