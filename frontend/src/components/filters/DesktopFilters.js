@@ -57,7 +57,7 @@ const DesktopFilters = () => {
      motherboardFormFactor: "Factor de Forma",
      expansionSlots: "Slots de Expansión",
 
-     // Memorias RAM
+     // Memormodelias RAM
      ramText : "Categoria de Memoria",
      ramType: "Tipo de RAM",
      ramSpeed: "Velocidad",
@@ -73,7 +73,7 @@ const DesktopFilters = () => {
      diskWriteSpeed: "Velocidad de Escritura",
 
      // Procesadores
-     processorModel: "Modelo",
+     model: "Modelo",
      processorSocket: "Socket",
      processorCores: "Núcleos",
      processorThreads: "Hilos",

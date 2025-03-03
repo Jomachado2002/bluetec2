@@ -19,7 +19,7 @@ const specificationsByCategory = {
     'processorBaseFreq', 'processorTurboFreq', 'processorCache', 'processorTDP',
     'psuWattage', 'psuEfficiency', 'psuModular', 'psuFormFactor', 'psuProtections',
     'graphicCardModel', 'graphicCardMemory', 'graphicCardMemoryType', 'graphicCardBaseFrequency', 'graphicCardTDP','graphicfabricate',
-    'caseFormFactor', 'caseMaterial', 'caseExpansionBays', 'caseIncludedFans', 'caseCoolingSupport', 'caseBacklight','ramText'
+    'caseFormFactor', 'caseMaterial', 'caseExpansionBays', 'caseIncludedFans', 'caseCoolingSupport', 'caseBacklight','ramText','model'
   ],
   perifericos: [
     'monitorSize', 'monitorResolution', 'monitorRefreshRate', 'monitorPanel', 'monitorConnectivity',
@@ -67,6 +67,7 @@ const specificationsByCategory = {
 
 // Mapeo de nombres de campo a nombres legibles
 const fieldNameMapping = {
+  model: "Modelo Procesador",
   ramText : "Categoria de Memoria",
   processor: "Procesador",
   memory: "Memoria RAM",

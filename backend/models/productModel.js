@@ -47,6 +47,7 @@ const productSchema = mongoose.Schema({
     diskWriteSpeed: { type: String },
     
     // Informática - Procesador
+    model: { type: String },
     processorModel: { type: String },
     processorSocket: { type: String },
     processorCores: { type: String },

@@ -3,6 +3,7 @@ import React from 'react';
 import { BiX } from 'react-icons/bi';
 import { useFilters } from '../../context/FilterContext';
 import productCategory from '../../helpers/productCategory';
+import { model } from 'mongoose';
 
 const ActiveFiltersBar = () => {
   const { 
@@ -61,7 +62,8 @@ const ActiveFiltersBar = () => {
      diskWriteSpeed: "Velocidad de Escritura",
 
      // Procesadores
-     processorModel: "Modelo",
+     
+     model: "Modelo",
      processorSocket: "Socket",
      processorCores: "Núcleos",
      processorThreads: "Hilos",

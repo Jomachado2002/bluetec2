@@ -68,7 +68,7 @@ const InlineActiveFilters = ({ productCategories }) => {
       diskWriteSpeed: "Velocidad de Escritura",
 
       // Procesadores
-      processorModel: "Modelo",
+      model: "Modelo",
       processorSocket: "Socket",
       processorCores: "Núcleos",
       processorThreads: "Hilos",

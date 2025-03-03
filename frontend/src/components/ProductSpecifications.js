@@ -111,6 +111,11 @@ const ProductSpecifications = ({
     ],
     procesador: [
       {
+        label: "Modelo",
+        name: "modelo",
+        placeholder: "Ingresa el modelo Series 11,12,13"
+    },
+      {
           label: "Socket",
           name: "processorSocket",
           placeholder: "Ingresa el tipo de socket (Ej: LGA1200, AM4)"

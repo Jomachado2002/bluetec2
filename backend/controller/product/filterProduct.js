@@ -47,7 +47,7 @@ const filterProductController = async (req, res) => {
         'hddRPM', 'diskReadSpeed', 'diskWriteSpeed'
       ],
       procesador: [
-        'processorSocket', 'processorCores', 'processorThreads',
+        'model','processorSocket', 'processorCores', 'processorThreads',
         'processorBaseFreq', 'processorTurboFreq',
         'processorCache', 'processorTDP'
       ],
