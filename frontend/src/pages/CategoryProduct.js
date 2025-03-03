@@ -53,6 +53,7 @@ const InlineActiveFilters = ({ productCategories }) => {
       expansionSlots: "Slots de Expansión",
 
       // Memorias RAM
+      ramText : "Categoria de Memoria",
       ramType: "Tipo de RAM",
       ramSpeed: "Velocidad",
       ramCapacity: "Capacidad",

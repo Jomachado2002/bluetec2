@@ -32,6 +32,7 @@ const productSchema = mongoose.Schema({
     expansionSlots: { type: String },
     
     // Informática - Memorias RAM
+    ramText: { type: String},
     ramType: { type: String },
     ramSpeed: { type: String },
     ramCapacity: { type: String },

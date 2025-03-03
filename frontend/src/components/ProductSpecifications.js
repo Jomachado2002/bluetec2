@@ -522,6 +522,11 @@ const ProductSpecifications = ({
   ],
     memorias_ram: [
       { 
+        label: "Memoria ram NB/PC", 
+        name: "ramText", 
+        placeholder: "Memoria Ram PC/NB?" 
+      },
+      { 
         label: "Tipo de RAM", 
         name: "ramType", 
         placeholder: "Ingresa el tipo de RAM (DDR4, DDR5, etc.)" 

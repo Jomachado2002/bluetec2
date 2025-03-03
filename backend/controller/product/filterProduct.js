@@ -40,7 +40,7 @@ const filterProductController = async (req, res) => {
         'caseIncludedFans', 'caseCoolingSupport', 'caseBacklight'
       ],
       memorias_ram: [
-        'ramType', 'ramSpeed', 'ramCapacity', 'ramLatency'
+        'ramText','ramType', 'ramSpeed', 'ramCapacity', 'ramLatency'
       ],
       discos_duros: [
         'hddCapacity', 'diskType', 'hddInterface',
