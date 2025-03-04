@@ -213,14 +213,14 @@ const Home = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                       </svg>
                     </span>
-                    Computadoras Ensambladas
+                    Mouses
                   </h2>
                   <div className="h-1 w-24 bg-green-500 mt-2 mb-4 rounded-full"></div>
                 </div>
                 <div className="p-4">
                   <VerticalCardProduct
-                    category="informatica"
-                    subcategory="computadoras_ensambladas"
+                    category="perifericos"
+                    subcategory="mouses"
                     heading=""
                   />
                 </div>
@@ -340,7 +340,7 @@ const Home = () => {
                 <div className="p-4">
                   <VerticalCardProduct
                     category="informatica"
-                    subcategory="tarjetas_graficas"
+                    subcategory="tarjeta_grafica"
                     heading=""
                   />
                 </div>
