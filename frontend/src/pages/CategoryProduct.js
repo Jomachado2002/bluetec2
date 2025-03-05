@@ -498,9 +498,23 @@ const CategoryProductContent = () => {
 // Componente principal que envuelve todo con el proveedor de contexto
 const CategoryProduct = () => {
   return (
+    <>
+    <Helmet>
+      {/* Script de Google Tag Manager */}
+      <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16909859875"></script>
+      <script>
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-16909859875');
+        `}
+      </script>
+    </Helmet>
     <FilterProvider>
       <CategoryProductContent />
     </FilterProvider>
+  </>
   );
 };
 
