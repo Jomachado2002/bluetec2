@@ -150,7 +150,7 @@ const BannerProduct = () => {
   };
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/595xxxxxxxxx?text=Estoy%20interesado%20en%20' + 
+    window.open('https://wa.me/+595984133733?text=Estoy%20interesado%20en%20' + 
       encodeURIComponent(bannerData[activeTab].title), '_blank');
   };
 
@@ -217,7 +217,7 @@ const BannerProduct = () => {
       const today = new Date().toLocaleDateString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric' });
       doc.setFontSize(10);
       doc.text(`Generado el: ${today}`, 14, 42);
-      doc.text(`Tel: +595 XXX XXX XXX`, 14, 48);
+      doc.text(`Tel: +595 984 133733`, 14, 48);
       doc.text(`Email: ventas@jmcomputer.com.py`, 14, 54);
       
       // Descripción
@@ -319,8 +319,8 @@ const BannerProduct = () => {
       doc.text("¿Interesado en algún producto?", 14, yPosition);
       doc.setFontSize(8);
       doc.setTextColor(80, 80, 80);
-      doc.text("Contáctenos por WhatsApp: +595 XXX XXX XXX", 14, yPosition + 6);
-      doc.text("O visite nuestra tienda: [Dirección de tu tienda]", 14, yPosition + 12);
+      doc.text("Contáctenos por WhatsApp: +595 984 133733", 14, yPosition + 6);
+      
       
       // Agregar pie de página
       const pageCount = doc.internal.getNumberOfPages();

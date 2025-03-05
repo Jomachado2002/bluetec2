@@ -14,11 +14,11 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-center md:justify-start space-x-3">
                 <FontAwesomeIcon icon={faPhone} className="text-green-300" />
-                <span>+595 (984) 912683</span>
+                <span>+595 984 133733</span>
               </div>
               <div className="flex items-center justify-center md:justify-start space-x-3">
                 <FontAwesomeIcon icon={faPhone} className="text-green-300" />
-                <span>+595 972 971353</span>
+                <span>+595 984 133733</span>
               </div>
               <div className="flex items-center justify-center md:justify-start space-x-3">
                 <FontAwesomeIcon icon={faEnvelope} className="text-green-300" />
@@ -47,7 +47,7 @@ const Footer = () => {
             <h3 className="text-2xl font-bold mb-6 text-white">Síguenos</h3>
             <div className="flex justify-center md:justify-end space-x-6">
               <a 
-                href="https://www.instagram.com" 
+                href="https://www.instagram.com/jmcomputer.py" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-white hover:text-green-300 transition-colors duration-300"
@@ -55,21 +55,14 @@ const Footer = () => {
                 <FontAwesomeIcon icon={faInstagram} size="2x" />
               </a>
               <a 
-                href="https://www.whatsapp.com" 
+                href="https://wa.me/+595984133733" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-white hover:text-green-300 transition-colors duration-300"
               >
                 <FontAwesomeIcon icon={faWhatsapp} size="2x" />
               </a>
-              <a 
-                href="https://www.facebook.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-white hover:text-green-300 transition-colors duration-300"
-              >
-                <FontAwesomeIcon icon={faFacebook} size="2x" />
-              </a>
+              
             </div>
           </div>
         </div>
@@ -77,7 +70,7 @@ const Footer = () => {
         {/* Derechos de autor */}
         <div className="border-t border-green-700 mt-8 pt-6 text-center">
           <p className="text-green-200">
-            ©2024 JMcomputer Informática. Todos los derechos reservados
+            ©2025 JMcomputer Informática. Todos los derechos reservados
           </p>
         </div>
       </div>

@@ -175,7 +175,7 @@ const Cart = () => {
         doc.setFont("helvetica", "normal");
         doc.text([
             "JM Computer",
-            "Tel: +595 972 971353",
+            "Tel: +595 984 133733",
             "Email: info@jmcomputer.com.py",
             "Web: www.jmcomputer.com.py"
         ], pageWidth - 10, 40, { align: "right" });
@@ -324,7 +324,7 @@ const Cart = () => {
         // Pie de página
         doc.setFontSize(8);
         doc.setTextColor(100, 100, 100);
-        doc.text("Este presupuesto no constituye una factura. Para realizar el pedido, contáctenos al WhatsApp +595 972 971353.", pageWidth/2, pageHeight - 15, { align: "center" });
+        doc.text("Este presupuesto no constituye una factura. Para realizar el pedido, contáctenos al WhatsApp +595 984 133733.", pageWidth/2, pageHeight - 15, { align: "center" });
         doc.text("JM Computer - Tecnología a tu alcance", pageWidth/2, pageHeight - 10, { align: "center" });
         
         // Numeración de páginas
@@ -380,7 +380,7 @@ const Cart = () => {
         const encodedMessage = encodeURIComponent(message);
         
         // Abrir WhatsApp con el mensaje
-        window.open(`https://wa.me/+595972971353?text=${encodedMessage}`, '_blank');
+        window.open(`https://wa.me/+595984133733?text=${encodedMessage}`, '_blank');
         toast.success("Redirigiendo a WhatsApp...");
     };
 

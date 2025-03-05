@@ -225,7 +225,7 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=computadoras_ensambladas"
+                  <Link to="/categoria-producto?category=perifericos&subcategory=mouses"
                         onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más
@@ -345,7 +345,7 @@ const Home = () => {
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
-                  <Link to="/categoria-producto?category=informatica&subcategory=tarjetas_graficas"
+                  <Link to="/categoria-producto?category=informatica&subcategory=tarjeta_grafica"
                         onClick={() => scrollTop()}>
                     <button className="px-6 py-2 bg-teal-600 text-white hover:bg-teal-500 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button">
                       Ver más

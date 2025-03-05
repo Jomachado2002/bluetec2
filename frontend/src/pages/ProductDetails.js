@@ -352,7 +352,7 @@ Precio: ${price}
 ${productUrl}
 ¿Me puedes brindar más detalles sobre disponibilidad y envío?`;
     
-    const whatsappUrl = `https://wa.me/+595972971353?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+595984133733?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
