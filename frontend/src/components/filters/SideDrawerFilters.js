@@ -34,6 +34,7 @@ const SideDrawerFilters = () => {
   const [searchBrand, setSearchBrand] = useState('');
   const [searchSpecification, setSearchSpecification] = useState('');
   const drawerRef = useRef(null);
+  const [expandedSpecs, setExpandedSpecs] = useState({});
   
   // Filtrar marcas por término de búsqueda
   const filteredBrands = availableFilters.brands.filter(brand => 
@@ -586,54 +587,81 @@ const SideDrawerFilters = () => {
               </div>
             )}
             
-            {/* Especificaciones */}
-            {activeMobileFilter === 'specs' && (
-              <div>
-                <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4">
-                  <div className="relative mb-3">
-                    <input
-                      type="text"
-                      placeholder="Buscar especificación..."
-                      className="w-full pl-3 pr-10 py-2.5 border border-gray-300 rounded-md shadow-sm"
-                      value={searchSpecification}
-                      onChange={(e) => setSearchSpecification(e.target.value)}
-                    />
-                    <FiSearch className="absolute right-3 top-2.5 text-gray-400" />
+           {/* Especificaciones */}
+{activeMobileFilter === 'specs' && (
+  <div>
+    <div className="bg-white rounded-md shadow-sm border border-gray-200 p-4">
+      <div className="relative mb-3">
+        <input
+          type="text"
+          placeholder="Buscar especificación..."
+          className="w-full pl-3 pr-10 py-2.5 border border-gray-300 rounded-md shadow-sm"
+          value={searchSpecification}
+          onChange={(e) => setSearchSpecification(e.target.value)}
+        />
+        <FiSearch className="absolute right-3 top-2.5 text-gray-400" />
+      </div>
+      
+      <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-1">
+        {Object.keys(availableFilters.specifications)
+          .filter(key => getSpecificationLabel(key).toLowerCase().includes(searchSpecification.toLowerCase()))
+          .map(specKey => {
+            const hasActiveFilters = specFilters[specKey] && specFilters[specKey].length > 0;
+            
+            return (
+              <div key={specKey} className="border border-gray-200 rounded-md overflow-hidden">
+                <button 
+                  onClick={() => {
+                    setExpandedSpecs(prev => ({
+                      ...prev,
+                      [specKey]: !prev[specKey]
+                    }));
+                  }}
+                  className={`w-full flex items-center justify-between p-3 text-left ${
+                    hasActiveFilters ? 'bg-green-50 text-green-700 font-medium' : 'bg-gray-50 text-gray-800'
+                  }`}
+                >
+                  <span>{getSpecificationLabel(specKey)}</span>
+                  {hasActiveFilters && (
+                    <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
+                      {specFilters[specKey].length}
+                    </span>
+                  )}
+                  <span className="ml-auto text-gray-500">
+                    {expandedSpecs[specKey] ? <BiChevronUp size={20} /> : <BiChevronDown size={20} />}
+                  </span>
+                </button>
+                
+                {expandedSpecs[specKey] && (
+                  <div className="p-3 border-t border-gray-100 bg-white">
+                    <div className="space-y-2">
+                      {availableFilters.specifications[specKey].map(value => (
+                        <label key={`${specKey}-${value}`} className="flex items-center py-2 px-2 rounded hover:bg-gray-50">
+                          <input
+                            type="checkbox"
+                            className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                            checked={(specFilters[specKey] || []).includes(value)}
+                            onChange={() => handleSpecFilterChange(specKey, value)}
+                          />
+                          <span className="text-sm text-gray-700">{value}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                  
-                  <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-1">
-                    {Object.keys(availableFilters.specifications)
-                      .filter(key => getSpecificationLabel(key).toLowerCase().includes(searchSpecification.toLowerCase()))
-                      .map(specKey => (
-                        <div key={specKey} className="border-b pb-4 last:border-0">
-                          <h4 className="font-medium text-gray-800 mb-2 bg-gray-100 p-2 rounded">
-                            {getSpecificationLabel(specKey)}
-                          </h4>
-                          <div className="space-y-2 ml-1 border-l-2 border-green-100 pl-2">
-                            {availableFilters.specifications[specKey].map(value => (
-                              <label key={`${specKey}-${value}`} className="flex items-center py-2 px-2 rounded hover:bg-gray-50">
-                                <input
-                                  type="checkbox"
-                                  className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
-                                  checked={(specFilters[specKey] || []).includes(value)}
-                                  onChange={() => handleSpecFilterChange(specKey, value)}
-                                />
-                                <span className="text-sm text-gray-700">{value}</span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      ))
-                    }
-                    {Object.keys(availableFilters.specifications).length === 0 && (
-                      <p className="text-sm text-gray-500 py-2 text-center italic">
-                        Selecciona una categoría para ver las especificaciones disponibles
-                      </p>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
-            )}
+            );
+          })
+        }
+        {Object.keys(availableFilters.specifications).length === 0 && (
+          <p className="text-sm text-gray-500 py-2 text-center italic">
+            Selecciona una categoría para ver las especificaciones disponibles
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+)}
             
             {/* Ordenar */}
             {activeMobileFilter === 'sort' && (

@@ -732,7 +732,7 @@ const Nosotros = () => {
                       </div>
                       <div>
                         <h4 className="text-lg font-medium text-gray-800">Dirección</h4>
-                        <p className="text-gray-600">Av. Eusebio Ayala 1234, Asunción, Paraguay</p>
+                        <p className="text-gray-600">Gaudioso Nuñez casi Celsa Speratti - Asuncion</p>
                       </div>
                     </div>
                     
