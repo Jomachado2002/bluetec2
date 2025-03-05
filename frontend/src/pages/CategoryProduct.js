@@ -9,6 +9,7 @@ import DesktopFilters from '../components/filters/DesktopFilters';
 import SideDrawerFilters from '../components/filters/SideDrawerFilters';
 import productCategory from '../helpers/productCategory';
 import getSeoTitle from '../utils/getSeoTitle';
+import { Helmet } from 'react-helmet';
 
 // Componente para filtros activos en línea
 const InlineActiveFilters = ({ productCategories }) => {
