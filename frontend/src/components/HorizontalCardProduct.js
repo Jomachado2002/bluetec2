@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWiseProduct';
 import displayPYGCurrency from '../helpers/displayCurrency';
 import { 
@@ -15,6 +15,75 @@ import addToCart from '../helpers/addToCart';
 import Context from '../context';
 import scrollTop from '../helpers/scrollTop';
 
+// Componente de imagen con carga optimizada
+const OptimizedImage = React.memo(({ src, alt, index, className }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+  const imgRef = useRef(null);
+  const placeholderUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"%3E%3Crect width="100%25" height="100%25" fill="%23f3f4f6"/%3E%3C/svg%3E';
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          if (imgRef.current) {
+            imgRef.current.src = src;
+            observer.disconnect();
+          }
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => {
+      if (imgRef.current) {
+        observer.disconnect();
+      }
+    };
+  }, [src]);
+
+  return (
+    <div className="relative w-full h-full">
+      {/* Imagen placeholder */}
+      {!loaded && !error && (
+        <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
+          <svg className="w-10 h-10 text-gray-300" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+            <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+          </svg>
+        </div>
+      )}
+
+      {/* Imagen real */}
+      <img 
+        ref={imgRef}
+        src={index < 3 ? src : placeholderUrl} // Carga inmediata solo para las primeras 3 imágenes
+        alt={alt}
+        className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        onLoad={() => setLoaded(true)}
+        onError={() => setError(true)}
+        width="150"
+        height="150"
+        loading={index < 3 ? "eager" : "lazy"}
+      />
+
+      {/* Imagen de error */}
+      {error && (
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+          <svg className="w-10 h-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+});
+
 const HorizontalCardProduct = ({ 
   category, 
   subcategory = null, 
@@ -24,8 +93,8 @@ const HorizontalCardProduct = ({
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
-  // Eliminamos el estado de hoveredProductId ya que no lo necesitaremos
-  const loadingList = new Array(13).fill(null);
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 5 });
+  const loadingList = new Array(5).fill(null); // Reducido para mejorar rendimiento
   const scrollElement = useRef();
   const { fetchUserAddToCart } = useContext(Context);
   const location = useLocation();
@@ -55,38 +124,65 @@ const HorizontalCardProduct = ({
     scrollElement.current.scrollBy({ left: -300, behavior: 'smooth' });
   };
 
-  const checkScrollPosition = () => {
+  const checkScrollPosition = useCallback(() => {
+    if (!scrollElement.current) return;
+    
     const { scrollLeft, scrollWidth, clientWidth } = scrollElement.current;
     setShowLeftButton(scrollLeft > 0);
-    setShowRightButton(scrollLeft < scrollWidth - clientWidth);
-  };
+    setShowRightButton(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
+    
+    // Actualizar rango visible para carga optimizada
+    const cardWidth = 300; // Ancho aproximado de cada tarjeta
+    const startIndex = Math.floor(scrollLeft / cardWidth);
+    const visibleCount = Math.ceil(clientWidth / cardWidth) + 1; // +1 para precarga
+    
+    setVisibleRange({
+      start: Math.max(0, startIndex - 1), // Precarga 1 antes
+      end: startIndex + visibleCount + 1 // Precarga 1 después
+    });
+  }, []);
 
   useEffect(() => {
     const scrollContainer = scrollElement.current;
     if (scrollContainer) {
       scrollContainer.addEventListener('scroll', checkScrollPosition);
+      // Debounce para mejorar rendimiento
+      let timeoutId;
+      const handleScroll = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(checkScrollPosition, 100);
+      };
+      
+      scrollContainer.addEventListener('scroll', handleScroll);
       checkScrollPosition();
-      return () => scrollContainer.removeEventListener('scroll', checkScrollPosition);
+      
+      return () => {
+        scrollContainer.removeEventListener('scroll', checkScrollPosition);
+        scrollContainer.removeEventListener('scroll', handleScroll);
+        clearTimeout(timeoutId);
+      };
     }
-  }, []);
+  }, [checkScrollPosition]);
 
-  const handleAddToCart = (e, product) => {
+  // Usar useCallback para funciones de manejo de eventos
+  const handleAddToCart = useCallback((e, product) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(e, product);
     fetchUserAddToCart();
-  };
+  }, [fetchUserAddToCart]);
 
-  const calculateDiscount = (price, sellingPrice) => {
+  // Memoizar funciones de procesamiento
+  const calculateDiscount = useCallback((price, sellingPrice) => {
     if (price && price > 0) {
       const discount = Math.round(((price - sellingPrice) / price) * 100);
       return discount > 0 ? `${discount}% OFF` : null;
     }
     return null;
-  };
+  }, []);
 
   // Función para formatear el nombre del producto
-  const formatProductName = (productName) => {
+  const formatProductName = useCallback((productName) => {
     if (!productName) return { mainName: '', specs: [] };
     
     // Si el nombre tiene separadores tipo "/"
@@ -142,7 +238,16 @@ const HorizontalCardProduct = ({
       mainName: mainName.trim(),
       specs: specs.filter(spec => spec && spec.length > 0)
     };
-  };
+  }, []);
+
+  // Memoizamos los datos formateados para evitar recálculos
+  const processedProducts = useMemo(() => {
+    return data.map(product => ({
+      ...product,
+      formattedName: formatProductName(product?.productName),
+      discount: calculateDiscount(product?.price, product?.sellingPrice)
+    }));
+  }, [data, formatProductName, calculateDiscount]);
 
   // If no data, don't render anything
   if (!loading && data.length === 0) {
@@ -200,31 +305,42 @@ const HorizontalCardProduct = ({
                 <div className="h-3 bg-slate-200 rounded w-2/3"></div>
               </div>
             </div>
-          )) : data.map((product, index) => {
-            const discount = calculateDiscount(product?.price, product?.sellingPrice);
-            const formattedName = formatProductName(product?.productName);
+          )) : processedProducts.map((product, index) => {
+            // Solo renderizar elementos visibles y algunos cercanos
+            const isInVisibleRange = index >= visibleRange.start && index <= visibleRange.end;
             
             return (
               <Link
                 to={`${pathname}producto/${product?._id}`}
                 onClick={scrollTop}
-                key={index}
+                key={product?._id || index}
                 className="flex-none w-[260px] sm:w-[300px] lg:w-[340px] h-[260px] sm:h-[300px] lg:h-[320px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 product-card cursor-pointer snap-center block overflow-hidden relative group/card"
+                data-product-id={product?._id}
               >
-                {discount && (
+                {product.discount && (
                   <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-green-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold transform hover:scale-110 transition-transform z-10">
-                    {discount}
+                    {product.discount}
                   </div>
                 )}
 
                 <div className="flex h-full">
                   <div className="w-2/5 h-full bg-white flex items-center justify-center p-2 sm:p-4 relative">
-                    <img 
-                      src={product.productImage[0]} 
-                      alt={product?.productName} 
-                      className="object-contain h-full w-full transform hover:scale-110 transition-transform duration-500"
-                      loading="lazy"
-                    />
+                    {isInVisibleRange ? (
+                      <OptimizedImage 
+                        src={product.productImage[0]} 
+                        alt={product?.productName} 
+                        index={index}
+                        className="object-contain h-full w-full transform hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      // Placeholder hasta que entre en rango visible
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <svg className="w-10 h-10 text-gray-300" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                          <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                        </svg>
+                      </div>
+                    )}
                     
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="bg-white/70 p-1 rounded-full">
@@ -254,14 +370,14 @@ const HorizontalCardProduct = ({
                           className="font-semibold text-xs sm:text-sm text-gray-800 hover:text-green-600 transition-colors line-clamp-2"
                           title={product?.productName}
                         >
-                          {formattedName.mainName}
+                          {product.formattedName.mainName}
                         </h2>
                         
                         {/* Especificaciones clave en formato de chips/pills */}
                         <div className="mt-2">
-                          {formattedName.specs.length > 0 ? (
+                          {product.formattedName.specs.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
-                              {formattedName.specs.map((spec, idx) => (
+                              {product.formattedName.specs.map((spec, idx) => (
                                 <span key={idx} className="inline-block text-[9px] bg-gray-50 px-1.5 py-0.5 rounded-full border border-gray-100 text-gray-600">
                                   {spec}
                                 </span>
@@ -272,7 +388,7 @@ const HorizontalCardProduct = ({
                       </div>
 
                       {/* Solo mostramos las especificaciones adicionales si no hay suficientes specs en el nombre */}
-                      {formattedName.specs.length < 2 && (
+                      {product.formattedName.specs.length < 2 && (
                         <div className="space-y-1 sm:space-y-2">
                           <div className="flex items-center text-xs text-gray-600">
                             <FaMicrochip className="mr-1 sm:mr-2 text-gray-400 flex-shrink-0" /> 
@@ -337,4 +453,4 @@ const HorizontalCardProduct = ({
   );
 };
 
-export default HorizontalCardProduct;
+export default React.memo(HorizontalCardProduct);

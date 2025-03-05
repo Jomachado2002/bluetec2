@@ -110,6 +110,31 @@ export const FilterProvider = ({ children }) => {
     }
   }, [rawData, sortBy, priceRange]);
   
+  // Detectar cambios en la URL para limpiar filtros cuando sea necesario
+  useEffect(() => {
+    const currentCategory = urlSearch.get("category");
+    const currentSubcategory = urlSearch.get("subcategory");
+    
+    // Si cambia la categoría o subcategoría en la URL, actualizar estados y limpiar filtros específicos
+    const categoryChanged = currentCategory !== filterCategoryList[0];
+    const subcategoryChanged = currentSubcategory !== filterSubcategoryList[0];
+    
+    if (categoryChanged || subcategoryChanged) {
+      if (categoryChanged) {
+        setFilterCategoryList(currentCategory ? [currentCategory] : []);
+      }
+      
+      if (subcategoryChanged) {
+        setFilterSubcategoryList(currentSubcategory ? [currentSubcategory] : []);
+      }
+      
+      // Limpiar filtros de especificaciones y precio al cambiar categoría/subcategoría
+      setSpecFilters({});
+      setPriceRange({ min: '', max: '' });
+      setFilterBrands([]);
+    }
+  }, [location.search]);
+  
   // Función para buscar la categoría padre de una subcategoría
   const findParentCategory = (subcategory) => {
     for (const category of productCategory) {
@@ -187,6 +212,11 @@ export const FilterProvider = ({ children }) => {
           setFilterSubcategoryList([]);
         }
       }
+      
+      // Limpiar filtros de especificaciones y marcas
+      setSpecFilters({});
+      setFilterBrands([]);
+      setPriceRange({ min: '', max: '' });
     } else {
       // Seleccionar esta categoría (solo una a la vez)
       setFilterCategoryList([category]);
@@ -202,7 +232,15 @@ export const FilterProvider = ({ children }) => {
       } else {
         setFilterSubcategoryList([]);
       }
+      
+      // Limpiar filtros de especificaciones y marcas
+      setSpecFilters({});
+      setFilterBrands([]);
+      setPriceRange({ min: '', max: '' });
     }
+    
+    // Actualizar URL para reflejar la categoría
+    navigate(`/categoria-producto?category=${category}`);
   };
   
   // Manejar selección de subcategoría
@@ -210,16 +248,31 @@ export const FilterProvider = ({ children }) => {
     // Si ya está seleccionada, la deseleccionamos
     if (filterSubcategoryList.includes(subcategory)) {
       setFilterSubcategoryList([]);
+      
+      // Limpiar filtros de especificaciones al deseleccionar
+      setSpecFilters({});
+      setFilterBrands([]);
+      setPriceRange({ min: '', max: '' });
+      
+      // Actualizar URL sin subcategoría
+      const category = filterCategoryList[0];
+      navigate(`/categoria-producto${category ? `?category=${category}` : ''}`);
     } else {
       // Seleccionar esta subcategoría (solo una a la vez)
       setFilterSubcategoryList([subcategory]);
       
       // Seleccionar automáticamente la categoría padre
       findParentCategory(subcategory);
+      
+      // Limpiar filtros de especificaciones al cambiar de subcategoría
+      setSpecFilters({});
+      setFilterBrands([]);
+      setPriceRange({ min: '', max: '' });
+      
+      // Actualizar URL para reflejar la subcategoría
+      const category = filterCategoryList[0];
+      navigate(`/categoria-producto?${category ? `category=${category}&` : ''}subcategory=${subcategory}`);
     }
-    
-    // Actualizar URL para reflejar la subcategoría
-    navigate(`/categoria-producto?subcategory=${subcategory}`);
   };
   
   // Manejar cambio en filtro de especificación

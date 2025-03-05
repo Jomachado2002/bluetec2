@@ -27,12 +27,12 @@ export const generatePageTitle = (selectedCategory, selectedSubcategory) => {
           { id: 201, label: "Monitores", value: "monitores" },
           { id: 202, label: "Teclados", value: "teclados" },
           { id: 203, label: "Mouses", value: "mouses" },
-          { id: 204, label: "Adaptadores", value: "adaptadores" },
-          { id: 503, label: "Auriculares", value: "auriculares" },
-          { id: 205, label: "Microfonos", value: "microfonos"}
+        //  { id: 204, label: "Adaptadores", value: "adaptadores" },
+        //  { id: 503, label: "Auriculares", value: "auriculares" },
+        //  { id: 205, label: "Microfonos", value: "microfonos"}
         ]
       },
-      {
+  /*  {
         id: 3,
         label: "CCTV",
         value: "cctv",
@@ -90,7 +90,7 @@ export const generatePageTitle = (selectedCategory, selectedSubcategory) => {
           { id: 804, label: "Racks", value: "racks" },
           { id: 805, label: "Access Point", value: "ap" }
         ]
-      }
+      }*/
     ];
   
     // Buscar la categoría
@@ -140,13 +140,13 @@ const productCategory = [
           { id: 201, label: "Monitores", value: "monitores" },
           { id: 202, label: "Teclados", value: "teclados" },
           { id: 203, label: "Mouses", value: "mouses" },
-          { id: 204, label: "Adaptadores", value: "adaptadores" },
-          { id: 503, label: "Auriculares", value: "auriculares" },
-          { id: 205, label: "Microfonos", value: "microfonos"}
+        //{ id: 204, label: "Adaptadores", value: "adaptadores" },
+       // { id: 503, label: "Auriculares", value: "auriculares" },
+       // { id: 205, label: "Microfonos", value: "microfonos"}
           
       ]
   },
-  {
+/*{
       id: 3,
       label: "CCTV",
       value: "cctv",
@@ -206,7 +206,7 @@ const productCategory = [
         { id: 805, label: "Access Point", value: "ap" },
 
     ]
-}
+}*/
 ];
 
 export default productCategory;

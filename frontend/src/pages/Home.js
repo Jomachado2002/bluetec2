@@ -60,7 +60,7 @@ const Home = () => {
   const openWhatsApp = () => {
     const message = "Hola, necesito asesoramiento sobre productos de informática. ¿Podrían ayudarme?";
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/595972971353?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/595984133733?text=${encodedMessage}`, '_blank');
   };
 
   // Función para navegar a categorías con scroll suave
