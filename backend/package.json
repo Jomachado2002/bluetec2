@@ -25,6 +25,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "axios": "^1.8.1",
     "kill-port": "^2.0.1"
   }
 }

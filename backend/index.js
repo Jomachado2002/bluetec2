@@ -5,7 +5,6 @@ const session = require('express-session');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const router = require('./routes');
-const generateSitemap = require('./controller/product/generateSitemap');
 
 const app = express();
 
@@ -46,7 +45,7 @@ app.use(session({
 }));
 
 // Ruta del sitemap antes de las rutas API
-app.get("/sitemap.xml", generateSitemap);
+
 
 // Rutas API
 app.use("/api", router);
