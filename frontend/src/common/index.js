@@ -78,7 +78,10 @@ const SummaryApi = {
         url: `${backendDomain}/api/eliminar-producto`,  // Cambiar "delete-product" a "eliminar-producto"
         method: 'post'
     },
-    
+    productDetailsBySlug: {
+        url: `${backendDomain}/api/producto-por-slug`,
+        method: "get"
+      }
 };
 
 export default SummaryApi;

@@ -310,8 +310,7 @@ const HorizontalCardProduct = ({
             const isInVisibleRange = index >= visibleRange.start && index <= visibleRange.end;
             
             return (
-              <Link
-                to={`${pathname}producto/${product?._id}`}
+              <Link to={`/producto/${product?.slug || product?._id}`}
                 onClick={scrollTop}
                 key={product?._id || index}
                 className="flex-none w-[260px] sm:w-[300px] lg:w-[340px] h-[260px] sm:h-[300px] lg:h-[320px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 product-card cursor-pointer snap-center block overflow-hidden relative group/card"

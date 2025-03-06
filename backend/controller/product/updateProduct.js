@@ -1,5 +1,6 @@
 const uploadProductPermission = require('../../helpers/permission');
 const ProductModel = require('../../models/productModel');
+const { generateSlug, generateUniqueSlug } = require('../../helpers/slugGenerator');
 
 async function updateProductController(req, res) {
     try {
@@ -13,6 +14,23 @@ async function updateProductController(req, res) {
         const existingProduct = await ProductModel.findById(_id);
         if (!existingProduct) {
             throw new Error("El producto no existe o ya ha sido eliminado");
+        }
+
+        // Si el nombre del producto ha cambiado, actualizar el slug
+        if (resBody.productName && resBody.productName !== existingProduct.productName) {
+            const baseSlug = generateSlug(resBody.productName);
+            
+            // Función para verificar si un slug ya existe
+            const checkExistingSlug = async (slug) => {
+                const existingProductWithSlug = await ProductModel.findOne({
+                    slug,
+                    _id: { $ne: _id }
+                });
+                return !!existingProductWithSlug;
+            };
+            
+            // Generar slug único
+            resBody.slug = await generateUniqueSlug(baseSlug, checkExistingSlug);
         }
 
         // Actualizar el producto y devolver el documento actualizado
@@ -33,9 +51,6 @@ async function updateProductController(req, res) {
         });
     }
 }
-
-
-
 
 module.exports = {
     updateProductController,

@@ -253,6 +253,10 @@ tonerCompatibleModel: { type: String }
     timestamps: true
 });
 
+
+// Creamos un índice para el slug para búsquedas más rápidas
+productSchema.index({ slug: 1 }, { unique: true, sparse: true });
+
 const productModel = mongoose.model("product", productSchema);
 
 module.exports = productModel;

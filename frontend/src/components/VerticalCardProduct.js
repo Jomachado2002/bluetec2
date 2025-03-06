@@ -151,15 +151,14 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                             const discount = calculateDiscount(product?.price, product?.sellingPrice);
                             
                             return (
-                                <Link 
-                                    to={`/producto/${product?._id}`} 
+                                <Link to={`/producto/${product?.slug || product?._id}`}
                                     key={product?._id} 
                                     className='snap-center flex-none w-[220px] sm:w-[250px] md:w-[280px] bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 group/card product-card relative'
                                     onClick={scrollTop}
                                     onMouseEnter={() => setHoveredProductId(product?._id)}
                                     onMouseLeave={() => setHoveredProductId(null)}
                                 >
-                                    {/* Etiqueta de descuento */}
+l{/* Etiqueta de descuento */}
                                     {discount && (
                                         <div className='absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold'>
                                             {discount}

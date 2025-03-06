@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWiseProduct';
 import { FaAngleLeft, FaAngleRight, FaShoppingCart, FaExpand } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
 import displayPYGCurrency from '../helpers/displayCurrency';
-import scrollTop from '../helpers/scrollTop';
 
-const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
+const CategoryWiseProductDisplay = ({ category, subcategory, heading, currentProductId }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
@@ -16,6 +15,7 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
   const loadingList = new Array(13).fill(null);
 
   const scrollElement = useRef();
+  const navigate = useNavigate();
 
   const { fetchUserAddToCart } = useContext(Context);
 
@@ -39,18 +39,32 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
     [fetchUserAddToCart]
   );
 
+  // Función para navegar directamente a la página del producto
+  const handleProductClick = useCallback((e, productSlug) => {
+    e.preventDefault();
+    // Forzar una recarga completa para evitar problemas de estado
+    window.location.href = `/producto/${productSlug}`;
+  }, []);
+
   // Función para obtener datos
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const categoryProduct = await fetchCategoryWiseProduct(category, subcategory);
-      setData(categoryProduct?.data || []);
+      
+      // Filtrar el producto actual de los resultados si tenemos su ID
+      let filteredProducts = categoryProduct?.data || [];
+      if (currentProductId && filteredProducts.length > 0) {
+        filteredProducts = filteredProducts.filter(product => product._id !== currentProductId);
+      }
+      
+      setData(filteredProducts);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
-  }, [category, subcategory]);
+  }, [category, subcategory, currentProductId]);
 
   // useEffect para cargar datos
   useEffect(() => {
@@ -59,27 +73,43 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
 
   // Función para desplazar a la derecha
   const scrollRight = () => {
-    scrollElement.current.scrollBy({ left: 300, behavior: 'smooth' });
+    if (scrollElement.current) {
+      scrollElement.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
   };
 
   // Función para desplazar a la izquierda
   const scrollLeft = () => {
-    scrollElement.current.scrollBy({ left: -300, behavior: 'smooth' });
+    if (scrollElement.current) {
+      scrollElement.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
   };
 
   // Función para verificar la posición del scroll
-  const checkScrollPosition = () => {
-    const { scrollLeft, scrollWidth, clientWidth } = scrollElement.current;
-    setShowLeftButton(scrollLeft > 0);
-    setShowRightButton(scrollLeft < scrollWidth - clientWidth);
-  };
+  const checkScrollPosition = useCallback(() => {
+    if (scrollElement.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollElement.current;
+      setShowLeftButton(scrollLeft > 0);
+      setShowRightButton(scrollLeft < scrollWidth - clientWidth);
+    }
+  }, []);
 
   // useEffect para verificar la posición del scroll
   useEffect(() => {
     const scrollContainer = scrollElement.current;
-    scrollContainer.addEventListener('scroll', checkScrollPosition);
-    return () => scrollContainer.removeEventListener('scroll', checkScrollPosition);
-  }, []);
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', checkScrollPosition);
+      
+      // Verificar la posición inicial del scroll cuando se carga el componente
+      checkScrollPosition();
+      
+      return () => {
+        if (scrollContainer) {
+          scrollContainer.removeEventListener('scroll', checkScrollPosition);
+        }
+      };
+    }
+  }, [checkScrollPosition, data]);
 
   // Manejo de teclas para accesibilidad
   const handleKeyDown = (e) => {
@@ -90,6 +120,11 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
     }
   };
 
+  // Si no hay datos y no está cargando, no mostrar nada
+  if (data.length === 0 && !loading) {
+    return null;
+  }
+
   return (
     <div className='container mx-auto px-4 my-6 relative'>
       <h2 className='text-2xl font-semibold py-4'>{heading}</h2>
@@ -99,6 +134,7 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
           <button
             className='bg-white shadow-lg rounded-full p-2 absolute left-0 top-1/2 transform -translate-y-1/2 z-10'
             onClick={scrollLeft}
+            aria-label="Desplazar a la izquierda"
           >
             <FaAngleLeft className='text-gray-700' />
           </button>
@@ -109,6 +145,7 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
           ref={scrollElement}
           tabIndex={0}
           onKeyDown={handleKeyDown}
+          aria-label="Carrusel de productos recomendados"
         >
           {loading
             ? loadingList.map((_, index) => (
@@ -130,12 +167,13 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
               ))
             : data.map((product) => {
                 const discount = calculateDiscount(product?.price, product?.sellingPrice);
+                const productUrl = `/producto/${product?.slug || product?._id}`;
+                
                 return (
-                  <Link
-                    to={'/producto/' + product?._id}
-                    key={product?._id}
-                    className='block w-full min-w-[280px] md:min-w-[300px] max-w-[300px] bg-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative group/card'
-                    onClick={scrollTop}
+                  <div
+                    key={`product-${product?._id}`}
+                    className='block w-full min-w-[280px] md:min-w-[300px] max-w-[300px] bg-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative group/card cursor-pointer'
+                    onClick={(e) => handleProductClick(e, product?.slug || product?._id)}
                     onMouseEnter={() => setHoveredProductId(product?._id)}
                     onMouseLeave={() => setHoveredProductId(null)}
                   >
@@ -197,7 +235,7 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
                         <FaShoppingCart /> Agregar al Carrito
                       </button>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
         </div>
@@ -206,6 +244,7 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading }) => {
           <button
             className='bg-white shadow-lg rounded-full p-2 absolute right-0 top-1/2 transform -translate-y-1/2 z-10'
             onClick={scrollRight}
+            aria-label="Desplazar a la derecha"
           >
             <FaAngleRight className='text-gray-700' />
           </button>

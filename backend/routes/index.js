@@ -26,6 +26,8 @@ const requestPasswordReset = require('../controller/user/requestPasswordReset');
 const resetPassword = require('../controller/user/resetPassword');
 const getCategorySearch = require('../controller/product/getCategorySearch');
 const { deleteProductController } = require('../controller/product/deleteproductcontrolle');
+const getProductBySlug = require('../controller/product/getProductBySlug');
+
 
 
 // Archivo: backend/routes/index.js
@@ -66,6 +68,10 @@ router.get("/buscar-por-categoria", getCategorySearch); // Antes: getsearchProdu
 
 // Eliminar producto
 router.post("/eliminar-producto", authToken, deleteProductController); // Antes: delete-product
+
+router.get("/producto-por-slug/:slug", getProductBySlug);
+
+
 
 
 

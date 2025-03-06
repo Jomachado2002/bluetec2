@@ -66,8 +66,8 @@ const VerticalCard = ({ loading, data = [] }) => {
                         const discount = calculateDiscount(product?.price, product?.sellingPrice);
                         
                         return (
-                            <Link 
-                                to={`/producto/${product?._id}`} 
+                            <Link
+                             to={`/producto/${product?.slug || product?._id}`} 
                                 key={index} 
                                 className='block w-full min-w-[280px] md:min-w-[300px] max-w-[300px] bg-white rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl relative group/card'
                                 onClick={scrollTop} // Desplaza la página hacia arriba al hacer clic

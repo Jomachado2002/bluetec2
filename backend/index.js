@@ -5,6 +5,7 @@ const session = require('express-session');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const router = require('./routes');
+const generateSitemap = require('./controller/product/generateSitemap');
 
 const app = express();
 
@@ -41,11 +42,13 @@ app.use(session({
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
         sameSite: 'none' // Permite cookies en solicitudes cross-site
     },
-    
     store: new session.MemoryStore() // Considera usar un store más robusto para producción
 }));
 
-// Rutas
+// Ruta del sitemap antes de las rutas API
+app.get("/sitemap.xml", generateSitemap);
+
+// Rutas API
 app.use("/api", router);
 
 // Manejo de errores global

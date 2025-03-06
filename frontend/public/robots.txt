@@ -12,4 +12,3 @@ Disallow: /tmp/
 
 # Sitemap
 Sitemap: https://jmcomputer.com.py/sitemap.xml
-Sitemap: https://jmcomputer.com.py/sitemap.xml
