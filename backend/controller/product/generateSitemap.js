@@ -1,12 +1,12 @@
-// backend/controller/product/siteMap.js
+// backend/controller/product/generateSitemap.js
 const productModel = require("../../models/productModel");
 
 const generateSitemap = async (req, res) => {
   try {
     const baseUrl = process.env.FRONTEND_URL || 'https://jmcomputer.com.py';
     
-    // Obtener todos los productos con slug y fecha de actualización
-    const products = await productModel.find({}, 'slug updatedAt');
+    // Obtener todos los productos con slug e ID (para backup) y fecha de actualización
+    const products = await productModel.find({}, '_id slug updatedAt');
     
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
@@ -44,23 +44,31 @@ const generateSitemap = async (req, res) => {
       xml += `  </url>\n`;
     });
     
-    // Añadir URLs de productos
+    // Añadir URLs de productos - Usando slug si está disponible, si no, usar _id
+    let productsCount = 0;
     products.forEach(product => {
-      if (product.slug) {
+      // Determinamos qué parámetro usar para el enlace del producto (slug o _id)
+      const productParam = product.slug || product._id;
+      
+      if (productParam) {
         const lastmod = product.updatedAt ? 
           product.updatedAt.toISOString().split('T')[0] : 
           today;
         
         xml += `  <url>\n`;
-        xml += `    <loc>${baseUrl}/producto/${product.slug}</loc>\n`;
+        xml += `    <loc>${baseUrl}/producto/${productParam}</loc>\n`;
         xml += `    <lastmod>${lastmod}</lastmod>\n`;
         xml += `    <changefreq>weekly</changefreq>\n`;
         xml += `    <priority>0.8</priority>\n`;
         xml += `  </url>\n`;
+        productsCount++;
       }
     });
     
     xml += '</urlset>';
+    
+    // Agregar un log para debug
+    console.log(`Sitemap generado con ${productsCount} productos`);
     
     res.header('Content-Type', 'application/xml');
     res.send(xml);
