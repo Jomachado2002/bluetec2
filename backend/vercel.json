@@ -1,16 +1,20 @@
 {
-    "version" : 2,
-    "name" : "Full Stack",
-    "builds" : [
+    "version": 2,
+    "name": "Full Stack",
+    "builds": [
         {
-            "src" : "./index.js",
-            "use" : "@vercel/node"
+            "src": "./index.js",
+            "use": "@vercel/node"
         }
     ],
-    "routes" : [
+    "routes": [
         {
-            "src" : "/(.*)",
-            "dest" : "/"
+            "src": "/sitemap.xml",
+            "dest": "https://api.jmcomputer.com.py/sitemap.xml"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/"
         }
     ]
 }
