@@ -165,18 +165,18 @@ const productCategory = [
           { id: 402, label: "Impresoras Multifunción", value: "impresoras_multifuncion" },
           { id: 403, label: "Cartuchos y toner", value: "cartuchostoner" }
       ]
-  },
+  },*/
   {
       id: 5,
       label: "Energia",
       value: "energia",
       subcategories: [
-          { id: 501, label: "Fuentes de Alimentación", value: "fuentes_alimentacion" },
+         // { id: 501, label: "Fuentes de Alimentación", value: "fuentes_alimentacion" },
           { id: 502, label: "UPS", value: "ups" },
           
       ]
   },
-  {
+  /*{
       id: 6,
       label: "Software y Licencias",
       value: "software_licencias",
