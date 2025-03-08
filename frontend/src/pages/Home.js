@@ -253,6 +253,7 @@ const Home = () => {
                     subcategory="mouses"
                     heading=""
                     limit={50}
+                    
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -377,6 +378,7 @@ const Home = () => {
                     subcategory="tarjeta_grafica"
                     heading=""
                     limit={50}
+                    sortBy="newest"
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -439,6 +441,7 @@ const Home = () => {
                     subcategory="procesador"
                     heading=""
                     limit={50}
+                    sortBy="newest"
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -470,6 +473,7 @@ const Home = () => {
                     subcategory="teclados"
                     heading=""
                     limit={50}
+                    sortBy="newest"
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
