@@ -6,6 +6,7 @@ import displayINRCurrency from '../helpers/displayCurrency';
 import CategoryWiseProductDisplay from '../components/CategoryWiseProductDisplay';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Lista de todas las posibles especificaciones por categoría
 const specificationsByCategory = {
@@ -465,12 +466,13 @@ ${productUrl}
                 onMouseLeave={handleMouseLeave}
               >
                 {activeImage && (
-                  <img
-                    src={activeImage}
-                    alt={data.productName}
-                    className="object-contain h-full w-full"
-                  />
-                )}
+                    <OptimizedImage
+                      src={activeImage}
+                      alt={data.productName}
+                      index={0} // Alta prioridad para la imagen principal
+                      className="object-contain h-full w-full"
+                    />
+                  )}
                 {/** Contenedor de Zoom (visible solo en pantallas grandes) **/}
                 {zoomImage && activeImage && (
                   <div className="hidden lg:block absolute top-0 left-full ml-4 w-[600px] h-[500px] border border-gray-200 rounded overflow-hidden shadow-xl pointer-events-none">
@@ -503,12 +505,13 @@ ${productUrl}
                           handleMouseEnterProduct(imgURL, e);
                         }}
                       >
-                        <img 
-                          src={imgURL} 
-                          alt={`Producto ${index + 1}`} 
-                          className="h-full w-full object-cover rounded" 
+                        <OptimizedImage 
+                          src={imgURL}
+                          alt={`Producto ${index + 1}`}
+                          index={index} // El índice determina la prioridad de carga
+                          className="h-full w-full object-cover rounded"
                           onClick={(e) => e.stopPropagation()}
-                        />
+                        />  
                       </div>
                     ))
                 }

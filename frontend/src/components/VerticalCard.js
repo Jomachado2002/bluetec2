@@ -5,6 +5,7 @@ import addToCart from '../helpers/addToCart';
 import { Link } from 'react-router-dom';
 import displayPYGCurrency from '../helpers/displayCurrency';
 import { FaShoppingCart, FaExpand } from 'react-icons/fa';
+import OptimizedImage from './OptimizedImage';
 
 const VerticalCard = ({ loading, data = [] }) => {
     const loadingList = new Array(13).fill(null);
@@ -83,11 +84,13 @@ const VerticalCard = ({ loading, data = [] }) => {
 
                                 {/* Product Image */}
                                 <div className='bg-gray-50 h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
-                                    <img 
-                                        src={product?.productImage[0]} 
-                                        alt={product?.productName} 
-                                        className='object-contain h-full w-full transform group-hover/card:scale-110 transition-transform duration-500'
-                                    />
+                                <OptimizedImage 
+                                src={product?.productImage[0]} 
+                                alt={product?.productName}
+                                index={index} // Usando el índice del map para prioridad
+                                className='object-contain h-full w-full transform group-hover/card:scale-110 transition-transform duration-500'
+                                />
+
                                     <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
                                         <div className='bg-white/70 p-2 rounded-full'>
                                             <FaExpand className='text-gray-700' />
