@@ -180,7 +180,7 @@ const Home = () => {
             category="informatica"
             subcategory="notebooks"
             heading=""
-            limit={10} // Mostrar solo 10 productos
+            limit={50} // Mostrar solo 10 productos
             sortBy="price" // Ordenar por precio (más barato primero)
           />
         </div>
@@ -217,7 +217,7 @@ const Home = () => {
                     category="informatica"
                     subcategory="placas_madre"
                     heading=""
-                    limit={6} // Mostrar solo 6 productos
+                    limit={50} // Mostrar solo 6 productos
                     sortBy="newest" // Ordenar por más recientes
                   />
                 </div>
@@ -252,7 +252,7 @@ const Home = () => {
                     category="perifericos"
                     subcategory="mouses"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -283,7 +283,7 @@ const Home = () => {
                     category="perifericos"
                     subcategory="monitores"
                     heading=""
-                    limit={6}
+                    limit={50}  
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -314,7 +314,7 @@ const Home = () => {
                     category="informatica"
                     subcategory="memorias_ram"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -345,7 +345,7 @@ const Home = () => {
                     category="informatica"
                     subcategory="discos_duros"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -376,7 +376,7 @@ const Home = () => {
                     category="informatica"
                     subcategory="tarjeta_grafica"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -407,7 +407,7 @@ const Home = () => {
                     category="informatica"
                     subcategory="gabinetes"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -438,7 +438,7 @@ const Home = () => {
                     category="informatica"
                     subcategory="procesador"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -469,7 +469,7 @@ const Home = () => {
                     category="perifericos"
                     subcategory="teclados"
                     heading=""
-                    limit={6}
+                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -515,7 +515,7 @@ const Home = () => {
                 </Link>
               </div>
               
-              <LatestProductsMix limit={5} />
+              <LatestProductsMix limit={20} />
             </div>
           </motion.section>
 
