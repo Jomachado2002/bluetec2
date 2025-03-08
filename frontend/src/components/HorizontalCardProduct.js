@@ -15,25 +15,27 @@ import addToCart from '../helpers/addToCart';
 import Context from '../context';
 import scrollTop from '../helpers/scrollTop';
 
-// Componente de imagen con carga optimizada
-const OptimizedImage = React.memo(({ src, alt, index, className }) => {
+// Componente de imagen con carga optimizada - modificado para cargar inmediatamente
+const OptimizedImage = React.memo(({ src, alt, className }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   const imgRef = useRef(null);
   const placeholderUrl = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"%3E%3Crect width="100%25" height="100%25" fill="%23f3f4f6"/%3E%3C/svg%3E';
 
   useEffect(() => {
+    // Crear un observer para detectar cuándo la imagen entra en el viewport
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           if (imgRef.current) {
+            // Asignar la URL de la imagen cuando sea visible
             imgRef.current.src = src;
             observer.disconnect();
           }
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '200px' } // Precarga cuando está a 200px de ser visible
     );
 
     if (imgRef.current) {
@@ -59,17 +61,17 @@ const OptimizedImage = React.memo(({ src, alt, index, className }) => {
         </div>
       )}
 
-      {/* Imagen real */}
+      {/* Imagen real - modificada para cargar inmediatamente */}
       <img 
         ref={imgRef}
-        src={index < 3 ? src : placeholderUrl} // Carga inmediata solo para las primeras 3 imágenes
+        src={src} // Carga inmediata para todas las imágenes
         alt={alt}
         className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
         onLoad={() => setLoaded(true)}
         onError={() => setError(true)}
         width="150"
         height="150"
-        loading={index < 3 ? "eager" : "lazy"}
+        loading="eager" // Forzar carga inmediata para todas las imágenes
       />
 
       {/* Imagen de error */}
@@ -93,8 +95,8 @@ const HorizontalCardProduct = ({
   const [loading, setLoading] = useState(true);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
-  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 5 });
-  const loadingList = new Array(5).fill(null); // Reducido para mejorar rendimiento
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 }); // Aumentado para mostrar más productos
+  const loadingList = new Array(5).fill(null);
   const scrollElement = useRef();
   const { fetchUserAddToCart } = useContext(Context);
   const location = useLocation();
@@ -137,10 +139,10 @@ const HorizontalCardProduct = ({
     const visibleCount = Math.ceil(clientWidth / cardWidth) + 1; // +1 para precarga
     
     setVisibleRange({
-      start: Math.max(0, startIndex - 1), // Precarga 1 antes
-      end: startIndex + visibleCount + 1 // Precarga 1 después
+      start: 0, // Empezamos desde 0 para cargar todo
+      end: data.length // Mostramos todas las tarjetas
     });
-  }, []);
+  }, [data.length]);
 
   useEffect(() => {
     const scrollContainer = scrollElement.current;
@@ -306,9 +308,7 @@ const HorizontalCardProduct = ({
               </div>
             </div>
           )) : processedProducts.map((product, index) => {
-            // Solo renderizar elementos visibles y algunos cercanos
-            const isInVisibleRange = index >= visibleRange.start && index <= visibleRange.end;
-            
+            // Mostrar todos los productos sin importar la posición
             return (
               <Link to={`/producto/${product?.slug || product?._id}`}
                 onClick={scrollTop}
@@ -324,22 +324,11 @@ const HorizontalCardProduct = ({
 
                 <div className="flex h-full">
                   <div className="w-2/5 h-full bg-white flex items-center justify-center p-2 sm:p-4 relative">
-                    {isInVisibleRange ? (
-                      <OptimizedImage 
-                        src={product.productImage[0]} 
-                        alt={product?.productName} 
-                        index={index}
-                        className="object-contain h-full w-full transform hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      // Placeholder hasta que entre en rango visible
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <svg className="w-10 h-10 text-gray-300" fill="currentColor" viewBox="0 0 16 16">
-                          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                          <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
-                        </svg>
-                      </div>
-                    )}
+                    <OptimizedImage 
+                      src={product.productImage[0]} 
+                      alt={product?.productName}
+                      className="object-contain h-full w-full transform hover:scale-110 transition-transform duration-500"
+                    />
                     
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="bg-white/70 p-1 rounded-full">
