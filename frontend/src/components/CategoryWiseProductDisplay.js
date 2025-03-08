@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
 import displayPYGCurrency from '../helpers/displayCurrency';
-import OptimizedImage from './OptimizedImage';
 
 const CategoryWiseProductDisplay = ({ category, subcategory, heading, currentProductId }) => {
   const [data, setData] = useState([]);
@@ -166,9 +165,9 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading, currentPro
                   </div>
                 </div>
               ))
-            : data.map((product, index) => {
-              const discount = calculateDiscount(product?.price, product?.sellingPrice);
-              const productUrl = `/producto/${product?.slug || product?._id}`;
+            : data.map((product) => {
+                const discount = calculateDiscount(product?.price, product?.sellingPrice);
+                const productUrl = `/producto/${product?.slug || product?._id}`;
                 
                 return (
                   <div
@@ -187,18 +186,17 @@ const CategoryWiseProductDisplay = ({ category, subcategory, heading, currentPro
 
                     {/* Product Image */}
                     <div className='bg-gray-50 h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
-                    <OptimizedImage
-                      src={product.productImage[0]}
-                      alt={product.productName}
-                      index={index} // Usando el índice para prioridad
-                      className='object-contain h-full w-full transform group-hover/card:scale-110 transition-transform duration-500'
-                    />
-                    <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
-                      <div className='bg-white/70 p-2 rounded-full'>
-                        <FaExpand className='text-gray-700' />
+                      <img
+                        src={product.productImage[0]}
+                        alt={product.productName}
+                        className='object-contain h-full w-full transform group-hover/card:scale-110 transition-transform duration-500'
+                      />
+                      <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
+                        <div className='bg-white/70 p-2 rounded-full'>
+                          <FaExpand className='text-gray-700' />
+                        </div>
                       </div>
                     </div>
-                  </div>
 
                     {/* Product Details */}
                     <div className='p-5 space-y-3'>

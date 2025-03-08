@@ -146,45 +146,28 @@ const Home = () => {
               </motion.div>
               
               {/* Carousel de notebooks */}
-                    <motion.div 
+              <motion.div 
                 variants={fadeIn}
                 className="w-full lg:w-2/3"
               >
                 <div className="bg-white rounded-2xl shadow-lg p-6 h-full">
-                  <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-bold text-green-800 flex items-center">
-                        <span className="mr-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                        </span>
-                        Notebooks de Alto Rendimiento
-                      </h2>
-                      <div className="h-1 w-32 bg-green-600 mt-2 rounded-full"></div>
-                    </div>
-                    
-                    <Link 
-                      to="/categoria-producto?category=informatica&subcategory=notebooks" 
-                      onClick={() => scrollTop()}
-                      className="mt-4 sm:mt-0"
-                    >
-                      <button className="px-4 py-2 sm:px-6 sm:py-3 bg-green-600 text-white hover:bg-green-700 rounded-lg text-sm font-medium transition duration-300 shadow-md shine-button flex items-center">
-                        Ver toda la colección
-                        <FaAngleRight className="ml-1 transition-transform group-hover:translate-x-1" />
-                      </button>
-            </Link>
-          </div>
-          
-          <HorizontalCardProduct
-            category="informatica"
-            subcategory="notebooks"
-            heading=""
-            limit={50} // Mostrar solo 10 productos
-            sortBy="price" // Ordenar por precio (más barato primero)
-          />
-        </div>
-</motion.div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-green-800 mb-4 flex items-center">
+                    <span className="mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </span>
+                    Notebooks de Alto Rendimiento
+                  </h2>
+                  <div className="h-1 w-32 bg-green-600 mb-6 rounded-full"></div>
+                  
+                  <HorizontalCardProduct
+                    category="informatica"
+                    subcategory="notebooks"
+                    heading=""
+                  />
+                </div>
+              </motion.div>
             </div>
           </motion.section>
 
@@ -213,12 +196,10 @@ const Home = () => {
                 </div>
                 
                 <div className="mt-6">
-                <VerticalCardProduct
+                  <VerticalCardProduct
                     category="informatica"
                     subcategory="placas_madre"
                     heading=""
-                    limit={50} // Mostrar solo 6 productos
-                    sortBy="newest" // Ordenar por más recientes
                   />
                 </div>
               </div>
@@ -248,12 +229,10 @@ const Home = () => {
                   <div className="h-1 w-24 bg-green-500 mt-2 mb-4 rounded-full"></div>
                 </div>
                 <div className="p-4">
-                <VerticalCardProduct
+                  <VerticalCardProduct
                     category="perifericos"
                     subcategory="mouses"
                     heading=""
-                    limit={50}
-                    
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -284,7 +263,6 @@ const Home = () => {
                     category="perifericos"
                     subcategory="monitores"
                     heading=""
-                    limit={50}  
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -315,7 +293,6 @@ const Home = () => {
                     category="informatica"
                     subcategory="memorias_ram"
                     heading=""
-                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -346,7 +323,6 @@ const Home = () => {
                     category="informatica"
                     subcategory="discos_duros"
                     heading=""
-                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -377,8 +353,6 @@ const Home = () => {
                     category="informatica"
                     subcategory="tarjeta_grafica"
                     heading=""
-                    limit={50}
-                    sortBy="newest"
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -409,7 +383,6 @@ const Home = () => {
                     category="informatica"
                     subcategory="gabinetes"
                     heading=""
-                    limit={50}
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -440,8 +413,6 @@ const Home = () => {
                     category="informatica"
                     subcategory="procesador"
                     heading=""
-                    limit={50}
-                    sortBy="newest"
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -472,8 +443,6 @@ const Home = () => {
                     category="perifericos"
                     subcategory="teclados"
                     heading=""
-                    limit={50}
-                    sortBy="newest"
                   />
                 </div>
                 <div className="p-4 pt-0 text-center">
@@ -519,7 +488,7 @@ const Home = () => {
                 </Link>
               </div>
               
-              <LatestProductsMix limit={20} />
+              <LatestProductsMix limit={5} />
             </div>
           </motion.section>
 
