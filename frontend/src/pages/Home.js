@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaAngleRight } from 'react-icons/fa';
 import BannerProduct from '../components/BannerProduct';
-import HorizontalCardProduct from '../components/HorizontalCardProduct';
+
 import VerticalCardProduct from '../components/VerticalCardProduct';
 import BrandCarousel from '../components/BrandCarousel';
 import NotebookBanner from '../components/NotebookBanner';
@@ -161,7 +161,7 @@ const Home = () => {
                   </h2>
                   <div className="h-1 w-32 bg-green-600 mb-6 rounded-full"></div>
                   
-                  <HorizontalCardProduct
+                  <VerticalCardProduct
                     category="informatica"
                     subcategory="notebooks"
                     heading=""
