@@ -241,7 +241,7 @@ nasMaxCapacity: { type: String },
 nasBaysNumber: { type: String },
 nasProcessor: { type: String },
 nasRAM: { type: String },
-nasRAIDSupport: { type: String },
+
 
 // Cartuchos de Toner
 tonerPrinterType: { type: String },

@@ -1034,11 +1034,7 @@ const ProductSpecifications = ({
         name: "landlineFunctions", 
         placeholder: "Ingresa las funciones principales" 
       },
-      { 
-        label: "Capacidad de Auriculares", 
-        name: "landlineHandsets", 
-        placeholder: "Ingresa la cantidad de auriculares" 
-      }
+    
     ]
   };
 
