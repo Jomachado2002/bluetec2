@@ -1,3 +1,4 @@
+// Fix para el problema de gOPD
 try {
     const fs = require('fs');
     const path = require('path');
@@ -12,87 +13,103 @@ try {
   } catch (error) {
     console.error('Error fixing gOPD:', error);
   }
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-require('dotenv').config();
-const connectDB = require('./config/db');
-const router = require('./routes');
-
-const app = express();
-
-// Verificar variables de entorno requeridas
-const requiredEnvVars = ['SESSION_SECRET', 'MONGODB_URI', 'TOKEN_SECRET_KEY', 'FRONTEND_URL'];
-for (const envVar of requiredEnvVars) {
+  
+  const express = require('express');
+  const cors = require('cors');
+  const cookieParser = require('cookie-parser');
+  const session = require('express-session');
+  require('dotenv').config();
+  const connectDB = require('./config/db');
+  const router = require('./routes');
+  
+  const app = express();
+  
+  // Verificar variables de entorno requeridas
+  const requiredEnvVars = ['SESSION_SECRET', 'MONGODB_URI', 'TOKEN_SECRET_KEY', 'FRONTEND_URL'];
+  let missingEnvVars = false;
+  for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
-        console.error(`Error: ${envVar} no está definida en el archivo .env`);
-        process.exit(1);
+      console.error(`Error: ${envVar} no está definida en el archivo .env`);
+      missingEnvVars = true;
     }
-}
-
-// Configuración de CORS mejorada con múltiples orígenes permitidos
-app.use(cors({
+  }
+  
+  // Solo salir en entorno de desarrollo
+  if (missingEnvVars && process.env.NODE_ENV !== 'production') {
+    process.exit(1);
+  }
+  
+  // Ruta de prueba para verificar que el servidor responde
+  app.get('/test', (req, res) => {
+    res.json({ message: 'Backend funcionando correctamente' });
+  });
+  
+  // Configuración de CORS mejorada con múltiples orígenes permitidos
+  app.use(cors({
     origin: [process.env.FRONTEND_URL, 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// Middlewares
-app.use(express.json());
-app.use(cookieParser(process.env.SESSION_SECRET));
-
-// Configuración de sesión mejorada para invitados
-app.use(session({
-    secret: process.env.SESSION_SECRET,
+  }));
+  
+  // Middlewares
+  app.use(express.json());
+  app.use(cookieParser(process.env.SESSION_SECRET));
+  
+  // Configuración de sesión mejorada para invitados
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'default_secret_for_development',
     resave: false,
-    saveUninitialized: true, // Aseguramos que las sesiones de invitados se guarden
+    saveUninitialized: true,
     name: 'sessionId',
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Solo en HTTPS en producción
-        httpOnly: true, // No accesible desde JavaScript en el cliente
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-        sameSite: 'none' // Permite cookies en solicitudes cross-site
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     },
-    store: new session.MemoryStore() // Considera usar un store más robusto para producción
-}));
-
-// Ruta del sitemap antes de las rutas API
-
-
-// Rutas API
-app.use("/api", router);
-
-// Manejo de errores global
-app.use((err, req, res, next) => {
+    store: new session.MemoryStore()
+  }));
+  
+  // Rutas API
+  app.use("/api", router);
+  
+  // Manejo de errores global
+  app.use((err, req, res, next) => {
     console.error('Error:', err);
     res.status(500).json({
-        message: "Error interno del servidor",
-        error: true,
-        success: false
+      message: "Error interno del servidor",
+      error: true,
+      success: false
     });
-});
-
-// Función para iniciar el servidor
-const startServer = async () => {
+  });
+  
+  // Función para iniciar el servidor
+  const startServer = async () => {
     try {
-        const PORT = process.env.PORT || 8080;
-        
-        // Conectar a la base de datos
-        await connectDB();
-        console.log('Conexión a la base de datos establecida');
-        
-        // Iniciar el servidor
+      const PORT = process.env.PORT || 8080;
+      
+      // Conectar a la base de datos
+      await connectDB();
+      console.log('Conexión a la base de datos establecida');
+      
+      // Solo iniciar el servidor explícitamente en desarrollo
+      if (process.env.NODE_ENV !== 'production') {
         app.listen(PORT, () => {
-            console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+          console.log(`Servidor ejecutándose en el puerto ${PORT}`);
         });
-        
+      }
     } catch (error) {
-        console.error('Error al iniciar el servidor:', error);
+      console.error('Error al iniciar el servidor:', error);
+      // No salir del proceso en producción
+      if (process.env.NODE_ENV !== 'production') {
         process.exit(1);
+      }
     }
-};
-
-// Iniciar el servidor
-startServer();
+  };
+  
+  // Iniciar el servidor
+  startServer();
+  
+  // Exportar la aplicación para entornos serverless
+  module.exports = app;
