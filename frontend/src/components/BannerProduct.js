@@ -31,6 +31,19 @@ const BannerProduct = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+  // Detectar si es móvil para ajustar altura
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const bannerData = [
     {
@@ -38,7 +51,7 @@ const BannerProduct = () => {
       subtitle: "Trabajo y gaming en cualquier lugar",
       description: "Últimos modelos con procesadores Intel y AMD. Envío gratis y garantía extendida.",
       icon: <Laptop className="w-12 h-12 md:w-16 md:h-16" />,
-      bgColor: "from-indigo-900 to-blue-700",
+      bgColor: "from-[#001440] to-[#002060]",
       action: "Ver Catálogo",
       category: "informatica",
       subcategory: "notebooks",
@@ -53,7 +66,7 @@ const BannerProduct = () => {
       subtitle: "Construye el PC de tus sueños",
       description: "Amplio catálogo de componentes. Asesoramiento técnico personalizado.",
       icon: <Cpu className="w-12 h-12 md:w-16 md:h-16" />,
-      bgColor: "from-purple-900 to-purple-700",
+      bgColor: "from-[#0D47A1] to-[#1565C0]",
       action: "Explorar Componentes",
       category: "informatica",
       subcategory: "placas_madre",
@@ -69,7 +82,7 @@ const BannerProduct = () => {
       subtitle: "Visualiza cada detalle con precisión",
       description: "Alta resolución y fidelidad de color para diseño, programación y gaming.",
       icon: <Monitor className="w-12 h-12 md:w-16 md:h-16" />,
-      bgColor: "from-slate-900 to-slate-700",
+      bgColor: "from-[#01579B] to-[#0277BD]",
       action: "Ver Monitores",
       category: "perifericos",
       subcategory: "monitores",
@@ -85,7 +98,7 @@ const BannerProduct = () => {
       subtitle: "Tus datos siempre seguros",
       description: "SSDs y HDDs de las mejores marcas con servicio técnico local.",
       icon: <HardDrive className="w-12 h-12 md:w-16 md:h-16" />,
-      bgColor: "from-rose-900 to-red-700",
+      bgColor: "from-[#1A237E] to-[#283593]",
       action: "Ver Opciones",
       category: "informatica",
       subcategory: "discos_duros",
@@ -101,7 +114,7 @@ const BannerProduct = () => {
       subtitle: "Mejora tu experiencia de juego",
       description: "Equipamiento profesional para gamers. RGB, precisión y durabilidad.",
       icon: <Keyboard className="w-12 h-12 md:w-16 md:h-16" />,
-      bgColor: "from-cyan-900 to-blue-700",
+      bgColor: "from-[#2962FF] to-[#448AFF]",
       action: "Ver Periféricos",
       category: "perifericos",
       subcategory: "",
@@ -117,7 +130,7 @@ const BannerProduct = () => {
       subtitle: "Tecnología móvil de vanguardia",
       description: "Dispositivos de última generación desbloqueados con garantía local.",
       icon: <Smartphone className="w-12 h-12 md:w-16 md:h-16" />,
-      bgColor: "from-violet-900 to-indigo-700",
+      bgColor: "from-[#1976D2] to-[#42A5F5]",
       action: "Ver Dispositivos",
       category: "telefonia",
       subcategory: "",
@@ -206,19 +219,19 @@ const BannerProduct = () => {
       
       // Título y cabecera
       doc.setFontSize(22);
-      doc.setTextColor(41, 128, 185);
+      doc.setTextColor(0, 32, 96); // Color azul BlueTec
       doc.text(`Catálogo: ${bannerData[activeTab].title}`, 14, 22);
       
       doc.setFontSize(12);
       doc.setTextColor(100, 100, 100);
-      doc.text(`JM Computer - Soluciones Tecnológicas`, 14, 32);
+      doc.text(`BlueTec - Soluciones Tecnológicas`, 14, 32);
       
       // Agregar fecha y contacto
       const today = new Date().toLocaleDateString('es-PY', { day: '2-digit', month: '2-digit', year: 'numeric' });
       doc.setFontSize(10);
       doc.text(`Generado el: ${today}`, 14, 42);
       doc.text(`Tel: +595 984 133733`, 14, 48);
-      doc.text(`Email: ventas@jmcomputer.com.py`, 14, 54);
+      doc.text(`Email: ventas@bluetec.com.py`, 14, 54);
       
       // Descripción
       doc.setFontSize(11);
@@ -238,7 +251,7 @@ const BannerProduct = () => {
         
         // Encabezado de marca
         doc.setFontSize(14);
-        doc.setTextColor(41, 128, 185);
+        doc.setTextColor(0, 32, 96); // Color azul BlueTec
         doc.text(`Productos ${brand}`, 14, yPosition);
         yPosition += 10;
         
@@ -285,7 +298,7 @@ const BannerProduct = () => {
             2: { cellWidth: 30 }
           },
           headStyles: {
-            fillColor: [41, 128, 185],
+            fillColor: [0, 32, 96], // Color azul BlueTec
             textColor: 255
           },
           alternateRowStyles: {
@@ -315,7 +328,7 @@ const BannerProduct = () => {
       // Agregar información de contacto para pedidos
       yPosition += 34;
       doc.setFontSize(10);
-      doc.setTextColor(41, 128, 185);
+      doc.setTextColor(0, 32, 96); // Color azul BlueTec
       doc.text("¿Interesado en algún producto?", 14, yPosition);
       doc.setFontSize(8);
       doc.setTextColor(80, 80, 80);
@@ -353,8 +366,8 @@ const BannerProduct = () => {
   }, [activeTab]);
 
   return (
-    <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
-      <div className="relative h-64 sm:h-80 md:h-96 lg:h-96 w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl">
+    <div className="container mx-auto px-2 sm:px-4 py-0 sm:py-4 mt-2 sm:mt-0">
+      <div className="relative h-80 sm:h-80 md:h-96 lg:h-96 w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl">
         {/* Background with gradient */}
         <div
           className={`absolute inset-0 bg-gradient-to-r ${bannerData[activeTab].bgColor} transition-all duration-700 ease-in-out`}
@@ -365,17 +378,25 @@ const BannerProduct = () => {
           <div className="absolute inset-0 bg-grid-pattern animate-pulse"></div>
         </div>
 
+        {/* Liquid effect overlay */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-blue-400/10 wave-animation"></div>
+        </div>
+
         {/* Decorative elements - hidden on small screens */}
         <div className="absolute top-0 right-0 w-32 sm:w-64 h-32 sm:h-64 bg-white/5 rounded-full -translate-x-16 sm:-translate-x-32 -translate-y-16 sm:-translate-y-32 hidden sm:block"></div>
         <div className="absolute bottom-0 left-0 w-24 sm:w-48 h-24 sm:h-48 bg-black/10 rounded-full translate-x-4 sm:translate-x-8 translate-y-8 sm:translate-y-16 hidden sm:block"></div>
         
-        {/* Geometric accents - hidden on small screens */}
-        <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 w-8 sm:w-16 h-8 sm:h-16 border-2 sm:border-4 border-white/10 rounded-full hidden sm:block"></div>
-        <div className="absolute top-8 sm:top-16 left-16 sm:left-32 w-4 sm:w-8 h-4 sm:h-8 bg-white/10 rounded-full hidden sm:block"></div>
-        <div className="absolute top-16 sm:top-32 right-24 sm:right-48 w-2 sm:w-4 h-2 sm:h-4 bg-white/20 rounded-full hidden sm:block"></div>
+        {/* Glowing accents */}
+        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-blue-400/20 rounded-full blur-3xl hidden sm:block"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-24 h-24 bg-blue-300/20 rounded-full blur-2xl hidden sm:block"></div>
+        
+        {/* Simple mobile background enhancements */}
+        <div className="absolute top-0 right-0 w-20 h-20 bg-blue-400/20 rounded-full blur-xl sm:hidden"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-16 h-16 bg-blue-300/10 rounded-full blur-lg sm:hidden"></div>
 
         {/* Content */}
-        <div className="relative h-full flex items-center z-10 p-4 sm:p-6 md:p-10">
+        <div className="relative h-full flex items-center z-10 p-3 sm:p-6 md:p-10">
           <div className="w-full sm:w-4/5 md:w-3/5">
             <div className={`transition-all duration-500 ease-in-out transform ${animating ? 'translate-y-4 opacity-0' : 'translate-y-0 opacity-100'}`}>
               {/* Badge */}
@@ -383,11 +404,11 @@ const BannerProduct = () => {
                 {bannerData[activeTab].badge}
               </div>
               
-              <h2 className="text-lg sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2 tracking-tight leading-tight">
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2 tracking-tight leading-tight">
                 {bannerData[activeTab].title}
               </h2>
               
-              <div className="w-12 sm:w-20 h-0.5 sm:h-1 bg-white/40 rounded-full mb-2 sm:mb-4"></div>
+              <div className="w-12 sm:w-20 h-0.5 sm:h-1 bg-[#42A5F5] rounded-full mb-2 sm:mb-4"></div>
               
               <p className="text-sm sm:text-lg md:text-xl text-white/90 font-medium mb-1 sm:mb-3">
                 {bannerData[activeTab].subtitle}
@@ -410,7 +431,7 @@ const BannerProduct = () => {
               {/* Action buttons - responsive layout */}
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 <button 
-                  className="bg-white text-gray-900 hover:bg-gray-100 transition-all px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-medium flex items-center gap-1 sm:gap-2 group shadow-md sm:shadow-lg hover:shadow-xl active:scale-95"
+                  className="bg-white text-[#002060] hover:bg-blue-50 transition-all px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full text-xs sm:text-sm md:text-base font-medium flex items-center gap-1 sm:gap-2 group shadow-md sm:shadow-lg hover:shadow-xl active:scale-95"
                   onClick={() => handleNavigate(bannerData[activeTab].category, bannerData[activeTab].subcategory)}
                 >
                   {bannerData[activeTab].action}
@@ -457,7 +478,7 @@ const BannerProduct = () => {
               <div className="absolute inset-0 border-2 border-white/10 rounded-full animate-ping-slow"></div>
               <div className="absolute inset-[-10px] border border-white/5 rounded-full"></div>
             </div>
-            <div className="absolute inset-0 bg-white/5 rounded-full blur-2xl -z-10 scale-110"></div>
+            <div className="absolute inset-0 bg-[#42A5F5]/10 rounded-full blur-2xl -z-10 scale-110"></div>
           </div>
         </div>
 
@@ -469,7 +490,7 @@ const BannerProduct = () => {
               onClick={() => setActiveTab(index)}
               className={`transition-all ${
                 activeTab === index 
-                  ? 'w-4 sm:w-8 h-1 sm:h-2 bg-white rounded-full' 
+                  ? 'w-4 sm:w-8 h-1 sm:h-2 bg-[#42A5F5] rounded-full' 
                   : 'w-1 sm:w-2 h-1 sm:h-2 bg-white/50 hover:bg-white/70 rounded-full'
               }`}
               aria-label={`Go to slide ${index + 1}`}
@@ -495,7 +516,7 @@ const BannerProduct = () => {
         </button>
       </div>
 
-              <style jsx>{`
+      <style jsx>{`
         @media (max-width: 479px) {
           .xs\\:inline {
             display: none;
@@ -527,6 +548,38 @@ const BannerProduct = () => {
         .animate-ping-slow {
           animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
         }
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          50% { transform: translateY(-15px) translateX(5px); }
+        }
+        @keyframes float-medium {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          50% { transform: translateY(-10px) translateX(-8px); }
+        }
+        @keyframes float-fast {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          50% { transform: translateY(-20px) translateX(-5px); }
+        }
+        .animate-float-slow {
+          animation: float-slow 8s ease-in-out infinite;
+        }
+        .animate-float-medium {
+          animation: float-medium 6s ease-in-out infinite;
+        }
+        .animate-float-fast {
+          animation: float-fast 4s ease-in-out infinite;
+        }
+
+        .wave-animation {
+  background: linear-gradient(90deg, transparent, rgba(66, 165, 245, 0.2), transparent);
+  background-size: 200% 100%;
+  animation: wave 8s linear infinite;
+}
+
+@keyframes wave {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
       `}</style>
     </div>
   );

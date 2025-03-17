@@ -88,11 +88,11 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                 <div className='flex justify-between items-center mb-6'>
                     <div>
                         <h2 className='text-2xl sm:text-3xl font-bold text-gray-800'>{heading}</h2>
-                        <div className='h-1 w-20 bg-blue-600 mt-2 rounded-full'></div>
+                        <div className='h-1 w-20 bg-[#002060] mt-2 rounded-full'></div>
                     </div>
                     <Link 
                         to={`/categoria-producto?category=${category}${subcategory ? `&subcategory=${subcategory}` : ''}`}
-                        className='text-blue-600 hover:text-blue-700 text-sm font-semibold transition-colors flex items-center'
+                        className='text-[#002060] hover:text-[#003399] text-sm font-semibold transition-colors flex items-center'
                         onClick={scrollTop}
                     >
                         Ver todos <FaAngleRight className='ml-1 transition-transform hover:translate-x-1' />
@@ -111,7 +111,7 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                         onClick={scrollLeft}
                         aria-label="Scroll izquierda"
                     >
-                        <FaAngleLeft className='text-gray-700' />
+                        <FaAngleLeft className='text-[#002060]' />
                     </button>
                 )}
                 
@@ -124,7 +124,7 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                         onClick={scrollRight}
                         aria-label="Scroll derecha"
                     >
-                        <FaAngleRight className='text-gray-700' />
+                        <FaAngleRight className='text-[#002060]' />
                     </button>
                 )}
 
@@ -158,15 +158,15 @@ const VerticalCardProduct = ({ category, subcategory, heading }) => {
                                     onMouseEnter={() => setHoveredProductId(product?._id)}
                                     onMouseLeave={() => setHoveredProductId(null)}
                                 >
-l{/* Etiqueta de descuento */}
+                                    {/* Etiqueta de descuento */}
                                     {discount && (
-                                        <div className='absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold'>
+                                        <div className='absolute top-4 left-4 z-10 bg-[#1565C0] text-white px-3 py-1 rounded-full text-xs font-bold'>
                                             {discount}
                                         </div>
                                     )}
                                     
                                     {/* Imagen del producto */}
-                                    <div className='block bg-gray-50 h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
+                                    <div className='block bg-[#f4f7fb] h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
                                         <img
                                             src={product.productImage[0]}
                                             alt={product.productName}
@@ -174,7 +174,7 @@ l{/* Etiqueta de descuento */}
                                         />
                                         <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
                                             <div className='bg-white/70 p-2 rounded-full'>
-                                                <FaExpand className='text-gray-700' />
+                                                <FaExpand className='text-[#002060]' />
                                             </div>
                                         </div>
                                     </div>
@@ -192,11 +192,11 @@ l{/* Etiqueta de descuento */}
                                         </h2>
                                         
                                         <div className='flex items-center justify-between'>
-                                            <span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'>
+                                            <span className='text-xs text-gray-500 bg-blue-50 px-2 py-1 rounded-full'>
                                                 {product?.brandName}
                                             </span>
                                             <div className='flex flex-col items-end'>
-                                                <p className='text-green-600 font-bold text-base'>
+                                                <p className='text-[#002060] font-bold text-base'>
                                                     {displayPYGCurrency(product?.sellingPrice)}
                                                 </p>
                                                 {product?.price > 0 && (
@@ -212,7 +212,7 @@ l{/* Etiqueta de descuento */}
                                                 e.preventDefault();
                                                 handleAddToCart(e, product);
                                             }}
-                                            className='w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 
+                                            className='w-full flex items-center justify-center gap-2 bg-[#002060] hover:bg-[#003399] 
                                                     text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors active:scale-95'
                                         >
                                             <FaShoppingCart /> Agregar al Carrito

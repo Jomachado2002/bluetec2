@@ -7,7 +7,7 @@ const SearchProduct = () => {
     const query = useLocation()
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
-    const [sortBy, setSortBy] = useState('') // Nuevo estado para ordenamiento
+    const [sortBy, setSortBy] = useState('') // Estado para ordenamiento
 
     const fetchProduct = async () => {
         setLoading(true)
@@ -47,8 +47,11 @@ const SearchProduct = () => {
         setSortBy(value)
     }
 
+    // Determinar si hay búsqueda móvil activa
+    const showMobileSearch = document.querySelector('.lg\\:hidden.fixed.top-16') !== null;
+
     return (
-        <div className='container mx-auto p-4'>
+        <div className={`container mx-auto p-4 content-wrapper ${showMobileSearch ? 'mt-16' : ''}`}>
             {/* Filtro de ordenamiento */}
             <div className='mb-4 flex justify-end items-center'>
                 <label htmlFor='sort-select' className='mr-2'>Ordenar por:</label>

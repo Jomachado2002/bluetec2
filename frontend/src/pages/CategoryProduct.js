@@ -281,11 +281,11 @@ const InlineActiveFilters = ({ productCategories }) => {
   
   // Componente para chip de filtro
   const FilterChip = ({ label, onRemove }) => (
-    <div className="inline-flex items-center bg-green-100 rounded-full px-2 py-0.5 text-xs text-green-800 mr-1.5 mb-1 border border-green-200">
+    <div className="inline-flex items-center bg-blue-100 rounded-full px-2 py-0.5 text-xs text-blue-800 mr-1.5 mb-1 border border-blue-200">
       <span className="mr-1">{label}</span>
       <button 
         onClick={onRemove} 
-        className="text-green-700 hover:text-green-900 p-0.5 rounded-full"
+        className="text-blue-700 hover:text-blue-900 p-0.5 rounded-full"
         aria-label={`Eliminar filtro ${label}`}
       >
         <BiX className="text-sm" />
@@ -352,7 +352,7 @@ const InlineActiveFilters = ({ productCategories }) => {
       {/* Botón para limpiar todos los filtros */}
       <button 
         onClick={clearAllFilters}
-        className="text-xs text-green-600 hover:text-green-800 hover:underline font-medium ml-2"
+        className="text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium ml-2"
       >
         Limpiar todos
       </button>
@@ -378,7 +378,7 @@ const CategoryProductContent = () => {
   useEffect(() => {
     // Cambiar el título del documento para SEO
     const seoTitle = getSeoTitle(location);
-    document.title = `${seoTitle} | JM Computer`;
+    document.title = `${seoTitle} | BlueTec`;
     
     // Actualizar meta description
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -390,19 +390,19 @@ const CategoryProductContent = () => {
   return (
     <>
       {/* Nueva barra de filtros justo debajo del header */}
-      <div className="sticky top-18 z-22 bg-white shadow-sm border-b border-gray-200 px-4 py-2">
+      <div className="sticky top-12 z-22 bg-white shadow-sm border-b border-gray-200 px-4 py-2">
         <div className="container mx-auto">
           <div className="flex flex-col sm:flex-row items-center">
             <div className="flex items-center w-full">
               {/* Botón de filtros móvil */}
               <button 
-                className="lg:hidden flex items-center py-1.5 px-3 bg-green-600 text-white text-sm rounded-lg shadow-sm mr-3"
+                className="lg:hidden flex items-center py-1.5 px-3 bg-[#002060] text-white text-sm rounded-lg shadow-sm mr-3 hover:bg-[#1565C0] transition-colors"
                 onClick={() => setMobileFilterOpen(true)}
               >
                 <BiFilter className="mr-1" />
                 Filtros
                 {filterCount > 0 && (
-                  <span className="ml-1 px-1.5 bg-white text-green-800 rounded-full text-xs">
+                  <span className="ml-1 px-1.5 bg-white text-[#002060] rounded-full text-xs">
                     {filterCount}
                   </span>
                 )}
@@ -432,16 +432,16 @@ const CategoryProductContent = () => {
           </span>
           
           {/* Botones de vista cuadrícula/lista (solo desktop) */}
-          <div className="hidden lg:flex items-center bg-gray-100 rounded-lg p-1">
+          <div className="hidden lg:flex items-center bg-blue-50 rounded-lg p-1">
             <button 
-              className={`p-2 rounded ${gridView ? 'bg-white shadow-sm' : 'text-gray-600'}`}
+              className={`p-2 rounded ${gridView ? 'bg-white shadow-sm text-[#002060]' : 'text-gray-600'}`}
               onClick={() => setGridView(true)}
               aria-label="Vista de cuadrícula"
             >
               <IoGridOutline size={20} />
             </button>
             <button 
-              className={`p-2 rounded ${!gridView ? 'bg-white shadow-sm' : 'text-gray-600'}`}
+              className={`p-2 rounded ${!gridView ? 'bg-white shadow-sm text-[#002060]' : 'text-gray-600'}`}
               onClick={() => setGridView(false)}
               aria-label="Vista de lista"
             >
@@ -467,7 +467,7 @@ const CategoryProductContent = () => {
             {loading ? (
               <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-sm">
                 <div className="text-center">
-                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600 mb-3"></div>
+                  <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#002060] mb-3"></div>
                   <p className="text-gray-600">Cargando productos...</p>
                 </div>
               </div>
@@ -483,7 +483,7 @@ const CategoryProductContent = () => {
                 <p className="text-lg text-gray-600 mb-4">No se encontraron productos con los filtros seleccionados</p>
                 <button 
                   onClick={clearAllFilters}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                  className="px-4 py-2 bg-[#002060] text-white rounded-lg hover:bg-[#1565C0] transition-colors"
                 >
                   Limpiar filtros
                 </button>

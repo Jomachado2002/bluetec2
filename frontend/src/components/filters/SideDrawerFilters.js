@@ -318,14 +318,14 @@ const SideDrawerFilters = () => {
   // Renderizado del botón para abrir filtros en móvil
   const renderFilterButton = () => (
     <button 
-      className="lg:hidden fixed bottom-24 left-4 z-40 flex items-center justify-center py-2 px-4 bg-green-600 text-white rounded-full shadow-lg"
+      className="lg:hidden fixed bottom-24 left-4 z-40 flex items-center justify-center py-2 px-4 bg-blue-600 text-white rounded-full shadow-lg"
       onClick={() => setMobileFilterOpen(true)}
       style={{ minWidth: '120px' }}
     >
       <BiFilter className="mr-2" size={20} />
       Filtros
       {filterCount > 0 && (
-        <span className="ml-1 px-1.5 bg-white text-green-800 rounded-full text-xs">
+        <span className="ml-1 px-1.5 bg-white text-blue-800 rounded-full text-xs">
           {filterCount}
         </span>
       )}
@@ -375,13 +375,13 @@ const SideDrawerFilters = () => {
                 onClick={() => setActiveMobileFilter('categories')}
                 className={`px-3 py-1.5 whitespace-nowrap rounded-md text-sm font-medium ${
                   activeMobileFilter === 'categories' 
-                    ? 'bg-green-600 text-white' 
+                    ? 'bg-blue-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 Categorías
                 {(filterCategoryList.length || filterSubcategoryList.length) > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-blue-800 text-xs rounded-full">
                     {filterCategoryList.length + filterSubcategoryList.length}
                   </span>
                 )}
@@ -391,13 +391,13 @@ const SideDrawerFilters = () => {
                 onClick={() => setActiveMobileFilter('price')}
                 className={`px-3 py-1.5 whitespace-nowrap rounded-md text-sm font-medium ${
                   activeMobileFilter === 'price' 
-                    ? 'bg-green-600 text-white' 
+                    ? 'bg-blue-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 Precio
                 {(priceRange.min || priceRange.max) && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-blue-800 text-xs rounded-full">
                     1
                   </span>
                 )}
@@ -407,13 +407,13 @@ const SideDrawerFilters = () => {
                 onClick={() => setActiveMobileFilter('brands')}
                 className={`px-3 py-1.5 whitespace-nowrap rounded-md text-sm font-medium ${
                   activeMobileFilter === 'brands' 
-                    ? 'bg-green-600 text-white' 
+                    ? 'bg-blue-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 Marcas
                 {filterBrands.length > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-blue-800 text-xs rounded-full">
                     {filterBrands.length}
                   </span>
                 )}
@@ -423,13 +423,13 @@ const SideDrawerFilters = () => {
                 onClick={() => setActiveMobileFilter('specs')}
                 className={`px-3 py-1.5 whitespace-nowrap rounded-md text-sm font-medium ${
                   activeMobileFilter === 'specs' 
-                    ? 'bg-green-600 text-white' 
+                    ? 'bg-blue-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 Espec.
                 {Object.values(specFilters).flat().length > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-blue-800 text-xs rounded-full">
                     {Object.values(specFilters).flat().length}
                   </span>
                 )}
@@ -439,13 +439,13 @@ const SideDrawerFilters = () => {
                 onClick={() => setActiveMobileFilter('sort')}
                 className={`px-3 py-1.5 whitespace-nowrap rounded-md text-sm font-medium ${
                   activeMobileFilter === 'sort' 
-                    ? 'bg-green-600 text-white' 
+                    ? 'bg-blue-600 text-white' 
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 Ordenar
                 {sortBy && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-white text-green-800 text-xs rounded-full">
+                  <span className="ml-1 px-1.5 py-0.5 bg-white text-blue-800 text-xs rounded-full">
                     1
                   </span>
                 )}
@@ -464,14 +464,14 @@ const SideDrawerFilters = () => {
                       <div className="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
                         <div 
                           className={`flex items-center justify-between py-2.5 px-3 cursor-pointer ${
-                            filterCategoryList.includes(category.value) ? 'bg-green-50' : ''
+                            filterCategoryList.includes(category.value) ? 'bg-blue-50' : ''
                           }`}
                           onClick={() => handleSelectCategory(category.value)}
                         >
                           <div className="flex items-center">
                             <input
                               type="checkbox"
-                              className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                              className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-3"
                               checked={filterCategoryList.includes(category.value)}
                               onChange={() => {}} // Manejado por onClick del div
                             />
@@ -488,7 +488,7 @@ const SideDrawerFilters = () => {
                               >
                                 <input
                                   type="checkbox"
-                                  className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-3"
                                   checked={filterSubcategoryList.includes(subcat.value)}
                                   onChange={() => handleSelectSubcategory(subcat.value)}
                                 />
@@ -538,7 +538,7 @@ const SideDrawerFilters = () => {
                   </div>
                 </div>
                 <button
-                  className="w-full py-2.5 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition"
+                  className="w-full py-2.5 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
                   onClick={applyPriceFilter}
                 >
                   Aplicar filtro de precio
@@ -567,7 +567,7 @@ const SideDrawerFilters = () => {
                         <label key={brand} className="flex items-center py-2.5 px-3 border-b border-gray-100 last:border-b-0">
                           <input
                             type="checkbox"
-                            className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                            className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-3"
                             checked={filterBrands.includes(brand)}
                             onChange={() => {
                               const newBrands = filterBrands.includes(brand)
@@ -618,12 +618,12 @@ const SideDrawerFilters = () => {
                     }));
                   }}
                   className={`w-full flex items-center justify-between p-3 text-left ${
-                    hasActiveFilters ? 'bg-green-50 text-green-700 font-medium' : 'bg-gray-50 text-gray-800'
+                    hasActiveFilters ? 'bg-blue-50 text-blue-700 font-medium' : 'bg-gray-50 text-gray-800'
                   }`}
                 >
                   <span>{getSpecificationLabel(specKey)}</span>
                   {hasActiveFilters && (
-                    <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
+                    <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
                       {specFilters[specKey].length}
                     </span>
                   )}
@@ -639,7 +639,7 @@ const SideDrawerFilters = () => {
                         <label key={`${specKey}-${value}`} className="flex items-center py-2 px-2 rounded hover:bg-gray-50">
                           <input
                             type="checkbox"
-                            className="rounded border-gray-300 text-green-600 shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 mr-3"
+                            className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 mr-3"
                             checked={(specFilters[specKey] || []).includes(value)}
                             onChange={() => handleSpecFilterChange(specKey, value)}
                           />
@@ -673,7 +673,7 @@ const SideDrawerFilters = () => {
                     value="asc"
                     checked={sortBy === 'asc'}
                     onChange={() => setSortBy('asc')}
-                    className="text-green-600 focus:ring-green-500 mr-3"
+                    className="text-blue-600 focus:ring-blue-500 mr-3"
                   />
                   <span className="text-gray-700">Precio: Menor a mayor</span>
                 </label>
@@ -684,7 +684,7 @@ const SideDrawerFilters = () => {
                     value="dsc"
                     checked={sortBy === 'dsc'}
                     onChange={() => setSortBy('dsc')}
-                    className="text-green-600 focus:ring-green-500 mr-3"
+                    className="text-blue-600 focus:ring-blue-500 mr-3"
                   />
                   <span className="text-gray-700">Precio: Mayor a menor</span>
                 </label>
@@ -695,7 +695,7 @@ const SideDrawerFilters = () => {
                     value=""
                     checked={!sortBy}
                     onChange={() => setSortBy('')}
-                    className="text-green-600 focus:ring-green-500 mr-3"
+                    className="text-blue-600 focus:ring-blue-500 mr-3"
                   />
                   <span className="text-gray-700">Sin ordenar</span>
                 </label>
@@ -714,7 +714,7 @@ const SideDrawerFilters = () => {
               </button>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex-1 ml-2 text-sm"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex-1 ml-2 text-sm"
               >
                 Ver resultados {filterCount > 0 ? `(${filterCount})` : ''}
               </button>

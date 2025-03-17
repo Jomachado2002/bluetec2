@@ -275,11 +275,11 @@ const ActiveFiltersBar = () => {
   
   // Componente para chip de filtro
   const FilterChip = ({ label, onRemove }) => (
-    <div className="inline-flex items-center bg-green-100 rounded-full px-3 py-1 text-sm text-green-800 mr-2 mb-2 border border-green-200 shadow-sm">
+    <div className="inline-flex items-center bg-blue-100 rounded-full px-3 py-1 text-sm text-blue-800 mr-2 mb-2 border border-blue-200 shadow-sm">
       <span className="mr-1 font-medium">{label}</span>
       <button 
         onClick={onRemove} 
-        className="text-green-700 hover:text-green-900 hover:bg-green-200 rounded-full p-0.5"
+        className="text-blue-700 hover:text-blue-900 hover:bg-blue-200 rounded-full p-0.5"
         aria-label={`Eliminar filtro ${label}`}
       >
         <BiX className="text-lg" />
@@ -293,7 +293,7 @@ const ActiveFiltersBar = () => {
         <h3 className="text-sm font-medium text-gray-800">Filtros activos</h3>
         <button 
           onClick={clearAllFilters}
-          className="text-xs text-green-600 hover:text-green-800 hover:underline font-medium"
+          className="text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium"
         >
           Limpiar todos
         </button>

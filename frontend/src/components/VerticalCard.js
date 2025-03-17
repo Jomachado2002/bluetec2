@@ -76,13 +76,13 @@ const VerticalCard = ({ loading, data = [] }) => {
                             >
                                 {/* Discount Badge */}
                                 {discount && (
-                                    <div className='absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold'>
+                                    <div className='absolute top-4 left-4 z-10 bg-[#1565C0] text-white px-3 py-1 rounded-full text-xs font-bold'>
                                         {discount}
                                     </div>
                                 )}
 
                                 {/* Product Image */}
-                                <div className='bg-gray-50 h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
+                                <div className='bg-[#f4f7fb] h-48 rounded-t-xl flex items-center justify-center overflow-hidden relative'>
                                     <img 
                                         src={product?.productImage[0]} 
                                         alt={product?.productName} 
@@ -90,7 +90,7 @@ const VerticalCard = ({ loading, data = [] }) => {
                                     />
                                     <div className='absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300'>
                                         <div className='bg-white/70 p-2 rounded-full'>
-                                            <FaExpand className='text-gray-700' />
+                                            <FaExpand className='text-[#002060]' />
                                         </div>
                                     </div>
                                 </div>
@@ -108,14 +108,14 @@ const VerticalCard = ({ loading, data = [] }) => {
                                     </h2>
                                     
                                     <div className='flex items-center justify-between'>
-                                        <span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full'>
+                                        <span className='text-xs text-gray-500 bg-blue-50 px-2 py-1 rounded-full'>
                                             {product?.subcategory}
                                         </span>
-                                        <div className='flex items-center gap-2'>
-                                            <p className='text-green-600 font-bold text-base'>
+                                        <div className='flex flex-col items-end'>
+                                            <p className='text-[#002060] font-bold text-base'>
                                                 {displayPYGCurrency(product?.sellingPrice)}
                                             </p>
-                                            {product?.price > 0 && !discount && (
+                                            {product?.price > 0 && (
                                                 <p className='text-gray-400 line-through text-xs'>
                                                     {displayPYGCurrency(product?.price)}
                                                 </p>
@@ -126,7 +126,7 @@ const VerticalCard = ({ loading, data = [] }) => {
                                     {/* Add to Cart Button - Modificado para pasar todo el producto */}
                                     <button
                                         onClick={(e) => handleAddToCart(e, product)}
-                                        className='w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 
+                                        className='w-full flex items-center justify-center gap-2 bg-[#002060] hover:bg-[#003399] 
                                                  text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors'
                                     >
                                         <FaShoppingCart /> Agregar al Carrito

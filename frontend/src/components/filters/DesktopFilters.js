@@ -285,8 +285,8 @@ const DesktopFilters = () => {
   
   return (
     <div className="space-y-1">
-      <div className="bg-gray-50 p-4 mb-4 rounded-lg border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">Filtros</h2>
+      <div className="bg-blue-50 p-4 mb-4 rounded-lg border border-blue-100">
+        <h2 className="text-lg font-semibold text-[#002060] mb-2">Filtros</h2>
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-600">
             {data.length} {data.length === 1 ? 'producto encontrado' : 'productos encontrados'}
@@ -294,7 +294,7 @@ const DesktopFilters = () => {
           {hasActiveFilters() && (
             <button 
               onClick={clearAllFilters}
-              className="text-xs text-green-600 hover:text-green-800 hover:underline font-medium"
+              className="text-xs text-[#1565C0] hover:text-[#0D47A1] hover:underline font-medium"
             >
               Limpiar filtros
             </button>
@@ -313,25 +313,25 @@ const DesktopFilters = () => {
         count={sortBy ? 1 : 0}
       >
         <div className="px-1">
-          <label className="flex items-center py-1.5 px-2 rounded hover:bg-gray-100 cursor-pointer transition-colors">
+          <label className="flex items-center py-1.5 px-2 rounded hover:bg-blue-50 cursor-pointer transition-colors">
             <input
               type="radio"
               name="sortBy"
               value="asc"
               checked={sortBy === 'asc'}
               onChange={() => setSortBy('asc')}
-              className="text-green-600 focus:ring-green-500"
+              className="text-[#002060] focus:ring-[#1565C0]"
             />
             <span className="ml-2 text-sm text-gray-700">Precio: Menor a mayor</span>
           </label>
-          <label className="flex items-center py-1.5 px-2 rounded hover:bg-gray-100 cursor-pointer transition-colors">
+          <label className="flex items-center py-1.5 px-2 rounded hover:bg-blue-50 cursor-pointer transition-colors">
             <input
               type="radio"
               name="sortBy"
               value="dsc"
               checked={sortBy === 'dsc'}
               onChange={() => setSortBy('dsc')}
-              className="text-green-600 focus:ring-green-500"
+              className="text-[#002060] focus:ring-[#1565C0]"
             />
             <span className="ml-2 text-sm text-gray-700">Precio: Mayor a menor</span>
           </label>
@@ -355,7 +355,7 @@ const DesktopFilters = () => {
               />
               
               {filterCategoryList.includes(category.value) && category.subcategories && (
-                <div className="ml-6 mt-1 space-y-1 border-l-2 border-green-200 pl-2">
+                <div className="ml-6 mt-1 space-y-1 border-l-2 border-blue-200 pl-2">
                   {category.subcategories.map((subcat) => (
                     <FilterCheckbox
                       key={subcat.value}
@@ -383,7 +383,7 @@ const DesktopFilters = () => {
               <input
                 type="text"
                 placeholder="Buscar marca..."
-                className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#1565C0]"
                 value={searchBrand}
                 onChange={(e) => setSearchBrand(e.target.value)}
               />
@@ -415,7 +415,7 @@ const DesktopFilters = () => {
       
       {/* Especificaciones */}
       <div className="mt-4">
-        <h3 className="text-md font-semibold text-gray-800 mb-2 border-b pb-2">Especificaciones</h3>
+        <h3 className="text-md font-semibold text-[#002060] mb-2 border-b pb-2">Especificaciones</h3>
         {Object.keys(availableFilters.specifications).map(specKey => (
           <SpecificationFilter
             key={specKey}
