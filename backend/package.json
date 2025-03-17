@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "axios": "^1.8.1",
+    "debug": "^4.4.0",
     "kill-port": "^2.0.1"
   }
 }
