@@ -18,7 +18,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center justify-center md:justify-start space-x-3">
                 <FontAwesomeIcon icon={faEnvelope} className="text-blue-300" />
-                <span>info@bluetec.com.py</span>
+                <span>ventas@bluetec.com.py</span>
               </div>
             </div>
           </div>

@@ -1068,7 +1068,7 @@ const Nosotros = () => {
                       </div>
                       <div>
                         <h4 className="text-lg font-medium text-gray-800">Email</h4>
-                        <p className="text-gray-600">info@bluetec.com.py</p>
+                        <p className="text-gray-600">ventas@bluetec.com.py</p>
                       </div>
                     </div>
                     
