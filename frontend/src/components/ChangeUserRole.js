@@ -59,7 +59,7 @@ const ChangeUserRole = ({
                 <div className='mb-8'>
                     <label className='block text-gray-600 text-sm font-medium mb-2 text-center'>Rol:</label>
                     <select
-                        className='w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition ease-in duration-200'
+                        className='w-full border border-gray-300 rounded-md px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition ease-in duration-200'
                         value={userRole}
                         onChange={handleOnChangeSelect}
                     >
@@ -70,7 +70,7 @@ const ChangeUserRole = ({
                 </div>
 
                 <button
-                    className='w-full py-3 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg'
+                    className='w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg'
                     onClick={updateUserRole}
                 >
                     Cambiar Rol

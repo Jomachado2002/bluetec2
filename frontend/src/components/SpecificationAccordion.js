@@ -14,7 +14,7 @@ const SpecificationAccordion = ({ title, options = [], selectedValues = [], onCh
                     isOpen ? 'bg-gray-50' : 'bg-white'
                 } hover:bg-gray-50 transition-colors duration-200`}
             >
-                <span className={`font-medium ${isMobile ? 'text-green-600' : 'text-gray-700'}`}>
+                <span className={`font-medium ${isMobile ? 'text-blue-600' : 'text-gray-700'}`}>
                     {title}
                 </span>
                 {isOpen ? <FaChevronUp className="text-gray-500" /> : <FaChevronDown className="text-gray-500" />}
@@ -32,7 +32,7 @@ const SpecificationAccordion = ({ title, options = [], selectedValues = [], onCh
                                     type="checkbox"
                                     checked={selectedValues.includes(option)}
                                     onChange={() => onChange(option)}
-                                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                 />
                                 <span className="text-sm text-gray-700">{option}</span>
                             </label>

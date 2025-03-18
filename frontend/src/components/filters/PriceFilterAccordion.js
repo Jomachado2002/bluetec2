@@ -37,7 +37,7 @@ const PriceFilterAccordion = () => {
                 <input
                   type="text"
                   id="min-price"
-                  className="block w-full pl-12 pr-3 py-2 sm:text-sm border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                  className="block w-full pl-12 pr-3 py-2 sm:text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   placeholder="0"
                   value={tempPriceRange.min}
                   onChange={(e) => handlePriceChange('min', e.target.value)}
@@ -54,7 +54,7 @@ const PriceFilterAccordion = () => {
                 <input
                   type="text"
                   id="max-price"
-                  className="block w-full pl-12 pr-3 py-2 sm:text-sm border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                  className="block w-full pl-12 pr-3 py-2 sm:text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Sin límite"
                   value={tempPriceRange.max}
                   onChange={(e) => handlePriceChange('max', e.target.value)}
@@ -64,15 +64,15 @@ const PriceFilterAccordion = () => {
           </div>
           
           <button
-            className="w-full py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors"
+            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
             onClick={applyPriceFilter}
           >
             Aplicar filtro
           </button>
           
           {(priceRange.min || priceRange.max) && (
-            <div className="mt-3 bg-green-50 p-2 rounded-md text-center">
-              <p className="text-xs text-green-700">
+            <div className="mt-3 bg-blue-50 p-2 rounded-md text-center">
+              <p className="text-xs text-blue-700">
                 Filtro actual: {priceRange.min ? `Gs. ${Number(priceRange.min).toLocaleString()}` : 'Gs. 0'} - {priceRange.max ? `Gs. ${Number(priceRange.max).toLocaleString()}` : 'Sin límite'}
               </p>
             </div>

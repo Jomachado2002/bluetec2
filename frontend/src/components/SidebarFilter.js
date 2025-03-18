@@ -74,7 +74,7 @@ const SidebarFilter = ({
                                     onChange={(e) => onSortChange(e.target.value)}
                                     value={option.value}
                                     className="appearance-none w-5 h-5 border-2 border-gray-300 rounded-full 
-                                        checked:border-green-600 checked:bg-green-600 
+                                        checked:border-blue-600 checked:bg-blue-600 
                                         transition duration-200 cursor-pointer
                                         absolute top-0 left-0"
                                 />
@@ -82,7 +82,7 @@ const SidebarFilter = ({
                                     <div className="absolute top-1 left-1 w-3 h-3 bg-white rounded-full"></div>
                                 )}
                             </div>
-                            <span className="text-gray-700 group-hover:text-green-600 transition">
+                            <span className="text-gray-700 group-hover:text-blue-600 transition">
                                 {option.label}
                             </span>
                         </label>
@@ -100,7 +100,7 @@ const SidebarFilter = ({
                         <div key={category.value} className="group">
                             <div 
                                 className="flex justify-between items-center 
-                                    hover:bg-green-50 p-2 rounded-md 
+                                    hover:bg-blue-50 p-2 rounded-md 
                                     transition duration-200 cursor-pointer"
                                 onClick={() => toggleCategory(category.value)}
                             >
@@ -112,19 +112,19 @@ const SidebarFilter = ({
                                         value={category.value}
                                         onChange={(e) => onCategoryChange(e)}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="form-checkbox text-green-600 focus:ring-green-500 
+                                        className="form-checkbox text-blue-600 focus:ring-blue-500 
                                             rounded transition duration-200"
                                     />
-                                    <span className="text-gray-700 group-hover:text-green-600 
+                                    <span className="text-gray-700 group-hover:text-blue-600 
                                         transition duration-200">
                                         {category.label}
                                     </span>
                                 </div>
                                 {category.subcategories && (
                                     <div className="text-gray-400 transition duration-200 
-                                        group-hover:text-green-600">
+                                        group-hover:text-blue-600">
                                         {expandedCategories[category.value] 
-                                            ? <ChevronDown size={20} className="text-green-600" /> 
+                                            ? <ChevronDown size={20} className="text-blue-600" /> 
                                             : <ChevronRight size={20} />}
                                     </div>
                                 )}
@@ -136,7 +136,7 @@ const SidebarFilter = ({
                                         <div 
                                             key={subcat.value}
                                             className="flex items-center space-x-3 
-                                                hover:bg-green-50 p-2 rounded-md 
+                                                hover:bg-blue-50 p-2 rounded-md 
                                                 transition duration-200"
                                         >
                                             <input
@@ -145,12 +145,12 @@ const SidebarFilter = ({
                                                 checked={filterSubcategoryList.includes(subcat.value)}
                                                 value={subcat.value}
                                                 onChange={() => onSubcategoryChange(subcat.value)}
-                                                className="form-checkbox text-green-600 
-                                                    focus:ring-green-500 rounded 
+                                                className="form-checkbox text-blue-600 
+                                                    focus:ring-blue-500 rounded 
                                                     transition duration-200"
                                             />
                                             <span className="text-gray-600 
-                                                hover:text-green-600 transition">
+                                                hover:text-blue-600 transition">
                                                 {subcat.label}
                                             </span>
                                         </div>
@@ -174,8 +174,8 @@ const SidebarFilter = ({
                                 type="text" 
                                 placeholder="Buscar marca..." 
                                 className="w-full p-2 pl-8 border rounded-md 
-                                    focus:ring-2 focus:ring-green-500 
-                                    focus:border-green-500 transition duration-200"
+                                    focus:ring-2 focus:ring-blue-500 
+                                    focus:border-blue-500 transition duration-200"
                                 value={searchBrand}
                                 onChange={(e) => setSearchBrand(e.target.value)}
                             />
@@ -183,12 +183,12 @@ const SidebarFilter = ({
                                 className="h-5 w-5 absolute left-2 top-3 text-gray-400" 
                             />
                         </div>
-                        <div className="max-h-48 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-gray-100">
+                        <div className="max-h-48 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100">
                             {filteredBrands.map((brand) => (
                                 <label 
                                     key={brand} 
                                     className="flex items-center space-x-3 
-                                        hover:bg-green-50 p-2 rounded-md 
+                                        hover:bg-blue-50 p-2 rounded-md 
                                         cursor-pointer transition duration-200"
                                 >
                                     <input
@@ -202,12 +202,12 @@ const SidebarFilter = ({
                                                     : filterBrands.filter(b => b !== brand)
                                             );
                                         }}
-                                        className="form-checkbox text-green-600 
-                                            focus:ring-green-500 rounded 
+                                        className="form-checkbox text-blue-600 
+                                            focus:ring-blue-500 rounded 
                                             transition duration-200"
                                     />
                                     <span className="text-gray-700 
-                                        hover:text-green-600 transition">
+                                        hover:text-blue-600 transition">
                                         {brand}
                                     </span>
                                 </label>
@@ -228,8 +228,8 @@ const SidebarFilter = ({
                             type="text" 
                             placeholder="Buscar especificación..." 
                             className="w-full p-2 pl-8 border rounded-md 
-                                focus:ring-2 focus:ring-green-500 
-                                focus:border-green-500 transition duration-200"
+                                focus:ring-2 focus:ring-blue-500 
+                                focus:border-blue-500 transition duration-200"
                             value={searchSpecification}
                             onChange={(e) => setSearchSpecification(e.target.value)}
                         />
@@ -237,7 +237,7 @@ const SidebarFilter = ({
                             className="h-5 w-5 absolute left-2 top-3 text-gray-400" 
                         />
                     </div>
-                    <div className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-gray-100">
+                    <div className="space-y-2 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100">
                         {Object.keys(availableFilters.specifications)
                             .filter(specKey => 
                                 specKey.toLowerCase().includes(searchSpecification.toLowerCase())
@@ -255,7 +255,7 @@ const SidebarFilter = ({
                                             <label 
                                                 key={specValue}
                                                 className="flex items-center space-x-2 
-                                                    hover:bg-green-50 p-2 rounded-md 
+                                                    hover:bg-blue-50 p-2 rounded-md 
                                                     cursor-pointer transition duration-200"
                                             >
                                                 <input
@@ -265,12 +265,12 @@ const SidebarFilter = ({
                                                         && specFilters[specKey].includes(specValue)
                                                     }
                                                     onChange={() => onSpecFilterChange(specKey, specValue)}
-                                                    className="form-checkbox text-green-600 
-                                                        focus:ring-green-500 rounded 
+                                                    className="form-checkbox text-blue-600 
+                                                        focus:ring-blue-500 rounded 
                                                         transition duration-200"
                                                 />
                                                 <span className="text-gray-600 
-                                                    hover:text-green-600 transition">
+                                                    hover:text-blue-600 transition">
                                                     {specValue}
                                                 </span>
                                             </label>

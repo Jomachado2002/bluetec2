@@ -444,14 +444,14 @@ ${productUrl}
   return (
     <>
       <Helmet>
-        <title>{data.productName ? `${data.productName} | JM Computer` : 'Producto | JM Computer'}</title>
-        <meta name="description" content={data.description?.substring(0, 160) || 'Descubre este producto en JM Computer'} />
+        <title>{data.productName ? `${data.productName} | BlueTec` : 'Producto | BlueTec'}</title>
+        <meta name="description" content={data.description?.substring(0, 160) || 'Descubre este producto en BlueTec'} />
         <meta property="og:title" content={data.productName || 'Producto'} />
-        <meta property="og:description" content={data.description?.substring(0, 160) || 'Descubre este producto en JM Computer'} />
+        <meta property="og:description" content={data.description?.substring(0, 160) || 'Descubre este producto en BlueTec'} />
         {data.productImage && data.productImage[0] && (
           <meta property="og:image" content={data.productImage[0]} />
         )}
-        <link rel="canonical" href={`https://jmcomputer.com.py/producto/${data.slug || params.id}`} />
+        <link rel="canonical" href={`https://bluetec.com.py/producto/${data.slug || params.id}`} />
       </Helmet>
       
       <div className="container mx-auto p-4 font-roboto">
@@ -495,7 +495,7 @@ ${productUrl}
                   : data?.productImage?.map((imgURL, index) => (
                       <div
                         key={`thumb-${index}-${currentProductId}`}
-                        className={`h-16 w-16 rounded border cursor-pointer transition-shadow duration-200 hover:shadow-md ${activeImage === imgURL ? 'border-green-500' : 'border-transparent'}`}
+                        className={`h-16 w-16 rounded border cursor-pointer transition-shadow duration-200 hover:shadow-md ${activeImage === imgURL ? 'border-[#2A3190]' : 'border-transparent'}`}
                         onMouseEnter={(e) => handleMouseEnterProduct(imgURL, e)}
                         onClick={(e) => {
                           e.preventDefault();
@@ -536,7 +536,7 @@ ${productUrl}
               ) : (
                 <div className="space-y-6">
                   <div>
-                    <p className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                    <p className="inline-block bg-[#2A3190] text-white px-3 py-1 rounded-full text-sm font-semibold">
                       {data?.brandName}
                     </p>
                     <h2 className="mt-2 text-2xl md:text-3xl font-bold text-gray-800">
@@ -545,7 +545,7 @@ ${productUrl}
                     <p className="capitalize text-sm md:text-lg text-gray-500">{data?.subcategory}</p>
                   </div>
                   <div className="flex items-center gap-4">
-                    <p className="text-3xl lg:text-4xl font-bold text-green-700">
+                    <p className="text-3xl lg:text-4xl font-bold text-[#2A3190]">
                       {displayINRCurrency(data.sellingPrice)}
                     </p>
                     {data.price > 0 && (
@@ -564,22 +564,22 @@ ${productUrl}
                   <div className="flex flex-col sm:flex-row gap-4">
                     <button
                       onClick={(e) => handleBuyProduct(e, data)}
-                      className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 text-white py-2 px-4 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+                      className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
                     >
                       Comprar
                     </button>
                     <button
-                      onClick={(e) => handleAddToCart(e, data)}
-                      className="w-full sm:w-auto bg-white text-green-600 border-2 border-green-600 py-2 px-4 rounded-lg shadow hover:bg-green-600 hover:text-white transition-all duration-300"
-                    >
-                      Agregar al carrito
-                    </button>
-                    <button
-                      onClick={handleWhatsAppClick}
-                      className="w-full sm:w-auto bg-white text-green-600 border-2 border-green-600 py-2 px-4 rounded-lg shadow hover:bg-green-600 hover:text-white transition-all duration-300"
-                    >
-                      WhatsApp
-                    </button>
+  onClick={(e) => handleAddToCart(e, data)}
+  className="w-full sm:w-auto bg-white text-[#2A3190] border-2 border-[#2A3190] py-2 px-4 rounded-lg shadow hover:bg-[#2A3190] hover:text-white transition-all duration-300"
+>
+  Agregar al carrito
+</button>
+<button
+  onClick={handleWhatsAppClick}
+  className="w-full sm:w-auto bg-white text-green-600 border-2 border-green-600 py-2 px-4 rounded-lg shadow hover:bg-green-600 hover:text-white transition-all duration-300"
+>
+  WhatsApp
+</button>
                   </div>
 
                   {!loading && (

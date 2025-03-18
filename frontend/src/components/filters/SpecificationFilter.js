@@ -27,7 +27,7 @@ const SpecificationFilter = ({ title, specKey, options }) => {
         <div className="flex items-center">
           <span className="font-semibold text-gray-800">{title}</span>
           {selectedValues.length > 0 && (
-            <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
+            <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
               {selectedValues.length}
             </span>
           )}
@@ -46,7 +46,7 @@ const SpecificationFilter = ({ title, specKey, options }) => {
             <input
               type="text"
               placeholder="Buscar..."
-              className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 pr-8 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />

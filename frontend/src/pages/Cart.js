@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import Context from '../context';
 import displayINRCurrency from '../helpers/displayCurrency';
 import { MdDelete, MdShoppingCart, MdPictureAsPdf, MdDownload, MdWhatsapp } from "react-icons/md";
+import { FaArrowLeft, FaTrash } from "react-icons/fa";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
-import logo from '../helpers/logo.jpg';
+import logo from '../helpers/logo.png';
 import { toast } from 'react-toastify';
 import { localCartHelper } from '../helpers/addToCart';
 
@@ -149,14 +150,14 @@ const Cart = () => {
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
         
-        // Colores corporativos
-        const primaryColor = [0, 128, 0]; // Verde
+        // Colores corporativos de BlueTec
+        const primaryColor = [42, 49, 144]; // Azul BlueTec #2A3190
         const secondaryColor = [0, 0, 0]; // Negro
         
         // Agregar logo
         const imgWidth = 30;
         const imgHeight = 15;
-        doc.addImage(logo, 'JPEG', 10, 10, imgWidth, imgHeight);
+        doc.addImage(logo, 'PNG', 10, 10, imgWidth, imgHeight);
         
         // Agregar encabezado
         doc.setFontSize(22);
@@ -174,10 +175,10 @@ const Cart = () => {
         doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
         doc.setFont("helvetica", "normal");
         doc.text([
-            "JM Computer",
+            "BlueTec",
             "Tel: +595 984 133733",
-            "Email: info@jmcomputer.com.py",
-            "Web: www.jmcomputer.com.py"
+            "Email: info@bluetec.com.py",
+            "Web: www.bluetec.com.py"
         ], pageWidth - 10, 40, { align: "right" });
         
         // Número de presupuesto y fecha
@@ -259,7 +260,7 @@ const Cart = () => {
             startY: customerData.email ? 110 : (customerData.phone ? 103 : 96),
             theme: 'grid',
             headStyles: {
-                fillColor: [0, 128, 0],
+                fillColor: primaryColor,
                 textColor: [255, 255, 255],
                 fontStyle: 'bold',
                 halign: 'center'
@@ -325,7 +326,7 @@ const Cart = () => {
         doc.setFontSize(8);
         doc.setTextColor(100, 100, 100);
         doc.text("Este presupuesto no constituye una factura. Para realizar el pedido, contáctenos al WhatsApp +595 984 133733.", pageWidth/2, pageHeight - 15, { align: "center" });
-        doc.text("JM Computer - Tecnología a tu alcance", pageWidth/2, pageHeight - 10, { align: "center" });
+        doc.text("BlueTec - Tecnología Profesional", pageWidth/2, pageHeight - 10, { align: "center" });
         
         // Numeración de páginas
         const pageCount = doc.internal.getNumberOfPages();
@@ -337,7 +338,7 @@ const Cart = () => {
         }
     
         // Guardar el PDF
-        doc.save(`Presupuesto-${presupuestoNo}.pdf`);
+        doc.save(`Presupuesto-BlueTec-${presupuestoNo}.pdf`);
         toast.success("Presupuesto generado exitosamente");
     };
 
@@ -356,7 +357,7 @@ const Cart = () => {
         }
 
         // Construir el mensaje de WhatsApp
-        let message = `*SOLICITUD DE PRESUPUESTO - JM Computer*\n\n`;
+        let message = `*SOLICITUD DE PRESUPUESTO - BlueTec*\n\n`;
         message += `*Cliente:* ${customerData.name}\n`;
         
         if (customerData.phone) {
@@ -391,7 +392,7 @@ const Cart = () => {
     const validProducts = data.filter(isValidProduct);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Botones para debug - solo visibles en desarrollo */}
                 {process.env.NODE_ENV === 'development' && (
@@ -408,26 +409,37 @@ const Cart = () => {
                 )}
                 
                 {/* Encabezado del carrito */}
-                <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
-                        <MdShoppingCart className="text-green-600" />
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-[#2A3190] flex items-center gap-3 mb-4 sm:mb-0">
+                        <div className="w-2 h-8 bg-[#2A3190] rounded-full"></div>
                         Mi Carrito
                     </h1>
-                    <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full shadow-sm">
-                        {totalQty} {totalQty === 1 ? 'producto' : 'productos'}
-                    </span>
+                    
+                    <div className="flex items-center gap-3">
+                        <Link to="/" className="flex items-center gap-2 text-gray-600 hover:text-[#2A3190] transition-colors">
+                            <FaArrowLeft className="text-sm" />
+                            <span>Seguir comprando</span>
+                        </Link>
+                        
+                        <div className="text-sm bg-[#2A3190] text-white px-4 py-1.5 rounded-full shadow-md">
+                            {totalQty} {totalQty === 1 ? 'producto' : 'productos'}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Carrito vacío */}
                 {validProducts.length === 0 && !loading && (
-                    <div className="bg-white rounded-xl shadow-sm p-8 text-center">
-                        <MdShoppingCart className="mx-auto text-6xl text-gray-300 mb-4" />
-                        <p className="text-xl text-gray-600 mb-4">No hay productos en tu carrito</p>
+                    <div className="bg-white rounded-xl shadow-lg p-8 text-center max-w-2xl mx-auto border border-gray-100">
+                        <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <MdShoppingCart className="text-5xl text-[#2A3190]" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-[#2A3190] mb-3">Tu carrito está vacío</h2>
+                        <p className="text-gray-600 mb-8">Parece que no has agregado productos a tu carrito todavía.</p>
                         <Link 
                             to="/"
-                            className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300"
+                            className="inline-block bg-[#2A3190] text-white px-8 py-3 rounded-lg hover:bg-[#1e236b] transition duration-300 shadow-md"
                         >
-                            Continuar Comprando
+                            Explorar Productos
                         </Link>
                     </div>
                 )}
@@ -437,8 +449,22 @@ const Cart = () => {
                     <div className="flex flex-col lg:flex-row gap-8">
                         {/* Lista de productos */}
                         <div className="flex-grow">
-                            {loading ? (
-                                <div className="bg-white rounded-xl shadow-sm p-6">
+                            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-4">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-xl font-bold text-[#2A3190]">Productos seleccionados</h2>
+                                    
+                                    {validProducts.length > 1 && (
+                                        <button 
+                                            onClick={clearCart}
+                                            className="flex items-center gap-1.5 text-red-500 hover:text-red-600 transition-colors text-sm bg-red-50 px-3 py-1 rounded-full"
+                                        >
+                                            <FaTrash className="text-xs" />
+                                            <span>Vaciar carrito</span>
+                                        </button>
+                                    )}
+                                </div>
+                                
+                                {loading ? (
                                     <div className="animate-pulse space-y-6">
                                         {[1, 2, 3].map((i) => (
                                             <div key={i} className="flex gap-4">
@@ -450,107 +476,119 @@ const Cart = () => {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    {validProducts.map((product) => (
-                                        <div key={product._id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
-                                            <div className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4">
-                                                {/* Imagen */}
-                                                <div className="w-full sm:w-36 h-36 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center p-2">
-                                                    <img 
-                                                        src={product.productId.productImage[0]} 
-                                                        alt={product.productId.productName} 
-                                                        className="w-full h-full object-contain" 
-                                                    />
-                                                </div>
-
-                                                {/* Información */}
-                                                <div className="flex-1">
-                                                <Link to={`/producto/${product.productId.slug || product.productId._id}`} className="text-lg font-semibold text-gray-900 hover:text-green-600 transition-colors">
-                                                    {product.productId.productName}
-                                                </Link>
-                                                    <p className="text-sm text-gray-500 mt-1">{product.productId.category}</p>
-                                                    
-                                                    <div className="mt-4 flex flex-wrap gap-4 items-center">
-                                                        <span className="text-lg font-medium text-green-600">
-                                                            {displayINRCurrency(product.productId.sellingPrice)}
-                                                        </span>
-                                                        <div className="flex items-center border rounded-lg overflow-hidden">
-                                                            <button 
-                                                                onClick={() => decreaseQty(product._id, product.quantity)} 
-                                                                className="px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                                                            >
-                                                                -
-                                                            </button>
-                                                            <span className="px-4 py-1 text-gray-800 font-medium">
-                                                                {product.quantity}
-                                                            </span>
-                                                            <button 
-                                                                onClick={() => increaseQty(product._id, product.quantity)}
-                                                                className="px-3 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                                                            >
-                                                                +
-                                                            </button>
-                                                        </div>
-                                                        <button 
-                                                            onClick={() => deleteCartProduct(product._id)}
-                                                            className="flex items-center gap-1 text-red-500 hover:text-red-600 transition-colors"
-                                                        >
-                                                            <MdDelete />
-                                                            <span>Eliminar</span>
-                                                        </button>
+                                ) : (
+                                    <div className="divide-y divide-gray-100">
+                                        {validProducts.map((product) => (
+                                            <div key={product._id} className="py-4 first:pt-0 last:pb-0">
+                                                <div className="flex flex-col sm:flex-row gap-4">
+                                                    {/* Imagen */}
+                                                    <div className="w-full sm:w-36 h-36 bg-blue-50 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-gray-100">
+                                                        <img 
+                                                            src={product.productId.productImage[0]} 
+                                                            alt={product.productId.productName} 
+                                                            className="w-full h-full object-contain" 
+                                                        />
                                                     </div>
-                    
-                                                    <div className="mt-2 text-right">
-                                                        <p className="text-lg font-semibold text-gray-900">
-                                                            {displayINRCurrency(product.productId.sellingPrice * product.quantity)}
-                                                        </p>
+
+                                                    {/* Información */}
+                                                    <div className="flex-1 flex flex-col">
+                                                        <div className="flex-grow">
+                                                            <Link 
+                                                                to={`/producto/${product.productId.slug || product.productId._id}`} 
+                                                                className="text-lg font-semibold text-gray-900 hover:text-[#2A3190] transition-colors line-clamp-2"
+                                                            >
+                                                                {product.productId.productName}
+                                                            </Link>
+                                                            <p className="text-sm text-gray-500 mt-1">{product.productId.category}</p>
+                                                        </div>
+                                                        
+                                                        <div className="mt-auto flex flex-wrap justify-between items-end gap-4">
+                                                            <div>
+                                                                <p className="text-sm text-gray-500">Precio unitario</p>
+                                                                <p className="text-lg font-medium text-[#2A3190]">
+                                                                    {displayINRCurrency(product.productId.sellingPrice)}
+                                                                </p>
+                                                            </div>
+                                                            
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                                                                    <button 
+                                                                        onClick={() => decreaseQty(product._id, product.quantity)} 
+                                                                        className="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                                                                    >
+                                                                        -
+                                                                    </button>
+                                                                    <span className="w-10 h-8 flex items-center justify-center text-gray-800 font-medium">
+                                                                        {product.quantity}
+                                                                    </span>
+                                                                    <button 
+                                                                        onClick={() => increaseQty(product._id, product.quantity)}
+                                                                        className="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                                                                    >
+                                                                        +
+                                                                    </button>
+                                                                </div>
+                                                                
+                                                                <button 
+                                                                    onClick={() => deleteCartProduct(product._id)}
+                                                                    className="text-red-500 hover:text-red-600 transition-colors p-2"
+                                                                    title="Eliminar"
+                                                                >
+                                                                    <MdDelete className="text-xl" />
+                                                                </button>
+                                                            </div>
+                                                            
+                                                            <div className="ml-auto text-right">
+                                                                <p className="text-sm text-gray-500">Subtotal</p>
+                                                                <p className="text-lg font-bold text-[#2A3190]">
+                                                                    {displayINRCurrency(product.productId.sellingPrice * product.quantity)}
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                 
                         {/* Resumen */}
                         <div className="w-full lg:w-96">
-                            <div className="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-                                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                    <span className="w-1 h-6 bg-green-600 rounded-full"></span>
-                                    Resumen del Carrito
+                            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-4 border-l-4 border-[#2A3190] border-t border-r border-b border-gray-100">
+                                <h2 className="text-xl font-bold text-[#2A3190] mb-6">
+                                    Resumen del Pedido
                                 </h2>
                 
                                 <div className="space-y-4">
-                                    <div className="flex justify-between py-2 border-b">
-                                        <span className="text-gray-600">Cantidad Total</span>
+                                    <div className="flex justify-between py-2 border-b border-gray-100">
+                                        <span className="text-gray-600">Cantidad de productos</span>
                                         <span className="font-medium text-gray-900">{totalQty}</span>
                                     </div>
-                                    <div className="flex justify-between py-2 border-b">
+                                    <div className="flex justify-between py-2 border-b border-gray-100">
                                         <span className="text-gray-600">Subtotal</span>
                                         <span className="font-medium text-gray-900">{displayINRCurrency(totalPrice)}</span>
                                     </div>
-                                    <div className="flex justify-between py-2">
-                                        <span className="text-lg font-medium text-gray-900">Total</span>
-                                        <span className="text-xl font-bold text-green-600">{displayINRCurrency(totalPrice)}</span>
+                                    <div className="flex justify-between py-3 bg-blue-50 px-3 rounded-lg">
+                                        <span className="text-lg font-medium text-[#2A3190]">Total</span>
+                                        <span className="text-xl font-bold text-[#2A3190]">{displayINRCurrency(totalPrice)}</span>
                                     </div>
                                 </div>
 
                                 {/* Información del cliente para presupuesto */}
-                                <div className="mt-6">
+                                <div className="mt-8">
                                     <button 
                                         onClick={toggleCustomerForm}
-                                        className="w-full text-center text-green-600 hover:text-green-700 mb-4 flex items-center justify-center gap-2"
+                                        className="w-full text-center bg-[#2A3190] text-white py-3 rounded-lg hover:bg-[#1e236b] transition-all duration-300 shadow-md flex items-center justify-center gap-2 mb-4"
                                     >
-                                        <MdPictureAsPdf />
-                                        <span>{showCustomerForm ? 'Ocultar formulario' : 'Generar presupuesto'}</span>
+                                        <MdPictureAsPdf className="text-xl" />
+                                        <span>{showCustomerForm ? 'Ocultar formulario' : 'Solicitar presupuesto'}</span>
                                     </button>
 
                                     {showCustomerForm && (
-                                        <div className="space-y-3 bg-gray-50 p-4 rounded-lg mt-2 mb-4">
-                                            <h3 className="font-semibold text-gray-700">Datos para el presupuesto</h3>
+                                        <div className="space-y-3 bg-blue-50 p-5 rounded-lg mt-4 mb-4 border border-blue-100">
+                                            <h3 className="font-semibold text-[#2A3190]">Datos para el presupuesto</h3>
                                             
                                             <div>
                                                 <label className="block text-gray-700 text-sm font-medium mb-1">
@@ -561,7 +599,7 @@ const Cart = () => {
                                                     name="name"
                                                     value={customerData.name}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2A3190] focus:border-transparent text-sm"
                                                     placeholder="Nombre completo"
                                                     required
                                                 />
@@ -576,7 +614,7 @@ const Cart = () => {
                                                     name="phone"
                                                     value={customerData.phone}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2A3190] focus:border-transparent text-sm"
                                                     placeholder="Número de contacto"
                                                 />
                                             </div>
@@ -590,27 +628,27 @@ const Cart = () => {
                                                     name="email"
                                                     value={customerData.email}
                                                     onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2A3190] focus:border-transparent text-sm"
                                                     placeholder="Correo electrónico"
                                                 />
                                             </div>
 
-                                            <div className="flex gap-2 pt-2">
+                                            <div className="grid grid-cols-2 gap-3 pt-3 mt-2">
                                                 <button
                                                     onClick={generatePDF}
-                                                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center gap-1 text-sm"
+                                                    className="bg-[#2A3190] text-white py-2.5 rounded-lg hover:bg-[#1e236b] transition-all duration-300 flex items-center justify-center gap-1.5 text-sm shadow-md"
                                                 >
-                                                    <MdDownload />
+                                                    <MdDownload className="text-lg" />
                                                     <span>Descargar PDF</span>
                                                 </button>
                                                 
                                                 <button
-                                                    onClick={sendToWhatsApp}
-                                                    className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-1 text-sm"
-                                                >
-                                                    <MdWhatsapp />
-                                                    <span>Enviar a WhatsApp</span>
-                                                </button>
+  onClick={sendToWhatsApp}
+  className="bg-[#25D366] text-white py-2.5 rounded-lg hover:bg-[#128C7E] transition-all duration-300 flex items-center justify-center gap-1.5 text-sm shadow-md"
+>
+  <MdWhatsapp className="text-lg" />
+  <span>Enviar WhatsApp</span>
+</button>
                                             </div>
                                         </div>
                                     )}
@@ -618,7 +656,7 @@ const Cart = () => {
                 
                                 <Link
                                     to="/"
-                                    className="mt-4 w-full block text-center py-3 text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="mt-6 block text-center py-2.5 text-gray-600 hover:text-[#2A3190] transition-colors border border-gray-200 rounded-lg hover:border-[#2A3190]"
                                 >
                                     Continuar comprando
                                 </Link>

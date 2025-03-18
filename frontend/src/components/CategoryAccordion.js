@@ -17,8 +17,8 @@ const CategoryAccordion = ({
             {/* Categoría Principal */}
             <div 
                 className={`flex items-center justify-between p-3 cursor-pointer ${
-                    isSelected ? 'bg-green-50' : 'bg-white'
-                } hover:bg-green-50 transition-colors duration-200`}
+                    isSelected ? 'bg-blue-50' : 'bg-white'
+                } hover:bg-blue-50 transition-colors duration-200`}
                 onClick={() => {
                     onSelectCategory(category.value);
                     setIsOpen(!isOpen);
@@ -29,10 +29,10 @@ const CategoryAccordion = ({
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => onSelectCategory(category.value)}
-                        className="form-checkbox h-5 w-5 text-green-600 rounded focus:ring-green-500"
+                        className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
                     />
                     <span className={`font-medium ${
-                        isSelected ? 'text-green-700' : 'text-gray-700'
+                        isSelected ? 'text-blue-700' : 'text-gray-700'
                     }`}>
                         {category.label}
                     </span>
@@ -48,17 +48,17 @@ const CategoryAccordion = ({
                     {subcategories.map((subcat) => (
                         <div 
                             key={subcat.value} 
-                            className="flex items-center p-3 hover:bg-green-50 border-b last:border-b-0"
+                            className="flex items-center p-3 hover:bg-blue-50 border-b last:border-b-0"
                         >
                             <input
                                 type="checkbox"
                                 checked={selectedSubcategories.includes(subcat.value)}
                                 onChange={() => onSelectSubcategory(subcat.value)}
-                                className="form-checkbox h-5 w-5 text-green-600 rounded focus:ring-green-500 mr-3"
+                                className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 mr-3"
                             />
                             <span className={`flex-1 ${
                                 selectedSubcategories.includes(subcat.value) 
-                                    ? 'text-green-700 font-semibold' 
+                                    ? 'text-blue-700 font-semibold' 
                                     : 'text-gray-700'
                             }`}>
                                 {subcat.label}

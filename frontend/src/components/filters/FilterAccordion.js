@@ -19,7 +19,7 @@ const FilterAccordion = ({ title, id, icon, children, count }) => {
           {icon && <span className="mr-2 text-gray-500">{icon}</span>}
           <span className="font-semibold text-gray-800">{title}</span>
           {count > 0 && (
-            <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
+            <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
               {count}
             </span>
           )}
