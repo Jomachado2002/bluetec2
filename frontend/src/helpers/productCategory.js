@@ -176,7 +176,7 @@ const productCategory = [
           
       ]
   },
-  /*{
+  {
       id: 6,
       label: "Software y Licencias",
       value: "software_licencias",
@@ -184,7 +184,7 @@ const productCategory = [
           { id: 601, label: "Licencias de Software", value: "licencias" }
       ]
   },
-  {
+  /*{
       id: 7,
       label: "Telefonía",
       value: "telefonia",
