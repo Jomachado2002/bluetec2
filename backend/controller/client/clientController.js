@@ -173,13 +173,35 @@ async function getClientByIdController(req, res) {
             throw new Error("ID de cliente no proporcionado");
         }
 
-        const client = await ClientModel.findById(clientId)
-            .populate('budgets', 'budgetNumber totalAmount finalAmount status validUntil createdAt')
-            .populate('sales', 'saleNumber totalAmount status createdAt');
+        // Primero obtenemos el cliente sin relacionados para evitar errores
+        let client = await ClientModel.findById(clientId);
 
         if (!client) {
             throw new Error("Cliente no encontrado");
         }
+
+        // Intentamos popular los campos relacionados con manejo de errores
+        try {
+            // Intentar popular presupuestos
+            client = await ClientModel.findById(clientId)
+                .populate('budgets', 'budgetNumber totalAmount finalAmount status validUntil createdAt');
+        } catch (populateError) {
+            console.warn("No se pudieron cargar los presupuestos relacionados:", populateError.message);
+            // Continuamos con el cliente sin los presupuestos populados
+        }
+
+        // No intentamos popular las ventas ya que ese es el modelo que causa el error
+        // Cuando el modelo "sale" esté correctamente registrado, puedes descomentar esta sección
+
+        /* 
+        try {
+            // Intentar popular ventas
+            client = await client.populate('sales', 'saleNumber totalAmount status createdAt');
+        } catch (populateError) {
+            console.warn("No se pudieron cargar las ventas relacionadas:", populateError.message);
+            // Continuamos con el cliente sin las ventas populadas
+        }
+        */
 
         res.json({
             message: "Detalles del cliente",
@@ -189,6 +211,7 @@ async function getClientByIdController(req, res) {
         });
 
     } catch (err) {
+        console.error("Error en getClientByIdController:", err);
         res.status(400).json({
             message: err.message || err,
             error: true,
