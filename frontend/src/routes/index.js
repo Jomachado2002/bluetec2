@@ -15,6 +15,14 @@ import MobileCategoriesPage from "../pages/MobileCategoriesPage"
 import ResetPassword from "../pages/ResetPassword"
 import Nosotros from "../pages/Nosotros"
 
+// Importar nuevas páginas financieras
+import FinancialReports from "../pages/FinancialReports"
+import ClientsList from "../pages/ClientsList"
+import ClientDetails from "../pages/ClientDetails"
+import BudgetsList from "../pages/BudgetsList"
+import BudgetDetails from "../pages/BudgetDetails"
+import NewBudget from "../pages/NewBudget"
+
 // Archivo: routes/index.js del frontend
 const router = createBrowserRouter([
     {
@@ -76,6 +84,36 @@ const router = createBrowserRouter([
                     {
                         path: "todos-productos",
                         element: <AllProducts />
+                    },
+                    
+                    // Nuevas rutas para finanzas
+                    {
+                        path: "reportes-financieros",
+                        element: <FinancialReports />
+                    },
+                    
+                    // Gestión de clientes
+                    {
+                        path: "clientes",
+                        element: <ClientsList />
+                    },
+                    {
+                        path: "clientes/:clientId",
+                        element: <ClientDetails />
+                    },
+                    
+                    // Gestión de presupuestos
+                    {
+                        path: "presupuestos",
+                        element: <BudgetsList />
+                    },
+                    {
+                        path: "presupuestos/nuevo",
+                        element: <NewBudget />
+                    },
+                    {
+                        path: "presupuestos/:budgetId",
+                        element: <BudgetDetails />
                     }
                 ]
             }

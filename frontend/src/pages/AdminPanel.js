@@ -29,8 +29,45 @@ const AdminPanel = () => {
                     </div>
                 </div>
                 <nav className='mt-6'>
-                    <Link to={"todos-usuarios"} className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'>Todos los Usuarios</Link>
-                    <Link to={"todos-productos"} className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'>Todos Productos</Link>
+                    {/* Enlace a Todos los Usuarios */}
+                    <Link 
+                        to={"todos-usuarios"} 
+                        className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'
+                    >
+                        Todos los Usuarios
+                    </Link>
+
+                    {/* Enlace a Todos los Productos */}
+                    <Link 
+                        to={"todos-productos"} 
+                        className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'
+                    >
+                        Todos los Productos
+                    </Link>
+
+                    {/* Enlace a Reportes Financieros */}
+                    <Link 
+                        to={"reportes-financieros"} 
+                        className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'
+                    >
+                        Reportes Financieros
+                    </Link>
+
+                    {/* Enlace a Gestión de Clientes */}
+                    <Link 
+                        to={"clientes"} 
+                        className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'
+                    >
+                        Gestión de Clientes
+                    </Link>
+
+                    {/* Enlace a Gestión de Presupuestos */}
+                    <Link 
+                        to={"presupuestos"} 
+                        className='block px-4 py-2 mt-2 text-gray-700 rounded-lg hover:bg-green-600 hover:text-white transition-colors duration-200'
+                    >
+                        Gestión de Presupuestos
+                    </Link>
                 </nav>
             </aside>
             <main className='flex-1 p-4'>
