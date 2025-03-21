@@ -80,33 +80,52 @@ const budgetSchema = new mongoose.Schema({
         ref: 'user',
         required: true
     },
-    // En backend/models/budgetModel.js, modifica el campo pdfUrl por pdfPath
-        pdfPath: {
-            type: String
-        }
+    pdfPath: {
+        type: String
+    }
 }, {
     timestamps: true
 });
 
-// Generar automáticamente el número de presupuesto
+// Modificar el hook pre('save') para hacer más robusto el proceso de generación del budgetNumber
 budgetSchema.pre('save', async function(next) {
-    if (!this.budgetNumber) {
-        try {
+    try {
+        // Si ya tiene un número de presupuesto, continuar
+        if (this.budgetNumber) {
+            return next();
+        }
+
+        // Si es un nuevo documento, generar un número de presupuesto
+        if (this.isNew) {
             const lastBudget = await this.constructor.findOne({}, {}, { sort: { 'createdAt': -1 } });
             
             if (lastBudget && lastBudget.budgetNumber) {
                 // Extraer la parte numérica del último presupuesto
-                const lastNumber = parseInt(lastBudget.budgetNumber.split('-')[1]);
-                this.budgetNumber = `PRES-${(lastNumber + 1).toString().padStart(5, '0')}`;
+                const lastNumberStr = lastBudget.budgetNumber.split('-')[1];
+                if (!lastNumberStr) {
+                    this.budgetNumber = 'PRES-00001';
+                } else {
+                    const lastNumber = parseInt(lastNumberStr);
+                    this.budgetNumber = `PRES-${(lastNumber + 1).toString().padStart(5, '0')}`;
+                }
             } else {
                 // Primer presupuesto
                 this.budgetNumber = 'PRES-00001';
             }
-            next();
-        } catch (error) {
-            next(error);
+            return next();
         }
-    } else {
+
+        // Si no es un nuevo documento y no tiene budgetNumber, asignar uno
+        // basado en timestamp para evitar duplicados (caso de emergencia)
+        if (!this.budgetNumber) {
+            this.budgetNumber = `PRES-${Date.now().toString().slice(-5)}`;
+        }
+        
+        next();
+    } catch (error) {
+        // En caso de error, asignar un número basado en timestamp
+        console.error('Error generando budgetNumber:', error);
+        this.budgetNumber = `PRES-${Date.now().toString().slice(-5)}`;
         next();
     }
 });

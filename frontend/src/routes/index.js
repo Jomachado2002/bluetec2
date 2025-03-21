@@ -22,6 +22,7 @@ import ClientDetails from "../pages/ClientDetails"
 import BudgetsList from "../pages/BudgetsList"
 import BudgetDetails from "../pages/BudgetDetails"
 import NewBudget from "../pages/NewBudget"
+import NewClient from "../pages/NewClient"
 
 // Archivo: routes/index.js del frontend
 const router = createBrowserRouter([
@@ -98,10 +99,13 @@ const router = createBrowserRouter([
                         element: <ClientsList />
                     },
                     {
+                        path: "clientes/nuevo",
+                        element: <NewClient />
+                    },
+                    {
                         path: "clientes/:clientId",
                         element: <ClientDetails />
                     },
-                    
                     // Gestión de presupuestos
                     {
                         path: "presupuestos",

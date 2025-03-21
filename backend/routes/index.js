@@ -31,7 +31,17 @@ const getProductBySlug = require('../controller/product/getProductBySlug');
 const { updateProductFinanceController, getProductFinanceController } = require('../controller/product/updateProductFinance');
 const { getMarginReportController, getCategoryProfitabilityController } = require('../controller/reports/financialReportsController');
 const { createClientController, getAllClientsController, getClientByIdController, updateClientController, deleteClientController } = require('../controller/client/clientController');
-const { createBudgetController, getAllBudgetsController, getBudgetByIdController, updateBudgetStatusController, getBudgetPDFController } = require('../controller/budget/budgetController');
+
+// Importa los controladores de presupuestos con las nuevas funciones
+const { 
+    createBudgetController,
+    getAllBudgetsController, 
+    getBudgetByIdController, 
+    updateBudgetStatusController, 
+    getBudgetPDFController,
+    deleteBudgetController,
+    sendBudgetEmailController
+} = require('../controller/budget/budgetController');
 
 // Rutas de usuario
 router.post("/registro", userSignUpController); // Antes: signup
@@ -93,5 +103,9 @@ router.get("/finanzas/presupuestos", authToken, getAllBudgetsController);
 router.get("/finanzas/presupuestos/:budgetId", authToken, getBudgetByIdController);
 router.patch("/finanzas/presupuestos/:budgetId/estado", authToken, updateBudgetStatusController);
 router.get("/finanzas/presupuestos/:budgetId/pdf", authToken, getBudgetPDFController);
+
+// Nuevas rutas añadidas para presupuestos
+router.delete("/finanzas/presupuestos/:budgetId", authToken, deleteBudgetController);
+router.post("/finanzas/presupuestos/:budgetId/email", authToken, sendBudgetEmailController);
 
 module.exports = router;
