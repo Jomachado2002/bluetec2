@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import UploadProduct from '../components/UploadProduct'
 import SummaryApi from '../common'
 import AdminProductCard from '../components/AdminProductCard'
-import { FaSearch, FaFilter, FaFileExcel } from 'react-icons/fa'
+import { FaSearch, FaFilter, FaFileExcel, FaCalculator } from 'react-icons/fa'
 import productCategory from '../helpers/productCategory'
 import * as XLSX from 'xlsx'
+import ProductFinanceModal from '../components/ProductFinanceModal'
 
 const AllProducts = () => {
   const [openUploadProduct, setOpenUploadProduct] = useState(false)
@@ -19,6 +20,9 @@ const AllProducts = () => {
   const [showCategoryMenu, setShowCategoryMenu] = useState(false)
   const [showSubcategoryMenu, setShowSubcategoryMenu] = useState(false)
   const [showSortMenu, setShowSortMenu] = useState(false)
+  
+  // Estado para gestión financiera
+  const [selectedProductForFinance, setSelectedProductForFinance] = useState(null)
 
   const fetchAllProduct = async() => {
     try {
@@ -153,6 +157,11 @@ const AllProducts = () => {
 
     return description
   }
+
+  // Función para manejar la gestión financiera
+  const handleFinanceProduct = (product) => {
+    setSelectedProductForFinance(product);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -349,6 +358,7 @@ const AllProducts = () => {
             data={product} 
             key={product._id || index+"allProduct"} 
             fetchdata={fetchAllProduct}
+            onFinance={handleFinanceProduct}
           />
         ))}
         
@@ -363,6 +373,29 @@ const AllProducts = () => {
         <UploadProduct 
           onClose={() => setOpenUploadProduct(false)} 
           fetchData={fetchAllProduct}
+        />
+      )}
+
+      {/* Modal para gestión financiera */}
+      {selectedProductForFinance && (
+        <ProductFinanceModal
+          product={selectedProductForFinance}
+          onClose={() => setSelectedProductForFinance(null)}
+          onUpdate={(updatedProduct) => {
+            // Actualizar el producto en la lista local para evitar recargar todo
+            const updatedProducts = allProduct.map(p => 
+              p._id === updatedProduct._id ? {...p, ...updatedProduct} : p
+            );
+            setAllProduct(updatedProducts);
+            
+            // También actualizar los productos filtrados si es necesario
+            if (filteredProducts.some(p => p._id === updatedProduct._id)) {
+              const updatedFiltered = filteredProducts.map(p => 
+                p._id === updatedProduct._id ? {...p, ...updatedProduct} : p
+              );
+              setFilteredProducts(updatedFiltered);
+            }
+          }}
         />
       )}
     </div>
