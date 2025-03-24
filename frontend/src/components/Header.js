@@ -60,7 +60,8 @@ const Header = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const context = useContext(Context);
   const navigate = useNavigate();
-  const searchInput = useLocation();
+  const location = useLocation(); // Usar useLocation para detectar la ruta actual
+  const searchInput = location;
   const URLSearch = new URLSearchParams(searchInput?.search);
   const searchQuery = URLSearch.getAll("q");
   const [search, setSearch] = useState(searchQuery);
@@ -71,8 +72,14 @@ const Header = () => {
   const menuRef = useRef(null);
   const overlayRef = useRef(null);
 
-  // Detectar scroll para efectos
+  // Verificar si estamos en una ruta de administración
+  const isAdminRoute = location.pathname.includes('/panel-admin');
+
+  // Detectar scroll para efectos - ahora SIEMPRE se declara antes de cualquier return
   useEffect(() => {
+    // Si estamos en una ruta admin, no necesitamos este efecto
+    if (isAdminRoute) return;
+    
     const handleScroll = () => {
       const offset = window.scrollY;
       if (offset > 30) {
@@ -86,19 +93,23 @@ const Header = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [isAdminRoute]);
 
   // Efecto para actualizar subcategorías cuando cambia la categoría activa
   useEffect(() => {
+    if (isAdminRoute) return;
+    
     if (activeCategoryIndex !== null && productCategory[activeCategoryIndex]) {
       setActiveSubcategories(productCategory[activeCategoryIndex].subcategories);
     } else {
       setActiveSubcategories([]);
     }
-  }, [activeCategoryIndex]);
+  }, [activeCategoryIndex, isAdminRoute]);
 
   // Prevenir scroll cuando el menú está abierto
   useEffect(() => {
+    if (isAdminRoute) return;
+    
     if (desktopMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -107,10 +118,12 @@ const Header = () => {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [desktopMenuOpen]);
+  }, [desktopMenuOpen, isAdminRoute]);
 
   // Efecto para ajustar el contenido cuando el buscador está abierto en móvil
   useEffect(() => {
+    if (isAdminRoute) return;
+    
     const contentElement = document.querySelector('.content-wrapper');
     if (contentElement && showMobileSearch) {
       contentElement.style.paddingTop = '0'; // Eliminado el padding
@@ -123,7 +136,12 @@ const Header = () => {
     if (mainSection) {
       mainSection.style.paddingTop = showMobileSearch ? '3rem' : '0';
     }
-  }, [showMobileSearch]);
+  }, [showMobileSearch, isAdminRoute]);
+
+  // Si estamos en una ruta de administración, retornar null (no mostrar el header)
+  if (isAdminRoute) {
+    return null;
+  }
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {

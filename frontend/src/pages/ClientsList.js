@@ -137,7 +137,7 @@ const ClientsList = () => {
                 <tr key={client._id} className="hover:bg-gray-50">
                   <td className="px-4 py-4">
                     <div className="font-medium text-gray-900">{client.name}</div>
-                    {client.taxId && <div className="text-xs text-gray-500">NIF/CIF: {client.taxId}</div>}
+                    {client.taxId && <div className="text-xs text-gray-500">RUC/CI: {client.taxId}</div>}
                   </td>
                   <td className="px-4 py-4">
                     {client.email && <div className="text-sm text-gray-900">{client.email}</div>}

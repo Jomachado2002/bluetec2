@@ -142,6 +142,10 @@ const SummaryApi = {
         url: `${backendDomain}/api/finanzas/presupuestos`, // usaremos el ID como parámetro
         method: 'get'
     },
+    updateAllPrices: {
+        url: `${backendDomain}/api/finanzas/actualizarprecios`,
+        method: 'post'
+    },
     
     // También establece un baseURL para uso general
     baseURL: backendDomain
