@@ -14,6 +14,8 @@ const { updateProductController} = require('../controller/product/updateProduct'
 const getCategoryProduct = require('../controller/product/getCategoryProduct');
 const getCategoryWiseProduct = require('../controller/product/getCategoryWiseProduct');
 const getProductDetails = require('../controller/product/getProductDetails');
+const { updateAllPricesController } = require('../controller/product/updateAllPrices');
+
 //const addToCartController = require('../controller/user/addToCartController');
 //const countAddToCartProduct = require('../controller/user/countAddToCartProduct');
 //const addToCartViewProduct = require('../controller/user/addToCartViewProduct');
@@ -63,6 +65,7 @@ router.post("/detalles-producto", getProductDetails); // Antes: product-details
 router.get("/buscar", searchProduct); // Antes: search
 router.post("/filtrar-productos", filterProductController); // Antes: filter-product
 
+
 // Carrito de compras (si decides reactivarlos)
 //router.post("/agregar-al-carrito", authToken, addToCartController); // Antes: addtocart
 //router.get("/contar-productos-carrito", authToken, countAddToCartProduct); // Antes: countAddToCartProduct
@@ -107,5 +110,7 @@ router.get("/finanzas/presupuestos/:budgetId/pdf", authToken, getBudgetPDFContro
 // Nuevas rutas añadidas para presupuestos
 router.delete("/finanzas/presupuestos/:budgetId", authToken, deleteBudgetController);
 router.post("/finanzas/presupuestos/:budgetId/email", authToken, sendBudgetEmailController);
+
+router.post("/finanzas/actualizarprecios", authToken, updateAllPricesController);
 
 module.exports = router;

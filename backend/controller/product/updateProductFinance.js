@@ -13,9 +13,12 @@ async function updateProductFinanceController(req, res) {
 
         const { 
             productId, 
-            purchasePrice, 
+            purchasePriceUSD,    // Nuevo: precio en USD
+            exchangeRate,        // Nuevo: tipo de cambio
+            purchasePrice,       // Precio en PYG (puede ser calculado o enviado directamente)
             loanInterest, 
             deliveryCost, 
+            profitMargin,        // Nuevo: margen de ganancia como porcentaje
             sellingPrice 
         } = req.body;
 
@@ -29,14 +32,26 @@ async function updateProductFinanceController(req, res) {
             throw new Error("Producto no encontrado");
         }
 
-        // Convertimos a números y validamos
-        const purchase = Number(purchasePrice) || 0;
-        const interest = Number(loanInterest) || 0;
-        const delivery = Number(deliveryCost) || 0;
+        // Convertimos a números y validamos con valores predeterminados
+        // Si el valor es cero o no está definido, usamos el valor predeterminado
+        const purchaseUSD = Number(purchasePriceUSD) || 0;
+        const exchange = Number(exchangeRate) || 7300;
+        const purchase = Number(purchasePrice) || (purchaseUSD * exchange); // Calcular si no se proporciona
+        
+        // Aplicar valores predeterminados para interés, envío y margen si no existen o son cero
+        let interest = Number(loanInterest);
+        interest = (isNaN(interest) || interest <= 0) ? 15 : interest;
+        
+        let delivery = Number(deliveryCost);
+        delivery = (isNaN(delivery) || delivery <= 0) ? 10000 : delivery;
+        
+        let margin = Number(profitMargin);
+        margin = (isNaN(margin) || margin <= 0) ? 10 : margin;
+        
         const selling = Number(sellingPrice) || 0;
 
-        if (purchase <= 0) {
-            throw new Error("El precio de compra debe ser mayor que cero");
+        if (purchaseUSD <= 0) {
+            throw new Error("El precio de compra en USD debe ser mayor que cero");
         }
 
         if (selling <= 0) {
@@ -44,22 +59,25 @@ async function updateProductFinanceController(req, res) {
         }
 
         // Calculamos los costos totales
-        const totalCosts = purchase + (purchase * (interest / 100)) + delivery;
+        const interestAmount = purchase * (interest / 100);
+        const totalCosts = purchase + interestAmount + delivery;
         
-        // Calculamos la utilidad y el margen de ganancia
+        // Calculamos la utilidad y el margen de ganancia real
         const profitAmount = selling - totalCosts;
-        const profitMargin = (profitAmount / selling) * 100;
+        const realProfitMargin = (profitAmount / selling) * 100;
 
         // Actualizamos el producto
         const updatedProduct = await ProductModel.findByIdAndUpdate(
             productId,
             {
-                sellingPrice: selling,
+                purchasePriceUSD: purchaseUSD,
+                exchangeRate: exchange,
                 purchasePrice: purchase,
                 loanInterest: interest,
                 deliveryCost: delivery,
+                profitMargin: margin,
                 profitAmount: profitAmount,
-                profitMargin: profitMargin,
+                sellingPrice: selling,
                 lastUpdatedFinance: new Date()
             },
             { new: true }
@@ -70,13 +88,15 @@ async function updateProductFinanceController(req, res) {
             data: {
                 product: updatedProduct,
                 financialSummary: {
-                    sellingPrice: selling,
-                    purchasePrice: purchase,
-                    interestAmount: purchase * (interest / 100),
+                    purchasePriceUSD: purchaseUSD,
+                    exchangeRate: exchange,
+                    purchasePricePYG: purchase,
+                    interestAmount: interestAmount,
                     deliveryCost: delivery,
                     totalCosts: totalCosts,
                     profitAmount: profitAmount,
-                    profitMargin: profitMargin.toFixed(2)
+                    profitMargin: realProfitMargin.toFixed(2),
+                    sellingPrice: selling
                 }
             },
             success: true,
@@ -113,16 +133,27 @@ async function getProductFinanceController(req, res) {
             throw new Error("Producto no encontrado");
         }
 
-        // Calculamos los valores financieros
+        // Calculamos los valores financieros con valores predeterminados mejorados
+        const purchaseUSD = product.purchasePriceUSD || 0;
+        const exchange = product.exchangeRate || 7300;
         const purchase = product.purchasePrice || 0;
-        const interest = product.loanInterest || 0;
-        const delivery = product.deliveryCost || 0;
+        
+        // Aplicar valores predeterminados si no existen o son cero
+        let interest = product.loanInterest;
+        interest = (isNaN(interest) || interest <= 0) ? 15 : interest;
+        
+        let delivery = product.deliveryCost;
+        delivery = (isNaN(delivery) || delivery <= 0) ? 10000 : delivery;
+        
+        let margin = product.profitMargin;
+        margin = (isNaN(margin) || margin <= 0) ? 10 : margin;
+        
         const selling = product.sellingPrice || 0;
 
         const interestAmount = purchase * (interest / 100);
         const totalCosts = purchase + interestAmount + delivery;
         const profitAmount = selling - totalCosts;
-        const profitMargin = selling > 0 ? (profitAmount / selling) * 100 : 0;
+        const realProfitMargin = selling > 0 ? (profitAmount / selling) * 100 : 0;
 
         res.json({
             message: "Información financiera del producto",
@@ -130,20 +161,25 @@ async function getProductFinanceController(req, res) {
                 product: {
                     _id: product._id,
                     productName: product.productName,
-                    sellingPrice: selling,
+                    purchasePriceUSD: purchaseUSD,
+                    exchangeRate: exchange,
                     purchasePrice: purchase,
                     loanInterest: interest,
+                    profitMargin: margin,
                     deliveryCost: delivery,
+                    sellingPrice: selling,
                     lastUpdatedFinance: product.lastUpdatedFinance
                 },
                 financialSummary: {
-                    sellingPrice: selling,
-                    purchasePrice: purchase,
+                    purchasePriceUSD: purchaseUSD,
+                    exchangeRate: exchange,
+                    purchasePricePYG: purchase,
                     interestAmount: interestAmount,
                     deliveryCost: delivery,
                     totalCosts: totalCosts,
                     profitAmount: profitAmount,
-                    profitMargin: profitMargin.toFixed(2)
+                    profitMargin: realProfitMargin.toFixed(2),
+                    sellingPrice: selling
                 }
             },
             success: true,

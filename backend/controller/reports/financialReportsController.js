@@ -20,7 +20,7 @@ async function getMarginReportController(req, res) {
             maxMargin,
             sortBy = 'profitMargin',
             sortOrder = 'desc',
-            limit = 100
+            limit = undefined
         } = req.query;
 
         // Construir el query
@@ -47,21 +47,24 @@ async function getMarginReportController(req, res) {
         const sort = {};
         sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
 
-        // Ejecutar la consulta con campos específicos
+        // Ejecutar la consulta con campos específicos (incluyendo campos en USD)
         const products = await ProductModel.find(query)
-            .select('productName brandName category subcategory sellingPrice purchasePrice loanInterest deliveryCost profitAmount profitMargin')
+            .select('productName brandName category subcategory sellingPrice purchasePrice purchasePriceUSD exchangeRate loanInterest deliveryCost profitAmount profitMargin')
             .sort(sort)
-            .limit(Number(limit));
+            .limit(limit ? Number(limit) : undefined);
 
         // Calcular estadísticas generales
         let totalRevenue = 0;
         let totalCost = 0;
         let totalProfit = 0;
+        let totalUSDPurchase = 0;
         let highestMargin = { value: 0, product: null };
         let lowestMargin = { value: Infinity, product: null };
 
         products.forEach(product => {
             totalRevenue += product.sellingPrice || 0;
+            totalUSDPurchase += product.purchasePriceUSD || 0;
+            
             const totalCostPerProduct = (product.purchasePrice || 0) + 
                                       ((product.purchasePrice || 0) * (product.loanInterest || 0) / 100) + 
                                       (product.deliveryCost || 0);
@@ -103,6 +106,10 @@ async function getMarginReportController(req, res) {
         const averageMargin = products.length > 0 ? 
             products.reduce((sum, product) => sum + (product.profitMargin || 0), 0) / products.length : 0;
 
+        // Calcular tipo de cambio promedio
+        const avgExchangeRate = products.length > 0 ? 
+            products.reduce((sum, product) => sum + (product.exchangeRate || 7300), 0) / products.length : 7300;
+
         // Agrupar por categoría
         const categoryMargins = {};
         products.forEach(product => {
@@ -130,6 +137,8 @@ async function getMarginReportController(req, res) {
                 products: products,
                 summary: {
                     totalProducts: products.length,
+                    totalUSDPurchase: totalUSDPurchase,
+                    avgExchangeRate: avgExchangeRate,
                     totalRevenue: totalRevenue,
                     totalCost: totalCost,
                     totalProfit: totalProfit,
@@ -161,7 +170,7 @@ async function getCategoryProfitabilityController(req, res) {
             throw new Error("Permiso denegado");
         }
 
-        // Obtener resumen por categoría
+        // Obtener resumen por categoría con información en USD
         const categorySummary = await ProductModel.aggregate([
             {
                 $match: {
@@ -182,6 +191,8 @@ async function getCategoryProfitabilityController(req, res) {
                             ] 
                         } 
                     },
+                    totalUSDPurchase: { $sum: "$purchasePriceUSD" },
+                    avgExchangeRate: { $avg: "$exchangeRate" },
                     totalProfit: { $sum: "$profitAmount" },
                     avgMargin: { $avg: "$profitMargin" }
                 }
@@ -192,6 +203,8 @@ async function getCategoryProfitabilityController(req, res) {
                     totalProducts: 1,
                     totalRevenue: 1,
                     totalCost: 1,
+                    totalUSDPurchase: 1,
+                    avgExchangeRate: 1,
                     totalProfit: 1,
                     avgMargin: 1,
                     profitPercentage: { 
@@ -207,7 +220,7 @@ async function getCategoryProfitabilityController(req, res) {
             }
         ]);
 
-        // Obtener resumen por subcategoría
+        // Obtener resumen por subcategoría con información en USD
         const subcategorySummary = await ProductModel.aggregate([
             {
                 $match: {
@@ -231,6 +244,8 @@ async function getCategoryProfitabilityController(req, res) {
                             ] 
                         } 
                     },
+                    totalUSDPurchase: { $sum: "$purchasePriceUSD" },
+                    avgExchangeRate: { $avg: "$exchangeRate" },
                     totalProfit: { $sum: "$profitAmount" },
                     avgMargin: { $avg: "$profitMargin" }
                 }
@@ -242,6 +257,8 @@ async function getCategoryProfitabilityController(req, res) {
                     totalProducts: 1,
                     totalRevenue: 1,
                     totalCost: 1,
+                    totalUSDPurchase: 1,
+                    avgExchangeRate: 1,
                     totalProfit: 1,
                     avgMargin: 1,
                     profitPercentage: { 
@@ -257,7 +274,7 @@ async function getCategoryProfitabilityController(req, res) {
             }
         ]);
 
-        // Obtener resumen por marca
+        // Obtener resumen por marca con información en USD
         const brandSummary = await ProductModel.aggregate([
             {
                 $match: {
@@ -278,6 +295,8 @@ async function getCategoryProfitabilityController(req, res) {
                             ] 
                         } 
                     },
+                    totalUSDPurchase: { $sum: "$purchasePriceUSD" },
+                    avgExchangeRate: { $avg: "$exchangeRate" },
                     totalProfit: { $sum: "$profitAmount" },
                     avgMargin: { $avg: "$profitMargin" }
                 }
@@ -288,6 +307,8 @@ async function getCategoryProfitabilityController(req, res) {
                     totalProducts: 1,
                     totalRevenue: 1,
                     totalCost: 1,
+                    totalUSDPurchase: 1,
+                    avgExchangeRate: 1,
                     totalProfit: 1,
                     avgMargin: 1,
                     profitPercentage: { 
@@ -303,20 +324,36 @@ async function getCategoryProfitabilityController(req, res) {
             }
         ]);
 
-        // Calcular resumen general
+        // Calcular resumen general incluyendo información en USD
         const overallSummary = {
             totalProducts: 0,
             totalRevenue: 0,
             totalCost: 0,
-            totalProfit: 0
+            totalProfit: 0,
+            totalUSDPurchase: 0,
+            avgExchangeRate: 0
         };
+
+        let totalExchangeRateSum = 0;
+        let countWithExchangeRate = 0;
 
         categorySummary.forEach(category => {
             overallSummary.totalProducts += category.totalProducts;
             overallSummary.totalRevenue += category.totalRevenue;
             overallSummary.totalCost += category.totalCost;
             overallSummary.totalProfit += category.totalProfit;
+            overallSummary.totalUSDPurchase += category.totalUSDPurchase;
+
+            // Calcular suma ponderada de tipos de cambio
+            if (category.avgExchangeRate) {
+                totalExchangeRateSum += category.avgExchangeRate * category.totalProducts;
+                countWithExchangeRate += category.totalProducts;
+            }
         });
+
+        // Calcular tipo de cambio promedio global
+        overallSummary.avgExchangeRate = countWithExchangeRate > 0 ? 
+            totalExchangeRateSum / countWithExchangeRate : 7300;
 
         overallSummary.avgMargin = overallSummary.totalRevenue > 0 ? 
             (overallSummary.totalProfit / overallSummary.totalRevenue) * 100 : 0;
