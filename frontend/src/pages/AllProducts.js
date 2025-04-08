@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import UploadProduct from '../components/UploadProduct'
 import SummaryApi from '../common'
 import AdminProductCard from '../components/AdminProductCard'
-import { FaSearch, FaFilter, FaFileExcel, FaCalculator } from 'react-icons/fa'
+import { FaSearch, FaFilter, FaFileExcel, FaCalculator, FaImage } from 'react-icons/fa'
 import productCategory from '../helpers/productCategory'
 import * as XLSX from 'xlsx'
 import ProductFinanceModal from '../components/admin/ProductFinanceModal'
 import ExchangeRateConfig from '../components/admin/ExchangeRateConfig'
+
+
 
 const AllProducts = () => {
   const [openUploadProduct, setOpenUploadProduct] = useState(false)
@@ -197,6 +199,8 @@ const AllProducts = () => {
       <div className='bg-green-50 py-2 px-4 flex justify-between items-center'>
         <h2 className='font-bold text-lg'>Todos los productos</h2>
         <div className='flex gap-2'>
+          
+           
           <button
             className='flex items-center gap-2 border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all py-1 px-4 rounded-full'
             onClick={exportToExcel}
@@ -423,6 +427,8 @@ const AllProducts = () => {
           }}
         />
       )}
+
+      
     </div>
   )
 }

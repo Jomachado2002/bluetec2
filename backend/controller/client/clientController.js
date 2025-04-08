@@ -27,38 +27,25 @@ async function createClientController(req, res) {
         }
 
         // Verificar si ya existe un cliente activo con el mismo email o teléfono
-        let existingClientQuery = {};
-        
-        if (email && email.trim() !== '') {
-            existingClientQuery.email = email;
-        }
-        
-        if (phone && phone.trim() !== '') {
-            // Si ya tenemos una condición por email, añadimos phone como OR
-            if (Object.keys(existingClientQuery).length > 0) {
-                // Only check against active clients or explicitly set condition to true if isActive field exists
-                existingClientQuery.isActive = { $ne: false };
-                
-                const existingClient = await ClientModel.findOne(existingClientQuery);
+        if (email || phone) {
+            const queryConditions = [];
             
-                if (existingClient) {
-                    throw new Error("Ya existe un cliente con el mismo email o teléfono");
-                }
+            if (email && email.trim() !== '') {
+                queryConditions.push({ email: email });
             }
             
-            // Similarly for updateClientController, update the existingClient query:
-            if (email || phone) {
-                const existingClient = await ClientModel.findOne({
-                    _id: { $ne: clientId },
-                    isActive: { $ne: false }, // Only check against active clients
-                    $or: [
-                        { email: email },
-                        { phone: phone }
-                    ]
-                });
+            if (phone && phone.trim() !== '') {
+                queryConditions.push({ phone: phone });
+            }
             
+            if (queryConditions.length > 0) {
+                const existingClient = await ClientModel.findOne({
+                    isActive: { $ne: false }, // Solo verifica clientes activos
+                    $or: queryConditions
+                });
+                
                 if (existingClient) {
-                    throw new Error("Ya existe otro cliente con el mismo email o teléfono");
+                    throw new Error("Ya existe un cliente con el mismo email o teléfono");
                 }
             }
         }
@@ -254,16 +241,26 @@ async function updateClientController(req, res) {
 
         // Verificar si el email o teléfono ya están en uso por otro cliente
         if (email || phone) {
-            const existingClient = await ClientModel.findOne({
-                _id: { $ne: clientId },
-                $or: [
-                    { email: email },
-                    { phone: phone }
-                ]
-            });
-
-            if (existingClient) {
-                throw new Error("Ya existe otro cliente con el mismo email o teléfono");
+            const queryConditions = [];
+            
+            if (email && email.trim() !== '') {
+                queryConditions.push({ email: email });
+            }
+            
+            if (phone && phone.trim() !== '') {
+                queryConditions.push({ phone: phone });
+            }
+            
+            if (queryConditions.length > 0) {
+                const existingClient = await ClientModel.findOne({
+                    _id: { $ne: clientId }, // Excluye el cliente actual
+                    isActive: { $ne: false }, // Solo verifica clientes activos
+                    $or: queryConditions
+                });
+                
+                if (existingClient) {
+                    throw new Error("Ya existe otro cliente con el mismo email o teléfono");
+                }
             }
         }
 

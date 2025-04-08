@@ -74,6 +74,7 @@ const router = createBrowserRouter([
                 path: "buscar",
                 element: <SearchProduct />
             },
+           
             {
                 path: "panel-admin",
                 element: <AdminPanel />,

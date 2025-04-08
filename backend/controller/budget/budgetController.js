@@ -423,7 +423,7 @@ async function deleteBudgetController(req, res) {
 }
 
 /**
- * Genera el PDF de un presupuesto
+ * Genera el PDF de un presupuesto con diseño mejorado
  */
 async function generateBudgetPDF(budgetId, isTemporary = false) {
   try {
@@ -436,7 +436,10 @@ async function generateBudgetPDF(budgetId, isTemporary = false) {
     }
 
     // Crear un documento PDF
-    const doc = new PDFDocument({ margin: 50 });
+    const doc = new PDFDocument({ 
+      margin: 50,
+      size: 'A4'
+    });
     
     // Crear carpeta temporal si no existe
     const tempDir = path.join(__dirname, '../../temp');
@@ -451,204 +454,454 @@ async function generateBudgetPDF(budgetId, isTemporary = false) {
 
     // Configuración de fuentes y colores
     const primaryColor = '#0047AB'; // Azul corporativo
+    const secondaryColor = '#333333'; // Color oscuro para texto
+    const accentColor = '#4682B4'; // Azul celeste para acentos
     
-    // Encabezado
-    doc.fontSize(20).fillColor(primaryColor).text('PRESUPUESTO', { align: 'center' });
-    doc.fontSize(12).fillColor('#333333').text(`Nº ${budget.budgetNumber}`, { align: 'center' });
-    doc.moveDown(1);
+    // ----- ENCABEZADO DEL DOCUMENTO -----
     
-    // Información de la empresa (Puedes reemplazar con los datos reales de tu empresa)
-    doc.fontSize(14).fillColor(primaryColor).text('TU EMPRESA, S.L.', { align: 'left' });
-    doc.fontSize(10).fillColor('#333333').text('Dirección de la empresa');
-    doc.text('Teléfono: +1 234 567 890');
-    doc.text('Email: info@tuempresa.com');
-    doc.text('NIF: B-12345678');
-    doc.moveDown(1);
+    // Intenta agregar el logo que está en la misma carpeta que el controlador
+    try {
+      // El logo.png está en la misma carpeta que budgetController.js (carpeta budget)
+      const logoPath = path.join(__dirname, 'logo.png');
+      
+      if (fs.existsSync(logoPath)) {
+        // Agregar el logo en la parte superior izquierda
+        doc.image(logoPath, 50, 50, { width: 120 });
+        // Mover hacia abajo para el resto del contenido del encabezado
+        doc.moveDown(4);
+        console.log("Logo encontrado y agregado desde:", logoPath);
+      } else {
+        console.warn("Logo no encontrado en:", logoPath);
+      }
+    } catch (logoError) {
+      console.error("Error al agregar el logo:", logoError);
+    }
     
-    // Información del cliente (manejo seguro)
-    doc.fontSize(14).fillColor(primaryColor).text('CLIENTE', { align: 'left' });
-    doc.fontSize(10).fillColor('#333333').text(`${budget.client ? budget.client.name : 'Cliente no especificado'}`);
+    // Título del documento (alineado a la derecha si hay logo)
+    doc.fontSize(22).fillColor(primaryColor).text('PRESUPUESTO', 250, 60, { align: 'right' });
+    doc.fontSize(14).fillColor(secondaryColor).text(`Nº ${budget.budgetNumber}`, 250, 85, { align: 'right' });
     
+    // Línea divisoria
+    doc.strokeColor(accentColor)
+       .lineWidth(1)
+       .moveTo(50, 120)
+       .lineTo(550, 120)
+       .stroke();
+    
+    // ----- INFORMACIÓN DE CABECERA -----
+    
+    // Información de la empresa - columna izquierda
+    doc.fontSize(12).fillColor(primaryColor).text('DATOS DE LA EMPRESA', 50, 140);
+    doc.fontSize(9).fillColor(secondaryColor);
+    doc.text('BlueTec EAS', 50, 160);
+    doc.text('Teodoro S. Mongelos casi Radio Operadores del Chaco n 3934', 50, 175, { width: 200 });
+    doc.text('Teléfono: +595 972 971353', 50, 200);
+    doc.text('Email: ventas@bluetec.com.py', 50, 215);
+    doc.text('RUC: 80136342-0', 50, 230);
+    
+    // Información del cliente - columna derecha
+    doc.fontSize(12).fillColor(primaryColor).text('CLIENTE', 350, 140);
+    doc.fontSize(9).fillColor(secondaryColor);
+    
+    let clientYPos = 160;
     if (budget.client) {
-      if (budget.client.company) doc.text(`${budget.client.company}`);
+      doc.text(`${budget.client.name}`, 350, clientYPos, { width: 200 });
+      clientYPos += 15;
+      
+      if (budget.client.company) {
+        doc.text(`${budget.client.company}`, 350, clientYPos, { width: 200 });
+        clientYPos += 15;
+      }
       
       // Manejo seguro de la dirección
       if (budget.client.address) {
         if (typeof budget.client.address === 'object') {
           // Si la dirección es un objeto con campos separados
           const { street, city, state, zip, country } = budget.client.address;
-          if (street) doc.text(street);
+          if (street) {
+            doc.text(street, 350, clientYPos, { width: 200 });
+            clientYPos += 15;
+          }
+          
           let locationLine = '';
           if (city) locationLine += city;
           if (state) locationLine += locationLine ? `, ${state}` : state;
           if (zip) locationLine += locationLine ? ` ${zip}` : zip;
-          if (locationLine) doc.text(locationLine);
-          if (country) doc.text(country);
+          
+          if (locationLine) {
+            doc.text(locationLine, 350, clientYPos, { width: 200 });
+            clientYPos += 15;
+          }
+          
+          if (country) {
+            doc.text(country, 350, clientYPos, { width: 200 });
+            clientYPos += 15;
+          }
         } else {
           // Si la dirección es un string
-          doc.text(budget.client.address);
+          doc.text(budget.client.address, 350, clientYPos, { width: 200 });
+          clientYPos += 15;
         }
       }
       
-      if (budget.client.phone) doc.text(`Teléfono: ${budget.client.phone}`);
-      if (budget.client.email) doc.text(`Email: ${budget.client.email}`);
-      if (budget.client.taxId) doc.text(`NIF/CIF: ${budget.client.taxId}`);
+      if (budget.client.phone) {
+        doc.text(`Teléfono: ${budget.client.phone}`, 350, clientYPos, { width: 200 });
+        clientYPos += 15;
+      }
+      
+      if (budget.client.email) {
+        doc.text(`Email: ${budget.client.email}`, 350, clientYPos, { width: 200 });
+        clientYPos += 15;
+      }
+      
+      if (budget.client.taxId) {
+        doc.text(`RUC/CI: ${budget.client.taxId}`, 350, clientYPos, { width: 200 });
+        clientYPos += 15;
+      }
+    } else {
+      doc.text('Cliente no especificado', 350, clientYPos);
     }
     
-    doc.moveDown(1);
+    // ----- INFORMACIÓN DEL PRESUPUESTO -----
     
-    // Información del presupuesto
-    doc.fontSize(12).fillColor(primaryColor).text('DETALLES DEL PRESUPUESTO', { align: 'left' });
-    doc.fontSize(10).fillColor('#333333').text(`Fecha: ${new Date(budget.createdAt).toLocaleDateString()}`);
-    doc.text(`Válido hasta: ${new Date(budget.validUntil).toLocaleDateString()}`);
-    doc.text(`Estado: ${budget.status.toUpperCase()}`);
-    if (budget.paymentTerms) doc.text(`Condiciones de pago: ${budget.paymentTerms}`);
-    if (budget.deliveryMethod) doc.text(`Método de entrega: ${budget.deliveryMethod}`);
-    doc.moveDown(1);
+    // Línea divisoria
+    const infoY = Math.max(clientYPos + 20, 260);
+    doc.strokeColor(accentColor)
+       .lineWidth(0.5)
+       .moveTo(50, infoY)
+       .lineTo(550, infoY)
+       .stroke();
+       
+    // Información del presupuesto en 2 columnas
+    const infoStartY = infoY + 20;
     
-    // Tabla de productos
-    doc.fontSize(12).fillColor(primaryColor).text('PRODUCTOS Y SERVICIOS', { align: 'left' });
-    doc.moveDown(0.5);
+    // Columna 1
+    doc.fontSize(9).fillColor(primaryColor).text('Fecha:', 50, infoStartY);
+    doc.fontSize(9).fillColor(secondaryColor).text(`${new Date(budget.createdAt).toLocaleDateString()}`, 120, infoStartY);
     
-    // Encabezados de la tabla
-    const tableTop = doc.y;
+    doc.fontSize(9).fillColor(primaryColor).text('Estado:', 50, infoStartY + 20);
+    doc.fontSize(9).fillColor(secondaryColor).text(`${budget.status.toUpperCase()}`, 120, infoStartY + 20);
+    
+    // Columna 2
+    doc.fontSize(9).fillColor(primaryColor).text('Válido hasta:', 300, infoStartY);
+    doc.fontSize(9).fillColor(secondaryColor).text(`${new Date(budget.validUntil).toLocaleDateString()}`, 370, infoStartY);
+    
+    if (budget.paymentTerms) {
+      doc.fontSize(9).fillColor(primaryColor).text('Condiciones:', 300, infoStartY + 20);
+      doc.fontSize(9).fillColor(secondaryColor).text(`${budget.paymentTerms}`, 370, infoStartY + 20, { width: 180 });
+    }
+    
+    if (budget.deliveryMethod) {
+      doc.fontSize(9).fillColor(primaryColor).text('Entrega:', 300, infoStartY + 40);
+      doc.fontSize(9).fillColor(secondaryColor).text(`${budget.deliveryMethod}`, 370, infoStartY + 40, { width: 180 });
+    }
+    
+    // ----- TABLA DE PRODUCTOS -----
+    
+    // Encabezado de tabla
+    const tableStartY = infoStartY + 80;
+    doc.fontSize(11).fillColor(primaryColor).text('PRODUCTOS Y SERVICIOS', 50, tableStartY);
+    
+    // Definición de la tabla con medidas ajustadas
     const tableConfig = {
       headers: [
-        { label: 'Descripción', property: 'name', width: 200 },
-        { label: 'Cant.', property: 'quantity', width: 40, align: 'center' },
-        { label: 'Precio', property: 'unitPrice', width: 70, align: 'right' },
+        { label: 'Descripción', property: 'name', width: 230, align: 'left' },
+        { label: 'Cant.', property: 'quantity', width: 50, align: 'center' },
+        { label: 'Precio', property: 'unitPrice', width: 85, align: 'right' },
         { label: 'Dto.', property: 'discount', width: 40, align: 'center' },
-        { label: 'Importe', property: 'subtotal', width: 80, align: 'right' }
+        { label: 'Importe', property: 'subtotal', width: 95, align: 'right' }
       ],
       rows: []
     };
-
+    
     // Llenar datos de la tabla (manejo seguro)
     if (budget.items && Array.isArray(budget.items)) {
       budget.items.forEach(item => {
         const name = item.productSnapshot ? item.productSnapshot.name : 'Producto';
+        
+        // Formateo de moneda sin símbolo para mejor alineación
+        const formatCurrency = (value) => {
+          return value.toLocaleString('es-ES') + ' PYG';
+        };
+        
         tableConfig.rows.push({
           name,
           quantity: item.quantity.toString(),
-          unitPrice: item.unitPrice.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' }),
+          unitPrice: formatCurrency(item.unitPrice),
           discount: item.discount ? `${item.discount}%` : '0%',
-          subtotal: (item.subtotal || (item.quantity * item.unitPrice * (1 - (item.discount || 0) / 100)))
-            .toLocaleString('es-ES', { style: 'currency', currency: 'PYG' })
+          subtotal: formatCurrency(item.subtotal || (item.quantity * item.unitPrice * (1 - (item.discount || 0) / 100)))
         });
       });
     }
-
-    // Dibujar encabezados
-    doc.fontSize(8).fillColor('#666666');
     
-    let xPos = 50; // Posición inicial x (margen izquierdo)
-    tableConfig.headers.forEach(header => {
-      const textOptions = { width: header.width };
-      if (header.align) {
-        textOptions.align = header.align;
-      }
-      doc.text(header.label, xPos, tableTop, textOptions);
-      xPos += header.width + 10; // +10 para espacio entre columnas
+    // Dibujar cabecera de tabla
+    const tableHeaderY = tableStartY + 20;
+    
+    // Fondo de cabecera de tabla
+    doc.fillColor(primaryColor)
+       .rect(50, tableHeaderY, 500, 20)
+       .fill();
+    
+    // Texto de cabeceras (definimos márgenes precisos para mejor alineación)
+    doc.fontSize(9).fillColor('#FFFFFF');
+    
+    // Descripción
+    doc.text(tableConfig.headers[0].label, 55, tableHeaderY + 5, { 
+      width: tableConfig.headers[0].width - 10, 
+      align: tableConfig.headers[0].align 
     });
-
-    // Línea bajo los encabezados
-    doc.strokeColor('#CCCCCC')
-       .lineWidth(1)
-       .moveTo(50, tableTop + 15)
-       .lineTo(550, tableTop + 15)
-       .stroke();
-
+    
+    // Cantidad
+    doc.text(tableConfig.headers[1].label, 55 + tableConfig.headers[0].width, tableHeaderY + 5, { 
+      width: tableConfig.headers[1].width - 10, 
+      align: tableConfig.headers[1].align 
+    });
+    
+    // Precio
+    doc.text(tableConfig.headers[2].label, 55 + tableConfig.headers[0].width + tableConfig.headers[1].width, tableHeaderY + 5, { 
+      width: tableConfig.headers[2].width - 10, 
+      align: tableConfig.headers[2].align 
+    });
+    
+    // Descuento
+    doc.text(tableConfig.headers[3].label, 55 + tableConfig.headers[0].width + tableConfig.headers[1].width + tableConfig.headers[2].width, tableHeaderY + 5, { 
+      width: tableConfig.headers[3].width - 10, 
+      align: tableConfig.headers[3].align 
+    });
+    
+    // Importe
+    doc.text(tableConfig.headers[4].label, 55 + tableConfig.headers[0].width + tableConfig.headers[1].width + tableConfig.headers[2].width + tableConfig.headers[3].width, tableHeaderY + 5, { 
+      width: tableConfig.headers[4].width - 10, 
+      align: tableConfig.headers[4].align 
+    });
+    
     // Dibujar filas
-    let yPos = tableTop + 25;
+    let yPos = tableHeaderY + 25;
+    let rowCounter = 0;
     
     tableConfig.rows.forEach((row, rowIndex) => {
       // Verificar si necesitamos una nueva página
-      if (yPos > 700) {
+      if (yPos > doc.page.height - 150) {
         doc.addPage();
-        yPos = 50; // Reiniciar posición Y en la nueva página
+        // Reiniciar posición Y en la nueva página
+        yPos = 50;
+        
+        // Dibujar nuevamente la cabecera en la nueva página
+        doc.fillColor(primaryColor)
+           .rect(50, yPos, 500, 20)
+           .fill();
+        
+        doc.fontSize(9).fillColor('#FFFFFF');
+        
+        // Descripción
+        doc.text(tableConfig.headers[0].label, 55, yPos + 5, { 
+          width: tableConfig.headers[0].width - 10, 
+          align: tableConfig.headers[0].align 
+        });
+        
+        // Cantidad
+        doc.text(tableConfig.headers[1].label, 55 + tableConfig.headers[0].width, yPos + 5, { 
+          width: tableConfig.headers[1].width - 10, 
+          align: tableConfig.headers[1].align 
+        });
+        
+        // Precio
+        doc.text(tableConfig.headers[2].label, 55 + tableConfig.headers[0].width + tableConfig.headers[1].width, yPos + 5, { 
+          width: tableConfig.headers[2].width - 10, 
+          align: tableConfig.headers[2].align 
+        });
+        
+        // Descuento
+        doc.text(tableConfig.headers[3].label, 55 + tableConfig.headers[0].width + tableConfig.headers[1].width + tableConfig.headers[2].width, yPos + 5, { 
+          width: tableConfig.headers[3].width - 10, 
+          align: tableConfig.headers[3].align 
+        });
+        
+        // Importe
+        doc.text(tableConfig.headers[4].label, 55 + tableConfig.headers[0].width + tableConfig.headers[1].width + tableConfig.headers[2].width + tableConfig.headers[3].width, yPos + 5, { 
+          width: tableConfig.headers[4].width - 10, 
+          align: tableConfig.headers[4].align 
+        });
+        
+        yPos += 25;
       }
       
-      doc.fontSize(8).fillColor('#333333');
+      // Alternar colores para las filas
+      if (rowCounter % 2 === 0) {
+        doc.fillColor('#F7F7F7')
+           .rect(50, yPos - 5, 500, 25)
+           .fill();
+      }
+      rowCounter++;
       
-      xPos = 50;
-      tableConfig.headers.forEach(header => {
-        const value = row[header.property];
-        const textOptions = { width: header.width };
-        if (header.align) {
-          textOptions.align = header.align;
-        }
-        doc.text(value || '', xPos, yPos, textOptions);
-        xPos += header.width + 10;
+      doc.fontSize(8).fillColor(secondaryColor);
+      
+      // Calcular posiciones exactas para cada columna
+      const col1 = 55;
+      const col2 = col1 + tableConfig.headers[0].width;
+      const col3 = col2 + tableConfig.headers[1].width;
+      const col4 = col3 + tableConfig.headers[2].width;
+      const col5 = col4 + tableConfig.headers[3].width;
+      
+      // Descripción (nombre)
+      let displayName = row.name;
+      if (displayName && displayName.length > 40) {
+        displayName = displayName.substring(0, 37) + '...';
+      }
+      doc.text(displayName || '', col1, yPos, { 
+        width: tableConfig.headers[0].width - 10,
+        align: 'left',
+        ellipsis: false,
+        lineBreak: false
       });
       
-      yPos += 20;
+      // Cantidad
+      doc.text(row.quantity || '', col2, yPos, { 
+        width: tableConfig.headers[1].width - 10,
+        align: 'center',
+        lineBreak: false
+      });
       
-      // Línea divisoria entre filas
-      if (rowIndex < tableConfig.rows.length - 1) {
-        doc.strokeColor('#EEEEEE')
-           .lineWidth(0.5)
-           .moveTo(50, yPos - 10)
-           .lineTo(550, yPos - 10)
-           .stroke();
-      }
+      // Precio
+      doc.text(row.unitPrice || '', col3, yPos, { 
+        width: tableConfig.headers[2].width - 10,
+        align: 'right',
+        lineBreak: false
+      });
+      
+      // Descuento
+      doc.text(row.discount || '', col4, yPos, { 
+        width: tableConfig.headers[3].width - 10,
+        align: 'center',
+        lineBreak: false
+      });
+      
+      // Importe
+      doc.text(row.subtotal || '', col5, yPos, { 
+        width: tableConfig.headers[4].width - 10,
+        align: 'right',
+        lineBreak: false
+      });
+      
+      yPos += 25;
     });
-
-    // Línea final de la tabla
+    
+    // ----- RESUMEN DE TOTALES -----
+    
+    // Línea divisoria final de la tabla
     doc.strokeColor('#CCCCCC')
        .lineWidth(1)
-       .moveTo(50, yPos - 10)
-       .lineTo(550, yPos - 10)
+       .moveTo(50, yPos - 5)
+       .lineTo(550, yPos - 5)
        .stroke();
     
-    // Resumen de totales (a la derecha)
-    yPos += 10;
-    const totalStartX = 380;
+    // Recuadro de totales
+    const totalsBoxX = 380;
+    const totalsBoxY = yPos + 10;
+    const totalsBoxWidth = 170;
     
-    doc.fontSize(8).fillColor('#666666').text('Subtotal:', totalStartX, yPos, { width: 80, align: 'right' });
-    doc.fontSize(8).fillColor('#333333').text(budget.totalAmount.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' }), totalStartX + 90, yPos, { width: 80, align: 'right' });
+    // Línea superior de totales
+    doc.strokeColor('#CCCCCC')
+       .lineWidth(0.5)
+       .moveTo(totalsBoxX, totalsBoxY)
+       .lineTo(totalsBoxX + totalsBoxWidth, totalsBoxY)
+       .stroke();
     
-    yPos += 15;
+    // Formateo de moneda sin símbolo para mejor alineación
+    const formatCurrency = (value) => {
+      return value.toLocaleString('es-ES') + ' PYG';
+    };
+    
+    // Subtotal
+    yPos = totalsBoxY + 15;
+    doc.fontSize(9).fillColor(secondaryColor).text('Subtotal:', totalsBoxX, yPos, { width: 80, align: 'left' });
+    doc.fontSize(9).fillColor(secondaryColor).text(
+      formatCurrency(budget.totalAmount), 
+      totalsBoxX + 90, yPos, { width: 80, align: 'right' }
+    );
+    
+    // Descuento
     if (budget.discount > 0) {
-      doc.fontSize(8).fillColor('#666666').text(`Descuento (${budget.discount}%):`, totalStartX, yPos, { width: 80, align: 'right' });
+      yPos += 20;
+      doc.fontSize(9).fillColor(secondaryColor).text(
+        `Descuento (${budget.discount}%):`, 
+        totalsBoxX, yPos, { width: 80, align: 'left' }
+      );
+      
       const discountAmount = budget.totalAmount * (budget.discount / 100);
-      doc.fontSize(8).fillColor('#333333').text('-' + discountAmount.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' }), totalStartX + 90, yPos, { width: 80, align: 'right' });
-      yPos += 15;
+      doc.fontSize(9).fillColor(secondaryColor).text(
+        '-' + formatCurrency(discountAmount), 
+        totalsBoxX + 90, yPos, { width: 80, align: 'right' }
+      );
     }
     
+    // IVA
     if (budget.tax > 0) {
-      doc.fontSize(8).fillColor('#666666').text(`IVA (${budget.tax}%):`, totalStartX, yPos, { width: 80, align: 'right' });
+      yPos += 20;
+      doc.fontSize(9).fillColor(secondaryColor).text(
+        `IVA (${budget.tax}%):`, 
+        totalsBoxX, yPos, { width: 80, align: 'left' }
+      );
+      
       const taxAmount = (budget.totalAmount - budget.totalAmount * (budget.discount / 100)) * (budget.tax / 100);
-      doc.fontSize(8).fillColor('#333333').text(taxAmount.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' }), totalStartX + 90, yPos, { width: 80, align: 'right' });
-      yPos += 15;
+      doc.fontSize(9).fillColor(secondaryColor).text(
+        formatCurrency(taxAmount), 
+        totalsBoxX + 90, yPos, { width: 80, align: 'right' }
+      );
     }
     
     // Línea divisoria para el total final
+    yPos += 20;
     doc.strokeColor('#CCCCCC')
        .lineWidth(1)
-       .moveTo(totalStartX, yPos)
-       .lineTo(550, yPos)
+       .moveTo(totalsBoxX, yPos)
+       .lineTo(totalsBoxX + totalsBoxWidth, yPos)
        .stroke();
     
-    yPos += 10;
-    doc.fontSize(10).fillColor(primaryColor).text('TOTAL:', totalStartX, yPos, { width: 80, align: 'right' });
-    doc.fontSize(10).fillColor(primaryColor).text(budget.finalAmount.toLocaleString('es-ES', { style: 'currency', currency: 'PYG' }), totalStartX + 90, yPos, { width: 80, align: 'right' });
+    // Total final destacado
+    yPos += 15;
+    doc.fontSize(11).fillColor(primaryColor).text('TOTAL:', totalsBoxX, yPos, { width: 80, align: 'left' });
+    doc.fontSize(11).fillColor(primaryColor).text(
+      formatCurrency(budget.finalAmount), 
+      totalsBoxX + 90, yPos, { width: 80, align: 'right' }
+    );
     
-    // Notas y condiciones
-    yPos += 40;
+    // ----- NOTAS Y CONDICIONES -----
+    
+    // Notas
     if (budget.notes) {
-      doc.fontSize(10).fillColor(primaryColor).text('NOTAS:', 50, yPos);
-      doc.fontSize(8).fillColor('#333333').text(budget.notes, 50, yPos + 15, { width: 500 });
+      const notesY = Math.min(yPos + 60, doc.page.height - 150);
+      
+      // Si estamos cerca del final de la página, crear una nueva
+      if (notesY > doc.page.height - 120) {
+        doc.addPage();
+        yPos = 50;
+      } else {
+        yPos = notesY;
+      }
+      
+      doc.fontSize(11).fillColor(primaryColor).text('NOTAS:', 50, yPos);
+      doc.fontSize(9).fillColor(secondaryColor).text(budget.notes, 50, yPos + 20, { width: 500 });
     }
     
-    // Pie de página
+    // ----- PIE DE PÁGINA -----
+    
+    // Pie de página en todas las páginas
     try {
       const pageCount = doc.bufferedPageRange().count;
       for (let i = 0; i < pageCount; i++) {
         doc.switchToPage(i);
         
-        // Posición del pie: parte inferior de la página
-        const footerY = doc.page.height - 50;
+        // Línea separadora del pie
+        const footerLineY = doc.page.height - 50;
+        doc.strokeColor('#CCCCCC')
+           .lineWidth(0.5)
+           .moveTo(50, footerLineY)
+           .lineTo(550, footerLineY)
+           .stroke();
         
+        // Texto del pie
+        const footerY = footerLineY + 10;
         doc.fontSize(8).fillColor('#999999').text(
           `Este presupuesto ha sido generado por ${budget.createdBy && budget.createdBy.name ? budget.createdBy.name : 'un administrador'} | Página ${i + 1} de ${pageCount}`,
           50, footerY, { align: 'center', width: 500 }
@@ -693,7 +946,6 @@ async function generateBudgetPDF(budgetId, isTemporary = false) {
     throw error;
   }
 }
-
 /**
  * Descarga el PDF de un presupuesto
  */

@@ -28,7 +28,7 @@ export const generatePageTitle = (selectedCategory, selectedSubcategory) => {
           { id: 202, label: "Teclados", value: "teclados" },
           { id: 203, label: "Mouses", value: "mouses" },
         //  { id: 204, label: "Adaptadores", value: "adaptadores" },
-        //  { id: 503, label: "Auriculares", value: "auriculares" },
+          { id: 503, label: "Auriculares", value: "auriculares" },
         //  { id: 205, label: "Microfonos", value: "microfonos"}
         ]
       },
@@ -141,7 +141,7 @@ const productCategory = [
           { id: 202, label: "Teclados", value: "teclados" },
           { id: 203, label: "Mouses", value: "mouses" },
        // { id: 204, label: "Adaptadores", value: "adaptadores" },
-       //{ id: 503, label: "Auriculares", value: "auriculares" },
+       { id: 503, label: "Auriculares", value: "auriculares" },
       // { id: 205, label: "Microfonos", value: "microfonos"}
           
       ]
@@ -184,7 +184,7 @@ const productCategory = [
           { id: 601, label: "Licencias de Software", value: "licencias" }
       ]
   },
-  /*{
+  {
       id: 7,
       label: "Telefonía",
       value: "telefonia",
@@ -206,7 +206,7 @@ const productCategory = [
         { id: 805, label: "Access Point", value: "ap" },
 
     ]
-}*/
+}
 ];
 
 export default productCategory;
