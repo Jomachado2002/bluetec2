@@ -12,8 +12,8 @@ import Context from '../context';
 import productCategory from '../helpers/productCategory';
 import { FaWhatsapp, FaInfoCircle, FaBars, FaPhone } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
+import { FaUserCircle, FaSignOutAlt, FaShoppingBag, FaHeart, FaCog } from "react-icons/fa";
 import { Cpu } from 'lucide-react';
-
 
 // Función scrollTop - se mantiene igual
 const scrollTop = () => {
@@ -62,9 +62,8 @@ const Header = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const context = useContext(Context);
   const navigate = useNavigate();
-  const location = useLocation(); // Usar useLocation para detectar la ruta actual
-  const searchInput = location;
-  const URLSearch = new URLSearchParams(searchInput?.search);
+  const location = useLocation(); // Corregido: useLocation() no searchInput
+  const URLSearch = new URLSearchParams(location?.search);
   const searchQuery = URLSearch.getAll("q");
   const [search, setSearch] = useState(searchQuery);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
@@ -140,6 +139,20 @@ const Header = () => {
     }
   }, [showMobileSearch, isAdminRoute]);
 
+  // useEffect para cerrar el menú al hacer clic fuera (CORREGIDO)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileMenuOpen && !event.target.closest('.profile-menu-container')) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [profileMenuOpen]);
+
   // Si estamos en una ruta de administración, retornar null (no mostrar el header)
   if (isAdminRoute) {
     return null;
@@ -156,6 +169,8 @@ const Header = () => {
     if (data.success) {
       toast.success(data.message);
       dispatch(setUserDetails(null));
+      // Limpiar datos del usuario en localStorage (mantener carrito)
+      localStorage.removeItem('userData');
     }
     if (data.error) {
       toast.error(data.message);
@@ -220,7 +235,6 @@ const Header = () => {
           {/* Área derecha: Botón hamburguesa y carrito */}
           <div className="flex items-center space-x-4">
             {/* Botón de menú hamburguesa */}
-          
             <button 
               onClick={toggleDesktopMenu}
               className="relative z-[150] flex items-center space-x-2 text-white hover:text-blue-200 transition-colors px-3 py-2 rounded-lg hover:bg-blue-800 border border-blue-700"
@@ -233,6 +247,131 @@ const Header = () => {
               )}
               <span className="font-medium">Menú</span>
             </button>
+
+            {/* Menú de usuario */}
+            {user?._id ? (
+              <div className="relative profile-menu-container">
+                <button 
+                  onClick={toggleProfileMenu}
+                  className="flex items-center space-x-2 text-white hover:text-blue-200 transition-colors px-3 py-2 rounded-lg hover:bg-blue-800"
+                  aria-label="Menú de usuario"
+                >
+                  <div className="w-8 h-8 rounded-full bg-blue-800 border-2 border-blue-300 flex items-center justify-center overflow-hidden">
+                    {user?.profilePic ? (
+                      <img src={user.profilePic} alt={user?.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <FaUserCircle className="text-lg text-white" />
+                    )}
+                  </div>
+                  <span className="font-medium hidden md:inline">{user?.name?.split(' ')[0] || 'Usuario'}</span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className={`h-4 w-4 transition-transform ${profileMenuOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown del usuario */}
+                {profileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50">
+                    {/* Header del dropdown */}
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-full bg-[#002060] flex items-center justify-center overflow-hidden">
+                          {user?.profilePic ? (
+                            <img src={user.profilePic} alt={user?.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <FaUserCircle className="text-lg text-white" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-800">{user?.name || 'Usuario'}</p>
+                          <p className="text-sm text-gray-600">{user?.email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Enlaces del menú */}
+                    <div className="py-2">
+                      <Link
+                        to="/mi-cuenta/dashboard"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          scrollTop();
+                        }}
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-[#002060] transition-colors"
+                      >
+                        <FaUserCircle className="w-4 h-4 mr-3" />
+                        <span>Mi Panel</span>
+                      </Link>
+
+                      <Link
+                        to="/mi-cuenta/pedidos"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          scrollTop();
+                        }}
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-[#002060] transition-colors"
+                      >
+                        <FaShoppingBag className="w-4 h-4 mr-3" />
+                        <span>Mis Pedidos</span>
+                      </Link>
+
+                      <Link
+                        to="/mi-cuenta/wishlist"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          scrollTop();
+                        }}
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-[#002060] transition-colors"
+                      >
+                        <FaHeart className="w-4 h-4 mr-3" />
+                        <span>Lista de Deseos</span>
+                      </Link>
+
+                      <Link
+                        to="/mi-cuenta/perfil"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          scrollTop();
+                        }}
+                        className="flex items-center px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-[#002060] transition-colors"
+                      >
+                        <FaCog className="w-4 h-4 mr-3" />
+                        <span>Configuración</span>
+                      </Link>
+
+                      {/* Separador */}
+                      <div className="border-t border-gray-100 my-2"></div>
+
+                      {/* Cerrar sesión */}
+                      <button
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          handleLogout();
+                        }}
+                        className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <FaSignOutAlt className="w-4 h-4 mr-3" />
+                        <span>Cerrar Sesión</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link 
+                to="/iniciar-sesion" 
+                className="text-white hover:text-blue-200 transition-colors px-3 py-2 rounded-lg hover:bg-blue-800"
+                onClick={scrollTop}
+              >
+                <CiUser className="text-2xl" />
+              </Link>
+            )}
 
             {/* Carrito mejorado */}
             <Link 

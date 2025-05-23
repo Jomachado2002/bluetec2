@@ -15,7 +15,7 @@ import MobileCategoriesPage from "../pages/MobileCategoriesPage"
 import ResetPassword from "../pages/ResetPassword"
 import Nosotros from "../pages/Nosotros"
 
-// Importar nuevas páginas financieras
+// Importar páginas financieras
 import FinancialReports from "../pages/FinancialReports"
 import ClientsList from "../pages/ClientsList"
 import ClientDetails from "../pages/ClientDetails"
@@ -24,7 +24,16 @@ import BudgetDetails from "../pages/BudgetDetails"
 import NewBudget from "../pages/NewBudget"
 import NewClient from "../pages/NewClient"
 
-// Archivo: routes/index.js del frontend
+// Imports para el panel de usuario
+import UserAccount from '../pages/UserAccount'
+import UserDashboard from '../components/user/UserDashboard'
+import UserOrders from '../components/user/UserOrders'
+import UserWishlist from '../components/user/UserWishlist'
+import UserProfile from '../components/user/UserProfile'
+import UserAddresses from '../components/user/UserAddresses'
+import UserSettings from '../components/user/UserSettings'
+import UserSupport from '../components/user/UserSupport'
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -59,7 +68,7 @@ const router = createBrowserRouter([
                 element: <MobileCategoriesPage />
             },
             {
-                path: "categoria-producto",
+                path: "categoria-producto/:categoryName", // ✅ Agregado parámetro
                 element: <CategoryProduct />
             },
             {
@@ -74,7 +83,52 @@ const router = createBrowserRouter([
                 path: "buscar",
                 element: <SearchProduct />
             },
+
+            // ✅ Panel de usuario separado del admin
+            {
+                path: "mi-cuenta",
+                element: <UserAccount />,
+                children: [
+                    {
+                        path: "",
+                        element: <UserDashboard />
+                    },
+                    {
+                        path: "dashboard",
+                        element: <UserDashboard />
+                    },
+                    {
+                        path: "pedidos",
+                        element: <UserOrders />
+                    },
+                    {
+                        path: "pedidos/:orderId",
+                        element: <UserOrders /> // Mismo componente, diferente vista
+                    },
+                    {
+                        path: "wishlist",
+                        element: <UserWishlist />
+                    },
+                    {
+                        path: "perfil",
+                        element: <UserProfile />
+                    },
+                    {
+                        path: "direcciones",
+                        element: <UserAddresses />
+                    },
+                    {
+                        path: "configuracion",
+                        element: <UserSettings />
+                    },
+                    {
+                        path: "soporte",
+                        element: <UserSupport />
+                    }
+                ]
+            },
            
+            // ✅ Panel de admin separado
             {
                 path: "panel-admin",
                 element: <AdminPanel />,
@@ -88,7 +142,7 @@ const router = createBrowserRouter([
                         element: <AllProducts />
                     },
                     
-                    // Nuevas rutas para finanzas
+                    // Rutas financieras
                     {
                         path: "reportes-financieros",
                         element: <FinancialReports />
@@ -107,6 +161,7 @@ const router = createBrowserRouter([
                         path: "clientes/:clientId",
                         element: <ClientDetails />
                     },
+                    
                     // Gestión de presupuestos
                     {
                         path: "presupuestos",
@@ -124,6 +179,6 @@ const router = createBrowserRouter([
             }
         ]
     }
-]);
+])
 
-export default router;
+export default router
